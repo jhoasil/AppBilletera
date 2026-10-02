@@ -6,6 +6,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useParametroRuta } from '../../app/navigation/useParametroRuta';
 import { servicioDetalleBilletera } from '../../app/data/servicioDetalleBilletera';
+import { servicioConciliacion } from '../../app/data/servicioConciliacion';
 import { calcularConciliacion, type ConfirmacionConciliacion } from '../../core/services/calcularConciliacion';
 import type { DetalleBilletera } from '../../core/repositories/RepositorioDetalleBilletera';
 import { crearImporte } from '../../core/money/Importe';
@@ -18,7 +19,7 @@ import { CampoTextoCatalogo } from '../../shared/components/CampoTextoCatalogo';
 interface PropiedadesConciliacion { alConfirmar?: (datos: ConfirmacionConciliacion) => Promise<void> }
 
 /** Muestra saldo calculado, real y diferencia, ofreciendo registrar faltantes o ajustar explícitamente. */
-export function PaginaConciliacion({ alConfirmar }: PropiedadesConciliacion) {
+export function PaginaConciliacion({ alConfirmar = confirmarConciliacion }: PropiedadesConciliacion) {
   const id = useParametroRuta('id');
   const [datos, establecerDatos] = useState<DetalleBilletera | null>(null);
   const [real, establecerReal] = useState(''); const [motivo, establecerMotivo] = useState(''); const [observaciones, establecerObservaciones] = useState('');
@@ -70,3 +71,6 @@ export function PaginaConciliacion({ alConfirmar }: PropiedadesConciliacion) {
     </Stack>}
   </Stack>;
 }
+
+/** Conecta la pantalla con el servicio de conciliación transaccional. */
+function confirmarConciliacion(datos: ConfirmacionConciliacion) { return servicioConciliacion.confirmar(datos); }
