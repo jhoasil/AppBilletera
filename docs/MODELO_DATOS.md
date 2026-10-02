@@ -2,6 +2,12 @@
 
 Modelo conceptual inicial. El esquema físico, las migraciones y el diagrama de entidades se definirán en la TAREA 10.
 
+Las once entidades TypeScript están definidas en `src/nucleo/entidades/`, con una base `EntidadAuditada`. Las propiedades del dominio usan camelCase en español (`actividadId`, `importeCentavos`, `creadoEn`); las columnas de persistencia usarán snake_case (`actividad_id`, `importe_centavos`, `creado_en`) mediante los adaptadores.
+
+Los instantes de auditoría, conciliación y movimientos se representan como cadenas ISO 8601 en UTC. Las fechas de ingresos, gastos, transferencias y períodos de actividad usan `AAAA-MM-DD` sin zona horaria. La ausencia de datos opcionales se representa con `null` explícito. Estos tipos describen los datos y no validan UUID, formatos de fechas, enteros, signos, referencias ni consistencia financiera en ejecución; esa responsabilidad corresponde a servicios posteriores.
+
+Los detalles heredan la moneda de su ingreso o gasto. Las transferencias se limitan a billeteras de la misma moneda; no se implementa conversión de divisas. Los movimientos usan la moneda de su billetera. Sus referencias apuntan a la operación de origen; en saldos iniciales, tipo e identidad de referencia son nulos. `AjusteBilletera.diferenciaCentavos` expresa saldo real menos saldo calculado y determina el signo del movimiento asociado.
+
 ## Entidades previstas
 
 | Entidad | Propósito y relaciones |

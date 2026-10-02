@@ -4,6 +4,7 @@
 
 ### Agregado
 
+- Once entidades de dominio TypeScript documentadas, con identidad UUID, auditoría y relaciones financieras.
 - Componentes visuales compartidos para cabeceras, resúmenes, importes, estados vacíos, catálogos, acciones y movimientos.
 - Navegación inferior móvil, lateral de escritorio y páginas provisionales con acceso a Ajustes.
 - Apariencia de sistema, clara y oscura con preferencia guardada en localStorage.
