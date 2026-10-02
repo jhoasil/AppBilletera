@@ -5,6 +5,7 @@ import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
+import { ResumenPatrimonial } from './ResumenPatrimonial';
 import { CabeceraPagina } from '../../shared/components/CabeceraPagina';
 import { TarjetaResumen } from '../../shared/components/TarjetaResumen';
 import { CampoTextoCatalogo } from '../../shared/components/CampoTextoCatalogo';
@@ -48,6 +49,7 @@ export function PaginaReportes() {
       <Typography color="text.secondary">La ganancia de cada actividad descuenta únicamente sus gastos asociados. Los gastos sin actividad se muestran separados.</Typography>
       {datos.desgloses.filter(function seleccionar(fila) { return fila.tipo === 'actividad'; }).map(function presentar(fila) { return <Paper key={`${fila.id}/${fila.moneda}`} variant="outlined" sx={{ p: 2 }}><Typography variant="subtitle1">{fila.nombre}</Typography><Typography>Ingresos: {importe(fila.ingresosCentavos, fila.moneda)}</Typography><Typography>Gastos asociados: {importe(fila.gastosCentavos, fila.moneda)}</Typography><Typography color={fila.gananciaCentavos < 0 ? 'error.main' : 'success.main'}>Ganancia neta: {importe(fila.gananciaCentavos, fila.moneda)}</Typography></Paper>; })}
       {(['medio', 'categoria'] as const).map(function seccion(grupo) { return <Stack key={grupo} spacing={1}><Typography variant="h6">{grupo === 'medio' ? 'Por medio de pago' : 'Gastos por categoría'}</Typography>{datos.desgloses.filter(function seleccionar(fila) { return fila.tipo === grupo; }).map(function presentar(fila) { return <Typography key={`${fila.id}/${fila.moneda}`}>{fila.nombre} · Ingresos {importe(fila.ingresosCentavos, fila.moneda)} · Gastos {importe(fila.gastosCentavos, fila.moneda)}</Typography>; })}</Stack>; })}
+      <ResumenPatrimonial desde={periodo.desde} hasta={periodo.hasta} />
     </>}
   </Stack>;
 }
