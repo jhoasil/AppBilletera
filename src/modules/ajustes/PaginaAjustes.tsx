@@ -7,7 +7,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { SelectorModoTema } from '../../app/theme/SelectorModoTema';
 import { CabeceraPagina } from '../../shared/components/CabeceraPagina';
-import { EstadoVacio } from '../../shared/components/EstadoVacio';
+import { RespaldoDatos } from './RespaldoDatos';
 import { CatalogoMediosPago } from './catalogos/CatalogoMediosPago';
 import { CatalogoCategoriasGasto } from './catalogos/CatalogoCategoriasGasto';
 import { CatalogoActividades } from './catalogos/CatalogoActividades';
@@ -45,6 +45,6 @@ export function PaginaAjustes() {
   </Stack>;
   return <Stack spacing={3}>
     <CabeceraPagina titulo={secciones.find(buscarSeccion)?.titulo ?? 'Ajustes'} acciones={<Button onClick={volver}>Volver a Ajustes</Button>} />
-    {seccion === 'actividades' ? <CatalogoActividades /> : seccion === 'categorias' ? <CatalogoCategoriasGasto /> : seccion === 'medios' ? <CatalogoMediosPago /> : seccion === 'billeteras' ? <CatalogoBilleteras /> : seccion === 'apariencia' ? <SelectorModoTema /> : seccion === 'informacion' ? <InformacionAplicacion /> : <EstadoVacio titulo="Sección en preparación" descripcion="Esta configuración se incorporará en su tarea correspondiente." />}
+    {seccion === 'actividades' ? <CatalogoActividades /> : seccion === 'categorias' ? <CatalogoCategoriasGasto /> : seccion === 'medios' ? <CatalogoMediosPago /> : seccion === 'billeteras' ? <CatalogoBilleteras /> : seccion === 'apariencia' ? <SelectorModoTema /> : seccion === 'informacion' ? <InformacionAplicacion /> : <RespaldoDatos />}
   </Stack>;
 }
