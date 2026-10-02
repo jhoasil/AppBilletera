@@ -1,4 +1,6 @@
 import type { Actividad } from '../../../nucleo/entidades/Actividad';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
 import { servicioActividades } from '../../../app/datos/serviciosCatalogos';
 import { SelectorCatalogo } from '../../../compartido/componentes/SelectorCatalogo';
 import { SelectorIcono } from '../../../compartido/componentes/SelectorIcono';
@@ -12,12 +14,14 @@ function crearActividad(): Actividad {
 }
 
 /** Resume el tipo y estado para consultar rápidamente la actividad. */
-function detalle(actividad: Actividad) { return `${actividad.tipo} · ${actividad.estado} · ${actividad.activo ? 'Disponible' : 'Inactiva'}`; }
+function detalle(actividad: Actividad) { return `${actividad.tipo === 'trabajo_temporal' ? 'Trabajo temporal' : actividad.tipo} · ${actividad.estado} · ${actividad.fechaInicio ?? 'Sin inicio'} / ${actividad.fechaFin ?? 'Sin fin'} · ${actividad.activo ? 'Disponible' : 'Inactiva'}`; }
 
 /** Presenta los campos de actividad, fechas, estado y selectores visuales. */
 function campos(actividad: Actividad, actualizar: (cambios: Partial<Actividad>) => void) {
   /** Actualiza la clasificación libre de la actividad. */
   function tipo(valor: string) { actualizar({ tipo: valor }); }
+  /** Clasifica el registro como trabajo temporal conservando su identidad y relaciones. */
+  function temporal() { actualizar({ tipo: 'trabajo_temporal' }); }
   /** Actualiza la descripción opcional. */
   function descripcion(valor: string) { actualizar({ descripcion: valor || null }); }
   /** Actualiza el comienzo del período. */
@@ -31,6 +35,8 @@ function campos(actividad: Actividad, actualizar: (cambios: Partial<Actividad>) 
   /** Actualiza el color opcional sin modificar el tema global. */
   function color(valor: string) { actualizar({ color: valor || null }); }
   return <><CampoTextoCatalogo etiqueta="Tipo" valor={actividad.tipo} alCambiar={tipo} obligatorio />
+    <Button onClick={temporal} aria-pressed={actividad.tipo === 'trabajo_temporal'}>Usar como trabajo temporal</Button>
+    {actividad.tipo === 'trabajo_temporal' && <Alert severity="info">Este trabajo conserva la misma actividad para asociar múltiples ingresos y gastos. Podés finalizarlo o archivarlo sin perder su historial.</Alert>}
     <CampoTextoCatalogo etiqueta="Descripción (opcional)" valor={actividad.descripcion ?? ''} alCambiar={descripcion} />
     <CampoTextoCatalogo etiqueta="Fecha de inicio (opcional)" valor={actividad.fechaInicio ?? ''} alCambiar={inicio} tipo="date" />
     <CampoTextoCatalogo etiqueta="Fecha de fin (opcional)" valor={actividad.fechaFin ?? ''} alCambiar={fin} tipo="date" />

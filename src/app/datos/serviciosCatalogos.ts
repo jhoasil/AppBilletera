@@ -7,6 +7,7 @@ import type { RepositorioCategoriasGasto } from '../../nucleo/repositorios/Repos
 import type { RepositorioMediosPago } from '../../nucleo/repositorios/RepositorioMediosPago';
 import type { RepositorioBilleteras } from '../../nucleo/repositorios/RepositorioBilleteras';
 import { ServicioCatalogo } from '../../nucleo/servicios/ServicioCatalogo';
+import { validarActividad } from '../../nucleo/servicios/validarActividad';
 import { RepositorioCatalogoWeb } from '../../base-datos/web/RepositorioCatalogoWeb';
 
 const repositorioMedios: RepositorioMediosPago = new RepositorioCatalogoWeb<MedioPago>('medios_pago');
@@ -25,11 +26,6 @@ function validarCategoria(_categoria: CategoriaGasto): void {}
 
 const repositorioCategorias: RepositorioCategoriasGasto = new RepositorioCatalogoWeb<CategoriaGasto>('categorias_gasto');
 export const servicioCategorias = new ServicioCatalogo(repositorioCategorias, validarCategoria);
-
-/** Comprueba los campos mínimos de una actividad sin crear entidades separadas para trabajos. */
-function validarActividad(actividad: Actividad) {
-  if (!actividad.tipo.trim()) throw new Error('Indicá el tipo de actividad.');
-}
 
 const repositorioActividades: RepositorioActividades = new RepositorioCatalogoWeb<Actividad>('actividades');
 export const servicioActividades = new ServicioCatalogo(repositorioActividades, validarActividad);
