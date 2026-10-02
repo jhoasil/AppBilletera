@@ -10,7 +10,7 @@ La presentación consume servicios y nunca accede directamente a los motores de 
 
 React, TypeScript estricto y Vite para la aplicación; Material UI y Material Icons para la interfaz; Capacitor para plataformas nativas; pnpm para dependencias. IndexedDB en Web y SQLite en Android, iOS e iPadOS.
 
-Estructura prevista, todavía no creada:
+Estructura inicial creada en la TAREA 001; las carpetas de dominio, persistencia, módulos y recursos compartidos permanecen reservadas para tareas posteriores:
 
 ```text
 src/

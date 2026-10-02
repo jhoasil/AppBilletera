@@ -2,7 +2,7 @@
 
 Aplicación personal para administrar actividades, ingresos, gastos y billeteras, con prioridad en la carga rápida, el funcionamiento offline y la trazabilidad.
 
-Versión inicial: **0.1.0**. Estado: preparación del proyecto; todavía no hay aplicación ejecutable ni dependencias instaladas.
+Versión inicial: **0.1.0**. Estado: aplicación base React + TypeScript + Vite, todavía sin módulos funcionales ni persistencia.
 
 ## Plataformas y tecnologías previstas
 
@@ -21,4 +21,17 @@ Una base compartida para Web, PWA, Android, iOS e iPadOS mediante React, TypeScr
 
 ## Desarrollo
 
-Ejecutar solamente la tarea solicitada y finalizar con su commit. No generar ni ejecutar tests durante la preparación y el desarrollo inicial. La configuración de la aplicación y de sus comandos corresponde a tareas posteriores.
+Requisitos: Node.js 20.19+ o 22.12+ y pnpm 11.19.0, fijado en `package.json`. Se recomienda Node.js 24 LTS.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm desarrollo
+```
+
+Comandos disponibles:
+
+- `pnpm verificar-tipos`: comprueba TypeScript estricto sin emitir archivos.
+- `pnpm compilar`: verifica tipos y genera la aplicación en `dist/`.
+- `pnpm previsualizar`: sirve localmente la compilación generada.
+
+Ejecutar solamente la tarea solicitada en su rama `codex/NNN` y finalizar con su commit. No generar ni ejecutar tests durante la preparación y el desarrollo inicial.
