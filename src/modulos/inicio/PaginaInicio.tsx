@@ -1,4 +1,5 @@
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import { CabeceraPagina } from '../../compartido/componentes/CabeceraPagina';
 import { EstadoVacio } from '../../compartido/componentes/EstadoVacio';
 
@@ -7,6 +8,7 @@ export function PaginaInicio() {
   return (
     <Stack spacing={3}>
       <CabeceraPagina titulo="Inicio" />
+      <Button component="a" href="#/billeteras" variant="contained">Ver billeteras y saldos</Button>
       <EstadoVacio titulo="Sección en preparación" descripcion="El resumen de ingresos, gastos y billeteras se incorporará en próximas tareas." />
     </Stack>
   );

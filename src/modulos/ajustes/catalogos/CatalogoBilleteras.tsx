@@ -69,6 +69,7 @@ export function CatalogoBilleteras() {
   function registrado() { establecerConfirmacion('Saldo inicial registrado como movimiento trazable.'); establecerBilleteraSaldo(null); }
   return <Stack spacing={2}>
     <Button component="a" href="#/transferencias" variant="outlined">Transferir entre billeteras</Button>
+    <Button component="a" href="#/billeteras">Ver saldos de billeteras</Button>
     {confirmacion && <Alert severity="success">{confirmacion}</Alert>}
     <EditorCatalogo singular="billetera" servicio={servicioBilleteras} crearNuevo={crear} campos={camposConSaldo} detalle={detalle} guardarPersonalizado={guardar} accionAdicional={accion} />
     <DialogoSaldoInicial billetera={billeteraSaldo} alCerrar={cerrar} alRegistrar={registrado} />

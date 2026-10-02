@@ -17,6 +17,9 @@ const PaginaAjustes = lazy(cargarAjustes);
 /** Carga las transferencias cuando se abre su pantalla, sin agrandar el paquete inicial. */
 async function cargarTransferencia() { const modulo = await import('../modulos/billeteras/PaginaTransferencia'); return { default: modulo.PaginaTransferencia }; }
 const PaginaTransferencia = lazy(cargarTransferencia);
+/** Carga la consulta de patrimonio únicamente cuando se abre Billeteras. */
+async function cargarBilleteras() { const modulo = await import('../modulos/billeteras/PaginaBilleteras'); return { default: modulo.PaginaBilleteras }; }
+const PaginaBilleteras = lazy(cargarBilleteras);
 
 const paginas = {
   inicio: <PaginaInicio />,
@@ -25,6 +28,7 @@ const paginas = {
   reportes: <PaginaReportes />,
   ajustes: <PaginaAjustes />,
   transferencias: <PaginaTransferencia />,
+  billeteras: <PaginaBilleteras />,
 };
 
 /** Muestra una única página dentro de la navegación compartida por todas las pantallas. */

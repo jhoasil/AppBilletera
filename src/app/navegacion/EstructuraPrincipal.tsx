@@ -4,6 +4,7 @@ import AddCircleOutlined from '@mui/icons-material/AddCircleOutlined';
 import RemoveCircleOutlined from '@mui/icons-material/RemoveCircleOutlined';
 import BarChartOutlined from '@mui/icons-material/BarChartOutlined';
 import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
+import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
 import AppBar from '@mui/material/AppBar';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
@@ -30,6 +31,7 @@ const destinosPrincipales = [
 ] as const;
 const destinosLaterales = [
   ...destinosPrincipales,
+  { pagina: 'billeteras', titulo: 'Billeteras', icono: <AccountBalanceWalletOutlined /> },
   { pagina: 'ajustes', titulo: 'Ajustes', icono: <SettingsOutlined /> },
 ] as const;
 
@@ -82,6 +84,9 @@ export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstru
           >
             AppBilletera
           </Typography>
+          <IconButton
+            component="a" href="#/billeteras" aria-label="Abrir Billeteras" color={paginaActual === 'billeteras' ? 'primary' : 'default'}
+          ><AccountBalanceWalletOutlined /></IconButton>
           <IconButton
             component="a" href="#/ajustes" aria-label="Abrir Ajustes"
             aria-current={paginaActual === 'ajustes' ? 'page' : undefined}
