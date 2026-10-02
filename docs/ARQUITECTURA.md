@@ -27,6 +27,10 @@ Los componentes visuales reutilizables están en `src/compartido/componentes/`: 
 
 ## Persistencia e integridad
 
+Los ocho contratos están en `src/nucleo/repositorios/`. Son interfaces asíncronas sin dependencias de React, IndexedDB o SQLite. Las consultas requieren límite positivo y desplazamiento no negativo, que los adaptadores deberán validar. Los catálogos se ordenan por nombre e id ascendentes; los medios de pago, por orden, nombre e id. Las operaciones y movimientos se ordenan por fecha descendente e id ascendente. Las consultas excluyen registros eliminados salvo petición explícita; obtener por id devuelve `null` para registros inexistentes o eliminados. Los errores de escritura se comunican rechazando la promesa; eliminar un registro inexistente no tiene efecto.
+
+Guardar ingresos o gastos incluye sus detalles: una edición reemplaza el conjunto vigente y conserva los anteriores mediante borrado lógico. Las operaciones con movimientos se coordinarán en una misma transacción desde la infraestructura de la TAREA 009; los contratos no abren transacciones independientes que impidan esa coordinación. El repositorio de movimientos devuelve saldos enteros seguros en centavos, calcula en persistencia y rechaza desbordamientos. No se implementan motores ni servicios financieros en la TAREA 008.
+
 La infraestructura administra inicialización, migraciones versionadas, transacciones y cierre. Guardar cada operación financiera y sus movimientos de billetera de forma atómica. Mantener identidades UUID locales y borrado lógico para conservar la historia.
 
 Los movimientos de billetera son la fuente de verdad del saldo. Resolver consultas y agregaciones en persistencia, evitando cargar toda la historia en la interfaz. Una caché futura debe ser reconstruible; los cierres por período se evaluarán cuando sean necesarios.
