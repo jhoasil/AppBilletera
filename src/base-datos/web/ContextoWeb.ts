@@ -76,6 +76,39 @@ export class ContextoWeb {
     return new Promise(conectar);
   }
 
+  /** Recorre por fecha descendente y UUID ascendente usando cursores, sin cargar todos los registros. */
+  recorrerPorFecha(tabla: NombreTabla, indice: string, rango: IDBKeyRange | undefined, visitar: (registro: RegistroWeb) => void): Promise<void> {
+    const fuente = this.transaccion.objectStore(tabla).index(indice);
+    const solicitud = fuente.openKeyCursor(rango, 'prev');
+    /** Procesa fechas descendentes y, dentro de cada fecha, UUID ascendentes sin acumular historia. */
+    function conectar(resolver: () => void, rechazar: (error: unknown) => void) {
+      let claveAnterior = '';
+      /** Abre un cursor ascendente solamente para la fecha actual y luego continúa con las anteriores. */
+      function avanzar() {
+        const cursor = solicitud.result;
+        if (!cursor) { resolver(); return; }
+        const cursorFecha = cursor;
+        const clave = JSON.stringify(cursor.key);
+        if (clave === claveAnterior) { cursor.continue(); return; }
+        claveAnterior = clave;
+        const grupo = fuente.openCursor(IDBKeyRange.only(cursor.key), 'next');
+        /** Visita una operación respetando el desempate por UUID ascendente. */
+        function leerGrupo() {
+          const actual = grupo.result;
+          if (!actual) { cursorFecha.continue(); return; }
+          try { visitar(actual.value as RegistroWeb); actual.continue(); } catch (error) { rechazar(error); }
+        }
+        /** Propaga errores del cursor sin confirmar una consulta incompleta. */
+        function fallarGrupo() { rechazar(grupo.error); }
+        grupo.onsuccess = leerGrupo; grupo.onerror = fallarGrupo;
+      }
+      /** Propaga el fallo del índice principal. */
+      function fallar() { rechazar(solicitud.error); }
+      solicitud.onsuccess = avanzar; solicitud.onerror = fallar;
+    }
+    return new Promise(conectar);
+  }
+
   /** Valida y guarda; insertar exige un id nuevo, actualizar permite conservar el id existente. */
   async guardar(tabla: NombreTabla, registro: RegistroWeb, insertar = false): Promise<void> {
     const definicion = tablasV1.find(buscarTabla);
