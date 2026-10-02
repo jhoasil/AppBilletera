@@ -1,4 +1,4 @@
-import { servicioActividades, servicioMedios, servicioBilleteras } from './serviciosCatalogos';
+import { servicioActividades, servicioMedios, servicioBilleteras, servicioCategorias } from './serviciosCatalogos';
 import type { ServicioCatalogo, EntidadCatalogo } from '../../nucleo/servicios/ServicioCatalogo';
 
 /** Consulta páginas pequeñas de catálogos; no carga operaciones financieras. */
@@ -13,8 +13,8 @@ export async function listarCatalogo<Entidad extends EntidadCatalogo>(servicio: 
 
 /** Ofrece los catálogos que consume el formulario sin exponer el almacenamiento físico. */
 export async function cargarDatosIngreso() {
-  const [actividades, medios, billeteras] = await Promise.all([
-    listarCatalogo(servicioActividades), listarCatalogo(servicioMedios), listarCatalogo(servicioBilleteras),
+  const [actividades, medios, billeteras, categorias] = await Promise.all([
+    listarCatalogo(servicioActividades), listarCatalogo(servicioMedios), listarCatalogo(servicioBilleteras), listarCatalogo(servicioCategorias),
   ]);
-  return { actividades, medios, billeteras };
+  return { actividades, medios, billeteras, categorias };
 }
