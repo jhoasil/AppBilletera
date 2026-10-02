@@ -1,4 +1,4 @@
-import type { Billetera } from '../entidades/Billetera';
+import type { Billetera } from '../entities/Billetera';
 import type { ConsultaCatalogo } from './ConsultasRepositorio';
 
 /** Billetera con saldo calculado, sin agregar un atributo mutable a su entidad persistida. */

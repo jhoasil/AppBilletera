@@ -11,10 +11,10 @@ import { CampoTextoCatalogo } from '../../shared/componentes/CampoTextoCatalogo'
 import { CampoImporte } from '../../shared/componentes/CampoImporte';
 import { SelectorCatalogo } from '../../shared/componentes/SelectorCatalogo';
 import { fechaActual } from '../../shared/fechas/fechaActual';
-import { crearImporte } from '../../core/dinero/Importe';
-import { interpretarImporte } from '../../core/dinero/interpretarImporte';
+import { crearImporte } from '../../core/money/Importe';
+import { interpretarImporte } from '../../core/money/interpretarImporte';
 import { formatearImporte } from '../../shared/dinero/formatearImporte';
-import type { Billetera } from '../../core/entidades/Billetera';
+import type { Billetera } from '../../core/entities/Billetera';
 
 /** Recupera una billetera de origen sugerida desde un enlace, sin guardar dinero en preferencias. */
 function leerOrigen() { return new URLSearchParams(window.location.hash.split('?')[1] ?? '').get('origen') ?? ''; }

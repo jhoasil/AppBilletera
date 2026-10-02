@@ -1,5 +1,5 @@
-import { crearBaseWeb } from '../adaptadores/Web';
-import { migracionesBaseLocal } from '../migraciones/v1';
+import { crearBaseWeb } from '../adapters/Web';
+import { migracionesBaseLocal } from '../migrations/v1';
 import { AdaptadorIndexedDB } from './AdaptadorIndexedDB';
 
 /** Instancia compartida por servicios; nunca se importa desde componentes de presentación. */

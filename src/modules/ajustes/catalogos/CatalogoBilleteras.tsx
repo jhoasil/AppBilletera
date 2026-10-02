@@ -1,4 +1,4 @@
-import type { Billetera } from '../../../core/entidades/Billetera';
+import type { Billetera } from '../../../core/entities/Billetera';
 import { useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';

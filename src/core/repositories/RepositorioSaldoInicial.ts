@@ -1,5 +1,5 @@
-import type { Billetera } from '../entidades/Billetera';
-import type { MovimientoBilletera } from '../entidades/MovimientoBilletera';
+import type { Billetera } from '../entities/Billetera';
+import type { MovimientoBilletera } from '../entities/MovimientoBilletera';
 
 /** Puerto para registrar el saldo inicial y, opcionalmente, crear su billetera de manera atómica. */
 export interface RepositorioSaldoInicial {

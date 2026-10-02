@@ -1,5 +1,5 @@
-import type { NombreTabla } from '../migraciones/EsquemaBaseDatos';
-import { tablasV1 } from '../migraciones/v1';
+import type { NombreTabla } from '../migrations/EsquemaBaseDatos';
+import { tablasV1 } from '../migrations/v1';
 
 /** Representación física con nombres snake_case, sin objetos de dominio en el motor. */
 export type RegistroWeb = Record<string, unknown>;

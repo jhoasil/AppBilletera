@@ -1,4 +1,4 @@
-import type { FechaCalendario, FechaHora, Identificador } from '../entidades/EntidadAuditada';
+import type { FechaCalendario, FechaHora, Identificador } from '../entities/EntidadAuditada';
 
 /** Página acotada: limite entero positivo y desplazamiento entero no negativo. */
 export interface ConsultaPaginada {

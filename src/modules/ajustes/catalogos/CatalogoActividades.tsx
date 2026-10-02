@@ -1,4 +1,4 @@
-import type { Actividad } from '../../../core/entidades/Actividad';
+import type { Actividad } from '../../../core/entities/Actividad';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import { servicioActividades } from '../../../app/datos/serviciosCatalogos';

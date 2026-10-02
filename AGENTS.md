@@ -147,7 +147,7 @@ calcularRentabilidad()
 
 # 6. Excepciones de idioma
 
-Por decisión del usuario, únicamente las carpetas principales de `src` utilizan nombres en inglés: `app`, `database`, `shared`, `modules` y `core`. Sus subcarpetas, archivos, componentes y demás contenido propio se mantienen en español. No extender esta excepción a otras carpetas ni traducir el interior.
+Por decisión del usuario, las carpetas principales de `src` utilizan nombres en inglés: `app`, `database`, `shared`, `modules` y `core`. También utilizan nombres técnicos convencionales las subcarpetas de `core`: `money`, `entities`, `repositories`, `services`; y de `database`: `adapters`, `contracts`, `data`, `migrations`, `web`. Las demás carpetas, los archivos, componentes, funciones y demás contenido propio permanecen en español. No extender esta excepción a otras rutas ni traducir el interior.
 
 No traducir nombres que pertenecen a tecnologías externas.
 

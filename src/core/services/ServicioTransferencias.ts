@@ -1,7 +1,7 @@
-import type { TransferenciaBilletera } from '../entidades/TransferenciaBilletera';
-import type { RepositorioTransferencias } from '../repositorios/RepositorioTransferencias';
+import type { TransferenciaBilletera } from '../entities/TransferenciaBilletera';
+import type { RepositorioTransferencias } from '../repositories/RepositorioTransferencias';
 import { instanteDeFecha } from './validarCarga';
-import { interpretarImporte } from '../dinero/interpretarImporte';
+import { interpretarImporte } from '../money/interpretarImporte';
 
 /** Datos de una transferencia interna que nunca participa del resultado de ingresos y gastos. */
 export interface CargaTransferencia { billeteraOrigenId: string; billeteraDestinoId: string; importe: string; moneda: string; fecha: string; descripcion: string }

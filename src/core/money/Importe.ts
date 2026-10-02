@@ -1,4 +1,4 @@
-import type { Moneda } from '../entidades/EntidadAuditada';
+import type { Moneda } from '../entities/EntidadAuditada';
 
 /** Importe inmutable en centavos enteros seguros; moneda inicial ARS. */
 export interface Importe {

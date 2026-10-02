@@ -1,5 +1,5 @@
 import { FormularioOperacionRapida } from '../../shared/componentes/FormularioOperacionRapida';
-import type { CargaIngreso } from '../../core/servicios/CargaIngreso';
+import type { CargaIngreso } from '../../core/services/CargaIngreso';
 
 /** Conexión del ingreso a sus datos iniciales y operación de aplicación. */
 export interface PropiedadesFormularioIngreso { alGuardar?: (carga: CargaIngreso) => Promise<void>; inicial?: CargaIngreso; alCompletar?: () => void }

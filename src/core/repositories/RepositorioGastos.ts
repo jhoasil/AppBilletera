@@ -1,6 +1,6 @@
-import type { Gasto } from '../entidades/Gasto';
-import type { DetalleGastoMedioPago } from '../entidades/DetalleGastoMedioPago';
-import type { FechaHora, Identificador } from '../entidades/EntidadAuditada';
+import type { Gasto } from '../entities/Gasto';
+import type { DetalleGastoMedioPago } from '../entities/DetalleGastoMedioPago';
+import type { FechaHora, Identificador } from '../entities/EntidadAuditada';
 import type { ConsultaGastos, PaginaResultado } from './ConsultasRepositorio';
 
 /** Persistencia de gastos y detalles con filtros por categoría, actividad y período. */

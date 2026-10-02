@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
-import type { Billetera } from '../../../core/entidades/Billetera';
+import type { Billetera } from '../../../core/entities/Billetera';
 import { servicioSaldoInicial } from '../../../app/datos/servicioSaldoInicial';
 import { CampoTextoCatalogo } from '../../../shared/componentes/CampoTextoCatalogo';
 import { fechaActual } from '../../../shared/fechas/fechaActual';

@@ -1,5 +1,5 @@
-import type { EntidadAuditada } from '../entidades/EntidadAuditada';
-import type { ConsultaCatalogo, PaginaResultado } from '../repositorios/ConsultasRepositorio';
+import type { EntidadAuditada } from '../entities/EntidadAuditada';
+import type { ConsultaCatalogo, PaginaResultado } from '../repositories/ConsultasRepositorio';
 
 /** Datos comunes a catálogos editables; las entidades conservan sus campos específicos. */
 export type EntidadCatalogo = EntidadAuditada & { nombre: string; activo: boolean; icono: string | null; color: string | null };

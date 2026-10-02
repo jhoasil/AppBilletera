@@ -1,5 +1,5 @@
 import { BaseLocal } from '../BaseLocal';
-import type { AdaptadorBaseLocal } from '../contratos/AdaptadorBaseLocal';
+import type { AdaptadorBaseLocal } from '../contracts/AdaptadorBaseLocal';
 
 /** Puerto Web que implementará IndexedDB; los recursos equivaldrán a sus almacenes. */
 export interface AdaptadorWeb<ContextoTransaccion, ContextoMigracion>

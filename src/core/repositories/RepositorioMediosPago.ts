@@ -1,5 +1,5 @@
-import type { MedioPago } from '../entidades/MedioPago';
-import type { FechaHora, Identificador } from '../entidades/EntidadAuditada';
+import type { MedioPago } from '../entities/MedioPago';
+import type { FechaHora, Identificador } from '../entities/EntidadAuditada';
 import type { ConsultaCatalogo, PaginaResultado } from './ConsultasRepositorio';
 
 /** Contrato de persistencia del catálogo MedioPago, independiente del motor físico. */

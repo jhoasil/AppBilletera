@@ -1,4 +1,4 @@
-import type { AdaptadorBaseLocal, MigracionBaseLocal, OpcionesTransaccion } from './contratos/AdaptadorBaseLocal';
+import type { AdaptadorBaseLocal, MigracionBaseLocal, OpcionesTransaccion } from './contracts/AdaptadorBaseLocal';
 
 /**
  * Coordina el ciclo de vida sin conocer IndexedDB ni SQLite.

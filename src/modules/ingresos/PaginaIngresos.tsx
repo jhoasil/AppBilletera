@@ -1,7 +1,7 @@
 import { FormularioIngreso } from './FormularioIngreso';
 import { servicioIngresos } from '../../app/datos/servicioIngresos';
 import { PantallaOperaciones } from '../../shared/componentes/PantallaOperaciones';
-import type { CargaIngreso } from '../../core/servicios/CargaIngreso';
+import type { CargaIngreso } from '../../core/services/CargaIngreso';
 
 /** Conecta el formulario de ingreso con las acciones del ABM compartido. */
 function formulario(inicial: CargaIngreso | undefined, guardar: (carga: CargaIngreso) => Promise<void>, completar: () => void) {

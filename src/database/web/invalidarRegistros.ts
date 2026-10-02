@@ -1,4 +1,4 @@
-import type { NombreTabla } from '../migraciones/EsquemaBaseDatos';
+import type { NombreTabla } from '../migrations/EsquemaBaseDatos';
 import type { ContextoWeb, RegistroWeb } from './ContextoWeb';
 
 /** Invalida únicamente registros de una operación dentro de su transacción, conservando auditoría. */

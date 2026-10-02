@@ -10,7 +10,7 @@ La presentación consume servicios y nunca accede directamente a los motores de 
 
 React, TypeScript estricto y Vite para la aplicación; Material UI y Material Icons para la interfaz; Capacitor para plataformas nativas; pnpm para dependencias. IndexedDB en Web y SQLite en Android, iOS e iPadOS.
 
-Las carpetas principales de `src` utilizan nombres en inglés por decisión del usuario; sus subcarpetas y contenido propio permanecen en español:
+Las carpetas principales de `src` y las subcarpetas técnicas de `core` y `database` utilizan nombres convencionales en inglés por decisión del usuario. Los archivos y el contenido propio permanecen en español:
 
 ```text
 src/
@@ -21,7 +21,9 @@ src/
     shared/
 ```
 
-`app` compone la aplicación; `core` contiene el dominio; `database`, la persistencia; `modules`, las pantallas por funcionalidad; y `shared`, los recursos reutilizables. Esta excepción de nomenclatura se limita a ese nivel.
+`app` compone la aplicación; `core` contiene el dominio; `database`, la persistencia; `modules`, las pantallas por funcionalidad; y `shared`, los recursos reutilizables.
+
+En `core`, las subcarpetas técnicas son `money`, `entities`, `repositories` y `services`. En `database`, son `adapters`, `contracts`, `data`, `migrations` y `web`. La excepción se limita a las rutas indicadas: por ejemplo, `src/shared/dinero` y `src/app/datos` conservan su nombre en español.
 
 ## Componentes visuales compartidos
 
@@ -29,7 +31,7 @@ Los componentes visuales reutilizables están en `src/shared/componentes/`: `Cab
 
 ## Persistencia e integridad
 
-Los ocho contratos están en `src/core/repositorios/`. Son interfaces asíncronas sin dependencias de React, IndexedDB o SQLite. Las consultas requieren límite positivo y desplazamiento no negativo, que los adaptadores deberán validar. Los catálogos se ordenan por nombre e id ascendentes; los medios de pago, por orden, nombre e id. Las operaciones y movimientos se ordenan por fecha descendente e id ascendente. Las consultas excluyen registros eliminados salvo petición explícita; obtener por id devuelve `null` para registros inexistentes o eliminados. Los errores de escritura se comunican rechazando la promesa; eliminar un registro inexistente no tiene efecto.
+Los ocho contratos están en `src/core/repositories/`. Son interfaces asíncronas sin dependencias de React, IndexedDB o SQLite. Las consultas requieren límite positivo y desplazamiento no negativo, que los adaptadores deberán validar. Los catálogos se ordenan por nombre e id ascendentes; los medios de pago, por orden, nombre e id. Las operaciones y movimientos se ordenan por fecha descendente e id ascendente. Las consultas excluyen registros eliminados salvo petición explícita; obtener por id devuelve `null` para registros inexistentes o eliminados. Los errores de escritura se comunican rechazando la promesa; eliminar un registro inexistente no tiene efecto.
 
 Guardar ingresos o gastos incluye sus detalles: una edición reemplaza el conjunto vigente y conserva los anteriores mediante borrado lógico. Las operaciones con movimientos se coordinarán en una misma transacción desde la infraestructura de la TAREA 009; los contratos no abren transacciones independientes que impidan esa coordinación. El repositorio de movimientos devuelve saldos enteros seguros en centavos, calcula en persistencia y rechaza desbordamientos. No se implementan motores ni servicios financieros en la TAREA 008.
 

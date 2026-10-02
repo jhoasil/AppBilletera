@@ -1,4 +1,4 @@
-import type { Actividad } from '../entidades/Actividad';
+import type { Actividad } from '../entities/Actividad';
 
 /** Comprueba fechas y estados para reutilizar Actividad también como trabajo temporal. */
 export function validarActividad(actividad: Actividad): void {

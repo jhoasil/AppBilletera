@@ -14,10 +14,10 @@ import { SelectorCatalogo } from '../../shared/componentes/SelectorCatalogo';
 import { IconoCatalogo } from '../../shared/componentes/IconoCatalogo';
 import { fechaActual } from '../../shared/fechas/fechaActual';
 import { formatearImporte } from '../../shared/dinero/formatearImporte';
-import { crearImporte } from '../../core/dinero/Importe';
-import { calcularCargaRapida, interpretarCampoRapido } from '../../core/dinero/calcularCargaRapida';
-import type { CargaIngreso, LineaCobro } from '../../core/servicios/CargaIngreso';
-import type { MedioPago } from '../../core/entidades/MedioPago';
+import { crearImporte } from '../../core/money/Importe';
+import { calcularCargaRapida, interpretarCampoRapido } from '../../core/money/calcularCargaRapida';
+import type { CargaIngreso, LineaCobro } from '../../core/services/CargaIngreso';
+import type { MedioPago } from '../../core/entities/MedioPago';
 
 /** Edición textual de una distribución; su dinero se convierte únicamente mediante dominio. */
 interface LineaFormulario { medioPagoId: string; billeteraId: string; importe: string }

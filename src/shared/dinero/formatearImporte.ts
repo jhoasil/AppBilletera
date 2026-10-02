@@ -1,4 +1,4 @@
-import { crearImporte, type Importe } from '../../core/dinero/Importe';
+import { crearImporte, type Importe } from '../../core/money/Importe';
 
 /**
  * Formatea un importe para la interfaz, por defecto en español de Argentina.

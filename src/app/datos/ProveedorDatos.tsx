@@ -3,7 +3,7 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { prepararDatosIniciales } from '../../database/datos/prepararDatosIniciales';
+import { prepararDatosIniciales } from '../../database/data/prepararDatosIniciales';
 
 /** Prepara servicios locales antes de mostrar pantallas, con estado y reintento visibles. */
 export function ProveedorDatos({ children }: PropsWithChildren) {

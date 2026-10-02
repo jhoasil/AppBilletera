@@ -14,8 +14,8 @@ import { CabeceraPagina } from './CabeceraPagina';
 import { CampoTextoCatalogo } from './CampoTextoCatalogo';
 import { EstadoVacio } from './EstadoVacio';
 import { formatearImporte } from '../dinero/formatearImporte';
-import { crearImporte } from '../../core/dinero/Importe';
-import type { ConsultaOperaciones, PaginaResultado } from '../../core/repositorios/ConsultasRepositorio';
+import { crearImporte } from '../../core/money/Importe';
+import type { ConsultaOperaciones, PaginaResultado } from '../../core/repositories/ConsultasRepositorio';
 
 /** Campos mínimos para presentar una operación con auditoría y total monetario. */
 export interface RegistroOperacion { id: string; fecha: string; descripcion: string | null; importeCentavos: number; moneda: string; actualizadoEn: string }

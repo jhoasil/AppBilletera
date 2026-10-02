@@ -1,13 +1,13 @@
-import type { MedioPago } from '../../core/entidades/MedioPago';
-import type { Billetera } from '../../core/entidades/Billetera';
-import type { CategoriaGasto } from '../../core/entidades/CategoriaGasto';
-import type { Actividad } from '../../core/entidades/Actividad';
-import type { RepositorioActividades } from '../../core/repositorios/RepositorioActividades';
-import type { RepositorioCategoriasGasto } from '../../core/repositorios/RepositorioCategoriasGasto';
-import type { RepositorioMediosPago } from '../../core/repositorios/RepositorioMediosPago';
-import type { RepositorioBilleteras } from '../../core/repositorios/RepositorioBilleteras';
-import { ServicioCatalogo } from '../../core/servicios/ServicioCatalogo';
-import { validarActividad } from '../../core/servicios/validarActividad';
+import type { MedioPago } from '../../core/entities/MedioPago';
+import type { Billetera } from '../../core/entities/Billetera';
+import type { CategoriaGasto } from '../../core/entities/CategoriaGasto';
+import type { Actividad } from '../../core/entities/Actividad';
+import type { RepositorioActividades } from '../../core/repositories/RepositorioActividades';
+import type { RepositorioCategoriasGasto } from '../../core/repositories/RepositorioCategoriasGasto';
+import type { RepositorioMediosPago } from '../../core/repositories/RepositorioMediosPago';
+import type { RepositorioBilleteras } from '../../core/repositories/RepositorioBilleteras';
+import { ServicioCatalogo } from '../../core/services/ServicioCatalogo';
+import { validarActividad } from '../../core/services/validarActividad';
 import { RepositorioCatalogoWeb } from '../../database/web/RepositorioCatalogoWeb';
 
 const repositorioMedios: RepositorioMediosPago = new RepositorioCatalogoWeb<MedioPago>('medios_pago');

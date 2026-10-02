@@ -1,7 +1,7 @@
-import type { EntidadAuditada } from '../../core/entidades/EntidadAuditada';
-import type { ConsultaCatalogo, PaginaResultado } from '../../core/repositorios/ConsultasRepositorio';
-import type { NombreTabla } from '../migraciones/EsquemaBaseDatos';
-import { tablasV1 } from '../migraciones/v1';
+import type { EntidadAuditada } from '../../core/entities/EntidadAuditada';
+import type { ConsultaCatalogo, PaginaResultado } from '../../core/repositories/ConsultasRepositorio';
+import type { NombreTabla } from '../migrations/EsquemaBaseDatos';
+import { tablasV1 } from '../migrations/v1';
 import { baseWeb, prepararBaseWeb } from './baseWeb';
 import { convertirEntidad, convertirRegistro, type ContextoWeb, type RegistroWeb } from './ContextoWeb';
 

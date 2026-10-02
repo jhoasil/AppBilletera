@@ -17,9 +17,9 @@ import { IconoCatalogo } from '../../shared/componentes/IconoCatalogo';
 import { ListaMovimiento, type ElementoListaMovimiento } from '../../shared/componentes/ListaMovimiento';
 import { TarjetaResumen } from '../../shared/componentes/TarjetaResumen';
 import { formatearImporte } from '../../shared/dinero/formatearImporte';
-import { crearImporte } from '../../core/dinero/Importe';
-import type { MovimientoBilletera, TipoMovimientoBilletera } from '../../core/entidades/MovimientoBilletera';
-import type { DetalleBilletera } from '../../core/repositorios/RepositorioDetalleBilletera';
+import { crearImporte } from '../../core/money/Importe';
+import type { MovimientoBilletera, TipoMovimientoBilletera } from '../../core/entities/MovimientoBilletera';
+import type { DetalleBilletera } from '../../core/repositories/RepositorioDetalleBilletera';
 
 const titulosMovimiento: Record<TipoMovimientoBilletera, string> = {
   SALDO_INICIAL: 'Saldo inicial', INGRESO: 'Ingreso', GASTO: 'Gasto', TRANSFERENCIA_ENTRADA: 'Transferencia recibida', TRANSFERENCIA_SALIDA: 'Transferencia enviada', AJUSTE_POSITIVO: 'Ajuste positivo', AJUSTE_NEGATIVO: 'Ajuste negativo',

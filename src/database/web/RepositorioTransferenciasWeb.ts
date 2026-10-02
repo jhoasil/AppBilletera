@@ -1,8 +1,8 @@
-import type { RepositorioTransferencias } from '../../core/repositorios/RepositorioTransferencias';
-import type { TransferenciaBilletera } from '../../core/entidades/TransferenciaBilletera';
-import type { MovimientoBilletera } from '../../core/entidades/MovimientoBilletera';
-import type { ConsultaTransferencias, PaginaResultado } from '../../core/repositorios/ConsultasRepositorio';
-import { instanteDeFecha } from '../../core/servicios/validarCarga';
+import type { RepositorioTransferencias } from '../../core/repositories/RepositorioTransferencias';
+import type { TransferenciaBilletera } from '../../core/entities/TransferenciaBilletera';
+import type { MovimientoBilletera } from '../../core/entities/MovimientoBilletera';
+import type { ConsultaTransferencias, PaginaResultado } from '../../core/repositories/ConsultasRepositorio';
+import { instanteDeFecha } from '../../core/services/validarCarga';
 import { baseWeb, prepararBaseWeb } from './baseWeb';
 import { convertirEntidad, convertirRegistro, type ContextoWeb, type RegistroWeb } from './ContextoWeb';
 import { exigirCatalogoActivo, validarPagina } from './consultasWeb';

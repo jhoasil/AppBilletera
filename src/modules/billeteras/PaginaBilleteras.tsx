@@ -12,8 +12,8 @@ import { EstadoVacio } from '../../shared/componentes/EstadoVacio';
 import { TarjetaResumen } from '../../shared/componentes/TarjetaResumen';
 import { IconoCatalogo } from '../../shared/componentes/IconoCatalogo';
 import { formatearImporte } from '../../shared/dinero/formatearImporte';
-import { crearImporte } from '../../core/dinero/Importe';
-import type { BilleteraConSaldo, ConsultaBilleterasConSaldo } from '../../core/repositorios/RepositorioConsultaBilleteras';
+import { crearImporte } from '../../core/money/Importe';
+import type { BilleteraConSaldo, ConsultaBilleterasConSaldo } from '../../core/repositories/RepositorioConsultaBilleteras';
 
 /** Presenta patrimonio por moneda y billeteras paginadas con saldos calculados desde persistencia. */
 export function PaginaBilleteras() {

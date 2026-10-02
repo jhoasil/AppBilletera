@@ -1,7 +1,7 @@
-import type { Billetera } from '../entidades/Billetera';
-import type { MovimientoBilletera } from '../entidades/MovimientoBilletera';
-import type { RepositorioSaldoInicial } from '../repositorios/RepositorioSaldoInicial';
-import { interpretarImporte } from '../dinero/interpretarImporte';
+import type { Billetera } from '../entities/Billetera';
+import type { MovimientoBilletera } from '../entities/MovimientoBilletera';
+import type { RepositorioSaldoInicial } from '../repositories/RepositorioSaldoInicial';
+import { interpretarImporte } from '../money/interpretarImporte';
 
 /** Registra el punto de partida financiero sin modificar un atributo de saldo. */
 export class ServicioSaldoInicial {

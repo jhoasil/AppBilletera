@@ -1,5 +1,5 @@
-import type { TransferenciaBilletera } from '../entidades/TransferenciaBilletera';
-import type { FechaHora, Identificador } from '../entidades/EntidadAuditada';
+import type { TransferenciaBilletera } from '../entities/TransferenciaBilletera';
+import type { FechaHora, Identificador } from '../entities/EntidadAuditada';
 import type { ConsultaTransferencias, PaginaResultado } from './ConsultasRepositorio';
 
 /** Persistencia de transferencias internas, sin clasificarlas como ingresos o gastos. */

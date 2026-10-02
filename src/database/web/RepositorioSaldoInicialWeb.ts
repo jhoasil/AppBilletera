@@ -1,6 +1,6 @@
-import type { Billetera } from '../../core/entidades/Billetera';
-import type { MovimientoBilletera } from '../../core/entidades/MovimientoBilletera';
-import type { RepositorioSaldoInicial } from '../../core/repositorios/RepositorioSaldoInicial';
+import type { Billetera } from '../../core/entities/Billetera';
+import type { MovimientoBilletera } from '../../core/entities/MovimientoBilletera';
+import type { RepositorioSaldoInicial } from '../../core/repositories/RepositorioSaldoInicial';
 import { baseWeb, prepararBaseWeb } from './baseWeb';
 import { convertirRegistro, type ContextoWeb, type RegistroWeb } from './ContextoWeb';
 

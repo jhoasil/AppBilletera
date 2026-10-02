@@ -1,4 +1,4 @@
-import type { CategoriaGasto } from '../../../core/entidades/CategoriaGasto';
+import type { CategoriaGasto } from '../../../core/entities/CategoriaGasto';
 import { servicioCategorias } from '../../../app/datos/serviciosCatalogos';
 import { EditorCatalogo } from './EditorCatalogo';
 import { CampoTextoCatalogo } from '../../../shared/componentes/CampoTextoCatalogo';

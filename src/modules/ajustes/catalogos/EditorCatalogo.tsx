@@ -14,7 +14,7 @@ import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import { BotonAccion } from '../../../shared/componentes/BotonAccion';
 import { EstadoVacio } from '../../../shared/componentes/EstadoVacio';
-import { ServicioCatalogo, type EntidadCatalogo } from '../../../core/servicios/ServicioCatalogo';
+import { ServicioCatalogo, type EntidadCatalogo } from '../../../core/services/ServicioCatalogo';
 import { CampoTextoCatalogo } from '../../../shared/componentes/CampoTextoCatalogo';
 import { IconoCatalogo } from '../../../shared/componentes/IconoCatalogo';
 

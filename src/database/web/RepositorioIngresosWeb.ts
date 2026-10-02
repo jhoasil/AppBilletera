@@ -1,10 +1,10 @@
 import { validarPagina, rangoFechas, exigirCatalogoActivo } from './consultasWeb';
-import type { RepositorioIngresos } from '../../core/repositorios/RepositorioIngresos';
-import type { Ingreso } from '../../core/entidades/Ingreso';
-import type { DetalleIngresoMedioPago } from '../../core/entidades/DetalleIngresoMedioPago';
-import type { MovimientoBilletera } from '../../core/entidades/MovimientoBilletera';
-import type { ConsultaOperaciones, PaginaResultado } from '../../core/repositorios/ConsultasRepositorio';
-import { instanteDeFecha, totalLineas } from '../../core/servicios/validarCarga';
+import type { RepositorioIngresos } from '../../core/repositories/RepositorioIngresos';
+import type { Ingreso } from '../../core/entities/Ingreso';
+import type { DetalleIngresoMedioPago } from '../../core/entities/DetalleIngresoMedioPago';
+import type { MovimientoBilletera } from '../../core/entities/MovimientoBilletera';
+import type { ConsultaOperaciones, PaginaResultado } from '../../core/repositories/ConsultasRepositorio';
+import { instanteDeFecha, totalLineas } from '../../core/services/validarCarga';
 import { baseWeb, prepararBaseWeb } from './baseWeb';
 import { convertirEntidad, convertirRegistro, type ContextoWeb, type RegistroWeb } from './ContextoWeb';
 import { invalidarRegistros } from './invalidarRegistros';

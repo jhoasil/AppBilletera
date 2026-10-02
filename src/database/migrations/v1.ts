@@ -1,4 +1,4 @@
-import type { MigracionBaseLocal } from '../contratos/AdaptadorBaseLocal';
+import type { MigracionBaseLocal } from '../contracts/AdaptadorBaseLocal';
 import type { ContextoMigracionEsquema, DefinicionColumna, DefinicionTabla, NombreTabla } from './EsquemaBaseDatos';
 import { indicesV1 } from './indicesV1';
 

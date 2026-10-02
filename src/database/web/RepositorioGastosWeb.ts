@@ -1,10 +1,10 @@
 import { validarPagina, rangoFechas, exigirCatalogoActivo } from './consultasWeb';
-import type { RepositorioGastos } from '../../core/repositorios/RepositorioGastos';
-import type { Gasto } from '../../core/entidades/Gasto';
-import type { DetalleGastoMedioPago } from '../../core/entidades/DetalleGastoMedioPago';
-import type { MovimientoBilletera } from '../../core/entidades/MovimientoBilletera';
-import type { ConsultaGastos, PaginaResultado } from '../../core/repositorios/ConsultasRepositorio';
-import { instanteDeFecha, totalLineas } from '../../core/servicios/validarCarga';
+import type { RepositorioGastos } from '../../core/repositories/RepositorioGastos';
+import type { Gasto } from '../../core/entities/Gasto';
+import type { DetalleGastoMedioPago } from '../../core/entities/DetalleGastoMedioPago';
+import type { MovimientoBilletera } from '../../core/entities/MovimientoBilletera';
+import type { ConsultaGastos, PaginaResultado } from '../../core/repositories/ConsultasRepositorio';
+import { instanteDeFecha, totalLineas } from '../../core/services/validarCarga';
 import { baseWeb, prepararBaseWeb } from './baseWeb';
 import { convertirEntidad, convertirRegistro, type ContextoWeb, type RegistroWeb } from './ContextoWeb';
 import { invalidarRegistros } from './invalidarRegistros';

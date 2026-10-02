@@ -1,5 +1,5 @@
-import type { Billetera } from '../entidades/Billetera';
-import type { MovimientoBilletera } from '../entidades/MovimientoBilletera';
+import type { Billetera } from '../entities/Billetera';
+import type { MovimientoBilletera } from '../entities/MovimientoBilletera';
 import type { ConsultaMovimientosBilletera, PaginaResultado } from './ConsultasRepositorio';
 
 /** Instantánea del saldo actual y una página de movimientos filtrados de la misma billetera. */

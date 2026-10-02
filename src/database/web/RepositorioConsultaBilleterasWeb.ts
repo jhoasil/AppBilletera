@@ -1,6 +1,6 @@
-import type { RepositorioConsultaBilleteras, ConsultaBilleterasConSaldo, BilleteraConSaldo } from '../../core/repositorios/RepositorioConsultaBilleteras';
-import type { ConsultaCatalogo } from '../../core/repositorios/ConsultasRepositorio';
-import type { Billetera } from '../../core/entidades/Billetera';
+import type { RepositorioConsultaBilleteras, ConsultaBilleterasConSaldo, BilleteraConSaldo } from '../../core/repositories/RepositorioConsultaBilleteras';
+import type { ConsultaCatalogo } from '../../core/repositories/ConsultasRepositorio';
+import type { Billetera } from '../../core/entities/Billetera';
 import { baseWeb, prepararBaseWeb } from './baseWeb';
 import { convertirEntidad, type ContextoWeb, type RegistroWeb } from './ContextoWeb';
 import { sumarSaldo, convertirSaldo } from './consultasSaldoWeb';

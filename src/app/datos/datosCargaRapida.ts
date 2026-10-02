@@ -1,5 +1,5 @@
 import { servicioActividades, servicioMedios, servicioBilleteras, servicioCategorias } from './serviciosCatalogos';
-import type { ServicioCatalogo, EntidadCatalogo } from '../../core/servicios/ServicioCatalogo';
+import type { ServicioCatalogo, EntidadCatalogo } from '../../core/services/ServicioCatalogo';
 
 /** Consulta páginas pequeñas de catálogos; no carga operaciones financieras. */
 export async function listarCatalogo<Entidad extends EntidadCatalogo>(servicio: ServicioCatalogo<Entidad>): Promise<readonly Entidad[]> {

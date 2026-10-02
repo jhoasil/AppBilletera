@@ -1,7 +1,7 @@
-import type { RepositorioDetalleBilletera, DetalleBilletera } from '../../core/repositorios/RepositorioDetalleBilletera';
-import type { ConsultaMovimientosBilletera } from '../../core/repositorios/ConsultasRepositorio';
-import type { MovimientoBilletera } from '../../core/entidades/MovimientoBilletera';
-import type { Billetera } from '../../core/entidades/Billetera';
+import type { RepositorioDetalleBilletera, DetalleBilletera } from '../../core/repositories/RepositorioDetalleBilletera';
+import type { ConsultaMovimientosBilletera } from '../../core/repositories/ConsultasRepositorio';
+import type { MovimientoBilletera } from '../../core/entities/MovimientoBilletera';
+import type { Billetera } from '../../core/entities/Billetera';
 import { baseWeb, prepararBaseWeb } from './baseWeb';
 import { convertirEntidad, type ContextoWeb, type RegistroWeb } from './ContextoWeb';
 import { sumarSaldo, rangoBilletera } from './consultasSaldoWeb';

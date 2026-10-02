@@ -1,5 +1,5 @@
 import { BaseLocal } from '../BaseLocal';
-import type { AdaptadorBaseLocal } from '../contratos/AdaptadorBaseLocal';
+import type { AdaptadorBaseLocal } from '../contracts/AdaptadorBaseLocal';
 
 /** Puerto nativo que implementará SQLite, compartido por Android e iOS. */
 export interface AdaptadorNativo<ContextoTransaccion, ContextoMigracion>

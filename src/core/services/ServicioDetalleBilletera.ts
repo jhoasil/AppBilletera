@@ -1,4 +1,4 @@
-import type { RepositorioDetalleBilletera } from '../repositorios/RepositorioDetalleBilletera';
+import type { RepositorioDetalleBilletera } from '../repositories/RepositorioDetalleBilletera';
 import { instanteDeFecha } from './validarCarga';
 
 /** Convierte filtros de calendario a un período local completo y delega las agregaciones a persistencia. */

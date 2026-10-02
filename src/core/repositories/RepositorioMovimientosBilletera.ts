@@ -1,5 +1,5 @@
-import type { MovimientoBilletera, TipoReferenciaMovimiento } from '../entidades/MovimientoBilletera';
-import type { FechaHora, Identificador } from '../entidades/EntidadAuditada';
+import type { MovimientoBilletera, TipoReferenciaMovimiento } from '../entities/MovimientoBilletera';
+import type { FechaHora, Identificador } from '../entities/EntidadAuditada';
 import type { ConsultaMovimientosBilletera, PaginaResultado } from './ConsultasRepositorio';
 
 /** Persistencia de la fuente de verdad de saldos, con agregaciones resueltas por el adaptador. */

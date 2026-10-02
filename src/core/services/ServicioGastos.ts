@@ -1,9 +1,9 @@
-import type { RepositorioGastos } from '../repositorios/RepositorioGastos';
+import type { RepositorioGastos } from '../repositories/RepositorioGastos';
 import type { CargaGasto } from './CargaGasto';
-import type { Gasto } from '../entidades/Gasto';
-import type { DetalleGastoMedioPago } from '../entidades/DetalleGastoMedioPago';
+import type { Gasto } from '../entities/Gasto';
+import type { DetalleGastoMedioPago } from '../entities/DetalleGastoMedioPago';
 import { instanteDeFecha, totalLineas } from './validarCarga';
-import type { ConsultaGastos } from '../repositorios/ConsultasRepositorio';
+import type { ConsultaGastos } from '../repositories/ConsultasRepositorio';
 
 /** Coordina carga de gastos y deja la atomicidad financiera al contrato de persistencia. */
 export class ServicioGastos {

@@ -1,4 +1,4 @@
-import type { RepositorioConsultaBilleteras } from '../repositorios/RepositorioConsultaBilleteras';
+import type { RepositorioConsultaBilleteras } from '../repositories/RepositorioConsultaBilleteras';
 
 /** Consulta patrimonio sin que las pantallas conozcan el motor ni recorran movimientos. */
 export class ServicioConsultaBilleteras {

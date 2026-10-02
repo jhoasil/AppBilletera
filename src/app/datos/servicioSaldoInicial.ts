@@ -1,5 +1,5 @@
-import type { Billetera } from '../../core/entidades/Billetera';
-import { ServicioSaldoInicial } from '../../core/servicios/ServicioSaldoInicial';
+import type { Billetera } from '../../core/entities/Billetera';
+import { ServicioSaldoInicial } from '../../core/services/ServicioSaldoInicial';
 import { RepositorioSaldoInicialWeb } from '../../database/web/RepositorioSaldoInicialWeb';
 import { servicioBilleteras } from './serviciosCatalogos';
 

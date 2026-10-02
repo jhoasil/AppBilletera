@@ -1,9 +1,9 @@
-import type { RepositorioIngresos } from '../repositorios/RepositorioIngresos';
+import type { RepositorioIngresos } from '../repositories/RepositorioIngresos';
 import type { CargaIngreso } from './CargaIngreso';
-import type { Ingreso } from '../entidades/Ingreso';
-import type { DetalleIngresoMedioPago } from '../entidades/DetalleIngresoMedioPago';
+import type { Ingreso } from '../entities/Ingreso';
+import type { DetalleIngresoMedioPago } from '../entities/DetalleIngresoMedioPago';
 import { instanteDeFecha, totalLineas } from './validarCarga';
-import type { ConsultaOperaciones } from '../repositorios/ConsultasRepositorio';
+import type { ConsultaOperaciones } from '../repositories/ConsultasRepositorio';
 
 /** Coordina carga de ingresos y deja la atomicidad financiera al contrato de persistencia. */
 export class ServicioIngresos {

@@ -1,6 +1,6 @@
-import type { Ingreso } from '../entidades/Ingreso';
-import type { DetalleIngresoMedioPago } from '../entidades/DetalleIngresoMedioPago';
-import type { FechaHora, Identificador } from '../entidades/EntidadAuditada';
+import type { Ingreso } from '../entities/Ingreso';
+import type { DetalleIngresoMedioPago } from '../entities/DetalleIngresoMedioPago';
+import type { FechaHora, Identificador } from '../entities/EntidadAuditada';
 import type { ConsultaOperaciones, PaginaResultado } from './ConsultasRepositorio';
 
 /** Persistencia de ingresos y sus detalles sin exponer el motor de almacenamiento. */
