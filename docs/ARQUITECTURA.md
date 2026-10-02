@@ -42,3 +42,7 @@ Los movimientos de billetera son la fuente de verdad del saldo. Resolver consult
 ## Preferencias y evolución
 
 Usar localStorage únicamente para preferencias de interfaz, como apariencia y últimos valores utilizados. Los datos financieros permanecen en la base local. Preparar identidades para futura sincronización sin implementar servicios cloud en esta etapa.
+
+## Persistencia Web
+
+El adaptador IndexedDB está en `src/base-datos/web/`. La versión física es la versión lógica más uno: IndexedDB 1 representa una base vacía y IndexedDB 2 el esquema V1. Las migraciones crean almacenes e índices dentro de versionchange y las transacciones resuelven después de oncomplete. Los errores abortan todas sus escrituras. Las referencias y restricciones se validan en la misma transacción; los componentes solo consumirán servicios. Los catálogos pequeños pueden ordenarse en la capa de persistencia; los movimientos financieros deberán recorrerse mediante sus índices, sin materializar toda la historia.
