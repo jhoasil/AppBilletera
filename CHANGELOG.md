@@ -17,6 +17,7 @@
 
 ### Modificado
 
+- Carpetas principales de `src` en inglés (`app`, `database`, `shared`, `modules`, `core`), con importaciones y documentación actualizadas; su contenido propio permanece en español.
 - Carga de Ajustes bajo demanda para reducir el paquete inicial.
 - Protección de la moneda de billeteras con historial de movimientos.
 

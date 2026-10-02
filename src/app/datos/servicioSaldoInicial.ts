@@ -1,6 +1,6 @@
-import type { Billetera } from '../../nucleo/entidades/Billetera';
-import { ServicioSaldoInicial } from '../../nucleo/servicios/ServicioSaldoInicial';
-import { RepositorioSaldoInicialWeb } from '../../base-datos/web/RepositorioSaldoInicialWeb';
+import type { Billetera } from '../../core/entidades/Billetera';
+import { ServicioSaldoInicial } from '../../core/servicios/ServicioSaldoInicial';
+import { RepositorioSaldoInicialWeb } from '../../database/web/RepositorioSaldoInicialWeb';
 import { servicioBilleteras } from './serviciosCatalogos';
 
 export const servicioSaldoInicial = new ServicioSaldoInicial(new RepositorioSaldoInicialWeb());

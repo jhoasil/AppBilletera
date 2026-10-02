@@ -1,8 +1,8 @@
 # Modelo de datos
 
-Esquema V1 definido en `src/base-datos/migraciones/v1.ts` mediante una migración declarativa común a Web y Nativo. Los adaptadores traducirán las definiciones y sus restricciones a IndexedDB y SQLite en las tareas de implementación de cada motor. Todavía no se ejecutó sobre una base física.
+Esquema V1 definido en `src/database/migraciones/v1.ts` mediante una migración declarativa común a Web y Nativo. Los adaptadores traducirán las definiciones y sus restricciones a IndexedDB y SQLite en las tareas de implementación de cada motor. Todavía no se ejecutó sobre una base física.
 
-Las once entidades TypeScript están definidas en `src/nucleo/entidades/`, con una base `EntidadAuditada`. Las propiedades del dominio usan camelCase en español (`actividadId`, `importeCentavos`, `creadoEn`); las columnas de persistencia usarán snake_case (`actividad_id`, `importe_centavos`, `creado_en`) mediante los adaptadores.
+Las once entidades TypeScript están definidas en `src/core/entidades/`, con una base `EntidadAuditada`. Las propiedades del dominio usan camelCase en español (`actividadId`, `importeCentavos`, `creadoEn`); las columnas de persistencia usarán snake_case (`actividad_id`, `importe_centavos`, `creado_en`) mediante los adaptadores.
 
 Los instantes de auditoría, conciliación y movimientos se representan como cadenas ISO 8601 en UTC. Las fechas de ingresos, gastos, transferencias y períodos de actividad usan `AAAA-MM-DD` sin zona horaria. La ausencia de datos opcionales se representa con `null` explícito. Estos tipos describen los datos y no validan UUID, formatos de fechas, enteros, signos, referencias ni consistencia financiera en ejecución; esa responsabilidad corresponde a servicios posteriores.
 
@@ -138,9 +138,9 @@ El diagrama muestra relaciones físicas. La asociación polimórfica de movimien
 
 ## Operaciones monetarias
 
-Las operaciones de dinero se centralizan en `src/nucleo/dinero/Importe.ts`: `crearImporte` recibe centavos enteros seguros, `sumarImportes` suma una lista de la misma moneda y `restarImportes` calcula una diferencia con signo. La moneda predeterminada es ARS; una suma sin argumentos devuelve cero ARS. Se rechazan fracciones, valores no finitos, monedas de formato inválido, mezclas de monedas y resultados fuera de ±`Number.MAX_SAFE_INTEGER`. Los cálculos usan BigInt internamente y devuelven enteros number para persistencia; nunca se persiste BigInt.
+Las operaciones de dinero se centralizan en `src/core/dinero/Importe.ts`: `crearImporte` recibe centavos enteros seguros, `sumarImportes` suma una lista de la misma moneda y `restarImportes` calcula una diferencia con signo. La moneda predeterminada es ARS; una suma sin argumentos devuelve cero ARS. Se rechazan fracciones, valores no finitos, monedas de formato inválido, mezclas de monedas y resultados fuera de ±`Number.MAX_SAFE_INTEGER`. Los cálculos usan BigInt internamente y devuelven enteros number para persistencia; nunca se persiste BigInt.
 
-El formateo se separa en `src/compartido/dinero/formatearImporte.ts`, con idioma predeterminado `es-AR` y dos decimales. Conserva los centavos exactos, incluidos los negativos menores a un peso. El modelo actual representa monedas de dos decimales; monedas con otra cantidad de unidades menores requerirán ampliar el modelo. La interpretación de texto de formularios no se implementa en esta tarea.
+El formateo se separa en `src/shared/dinero/formatearImporte.ts`, con idioma predeterminado `es-AR` y dos decimales. Conserva los centavos exactos, incluidos los negativos menores a un peso. El modelo actual representa monedas de dos decimales; monedas con otra cantidad de unidades menores requerirán ampliar el modelo. La interpretación de texto de formularios no se implementa en esta tarea.
 
 Ingresos y gastos tienen detalles por medio de pago, sin columnas fijas para efectivo o tarjeta. Los movimientos usan importes positivos para entradas y negativos para salidas. Tipos previstos: `SALDO_INICIAL`, `INGRESO`, `GASTO`, `TRANSFERENCIA_ENTRADA`, `TRANSFERENCIA_SALIDA`, `AJUSTE_POSITIVO` y `AJUSTE_NEGATIVO`.
 
@@ -148,4 +148,4 @@ Una transferencia genera salida y entrada por el mismo importe sin modificar el 
 
 ## Índices V1
 
-Los siete índices financieros exigidos y dos índices por cabecera de detalles están en src/base-datos/migraciones/indicesV1.ts, cada uno con su motivo. Se incluyen en V1 antes de su primera implementación física. Los adaptadores deben crearlos en la misma actualización de esquema; no se agregan índices de catálogo sin una necesidad medida.
+Los siete índices financieros exigidos y dos índices por cabecera de detalles están en src/database/migraciones/indicesV1.ts, cada uno con su motivo. Se incluyen en V1 antes de su primera implementación física. Los adaptadores deben crearlos en la misma actualización de esquema; no se agregan índices de catálogo sin una necesidad medida.

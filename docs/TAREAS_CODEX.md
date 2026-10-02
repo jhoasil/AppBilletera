@@ -97,10 +97,10 @@ Crear estructura:
 ```text
 src/
     app/
-    nucleo/
-    base-datos/
-    modulos/
-    compartido/
+    core/
+    database/
+    modules/
+    shared/
 ```
 
 No agregar persistencia todavía.

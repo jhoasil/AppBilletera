@@ -2,26 +2,26 @@ import { lazy, Suspense } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import { EstructuraPrincipal } from './navegacion/EstructuraPrincipal';
 import { usePaginaActual } from './navegacion/usePaginaActual';
-import { PaginaInicio } from '../modulos/inicio/PaginaInicio';
-import { PaginaIngresos } from '../modulos/ingresos/PaginaIngresos';
-import { PaginaGastos } from '../modulos/gastos/PaginaGastos';
-import { PaginaReportes } from '../modulos/reportes/PaginaReportes';
+import { PaginaInicio } from '../modules/inicio/PaginaInicio';
+import { PaginaIngresos } from '../modules/ingresos/PaginaIngresos';
+import { PaginaGastos } from '../modules/gastos/PaginaGastos';
+import { PaginaReportes } from '../modules/reportes/PaginaReportes';
 
 /** Carga los editores de catálogos al abrir Ajustes para reducir el paquete inicial. */
 async function cargarAjustes() {
-  const modulo = await import('../modulos/ajustes/PaginaAjustes');
+  const modulo = await import('../modules/ajustes/PaginaAjustes');
   return { default: modulo.PaginaAjustes };
 }
 const PaginaAjustes = lazy(cargarAjustes);
 
 /** Carga las transferencias cuando se abre su pantalla, sin agrandar el paquete inicial. */
-async function cargarTransferencia() { const modulo = await import('../modulos/billeteras/PaginaTransferencia'); return { default: modulo.PaginaTransferencia }; }
+async function cargarTransferencia() { const modulo = await import('../modules/billeteras/PaginaTransferencia'); return { default: modulo.PaginaTransferencia }; }
 const PaginaTransferencia = lazy(cargarTransferencia);
 /** Carga la consulta de patrimonio únicamente cuando se abre Billeteras. */
-async function cargarBilleteras() { const modulo = await import('../modulos/billeteras/PaginaBilleteras'); return { default: modulo.PaginaBilleteras }; }
+async function cargarBilleteras() { const modulo = await import('../modules/billeteras/PaginaBilleteras'); return { default: modulo.PaginaBilleteras }; }
 const PaginaBilleteras = lazy(cargarBilleteras);
 /** Carga el detalle financiero solamente cuando se consulta una billetera. */
-async function cargarDetalleBilletera() { const modulo = await import('../modulos/billeteras/PaginaDetalleBilletera'); return { default: modulo.PaginaDetalleBilletera }; }
+async function cargarDetalleBilletera() { const modulo = await import('../modules/billeteras/PaginaDetalleBilletera'); return { default: modulo.PaginaDetalleBilletera }; }
 const PaginaDetalleBilletera = lazy(cargarDetalleBilletera);
 
 const paginas = {
