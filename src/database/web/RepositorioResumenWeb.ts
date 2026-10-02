@@ -25,17 +25,17 @@ export class RepositorioResumenWeb implements RepositorioResumen {
         grupo[operacion] += importe;
       }
       for (const tabla of ['ingresos', 'gastos'] as const) {
-        const identificadores: string[] = [];
         /** Acumula exclusivamente operaciones vigentes, separando monedas. */
         function agregar(registro: RegistroWeb) {
           if (registro.eliminado_en !== null) return;
           const moneda = String(registro.moneda); const total = importes.get(moneda) ?? { ingresos: 0n, gastos: 0n };
           total[tabla] += BigInt(Number(registro.total_centavos)); importes.set(moneda, total);
-          identificadores.push(String(registro.id));
         }
         await contexto.recorrer(tabla, agregar, 'por_fecha', rangoFechas(desde, hasta));
-        for (const id of identificadores) {
-          const registro = (await contexto.obtener(tabla, id))!;
+        /** Lee cada operación del índice y agrega sus grupos sin acumular el historial en memoria. */
+        async function desglosar(registro: RegistroWeb) {
+          if (registro.eliminado_en !== null) return;
+          const id = String(registro.id);
           const moneda = String(registro.moneda); const total = BigInt(Number(registro.total_centavos));
           await agrupar('actividad', String(registro.actividad_id ?? ''), moneda, total, tabla);
           if (tabla === 'gastos') await agrupar('categoria', String(registro.categoria_id), moneda, total, tabla);
@@ -45,6 +45,7 @@ export class RepositorioResumenWeb implements RepositorioResumen {
           await contexto.recorrer(tabla === 'ingresos' ? 'ingresos_medios_pago' : 'gastos_medios_pago', agregarMedio, tabla === 'ingresos' ? 'por_ingreso' : 'por_gasto', IDBKeyRange.only(id));
           for (const [medio, importe] of medios) await agrupar('medio', medio, moneda, importe, tabla);
         }
+        await contexto.recorrerAsincrono(tabla, desglosar, 'por_fecha', rangoFechas(desde, hasta));
       }
       const totales: ResumenMoneda[] = [];
       for (const [moneda, total] of importes) totales.push({ moneda, ingresosCentavos: convertirSaldo(total.ingresos), gastosCentavos: convertirSaldo(total.gastos), gananciaCentavos: convertirSaldo(total.ingresos - total.gastos) });

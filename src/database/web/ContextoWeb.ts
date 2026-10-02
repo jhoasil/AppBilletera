@@ -77,6 +77,21 @@ export class ContextoWeb {
   }
 
   /** Recorre por fecha descendente y UUID ascendente usando cursores, sin cargar todos los registros. */
+  recorrerAsincrono(tabla: NombreTabla, visitar: (registro: RegistroWeb) => Promise<void>, indice?: string, rango?: IDBKeyRange): Promise<void> {
+    const almacen = this.transaccion.objectStore(tabla);
+    const solicitud = (indice ? almacen.index(indice) : almacen).openCursor(rango);
+    /** Conecta el cursor a visitas que solo pueden esperar solicitudes de esta misma transacción. */
+    function conectar(resolver: () => void, rechazar: (error: unknown) => void) {
+      /** Espera las lecturas dependientes antes de avanzar para no acumular identificadores del período. */
+      async function avanzar() { const cursor = solicitud.result; if (!cursor) { resolver(); return; } try { await visitar(cursor.value as RegistroWeb); cursor.continue(); } catch (error) { rechazar(error); } }
+      /** Propaga un error del motor al coordinador transaccional. */
+      function fallar() { rechazar(solicitud.error); }
+      solicitud.onsuccess = avanzar; solicitud.onerror = fallar;
+    }
+    return new Promise(conectar);
+  }
+
+  /** Recorre por fecha descendente y UUID ascendente usando cursores, sin cargar todos los registros. */
   recorrerPorFecha(tabla: NombreTabla, indice: string, rango: IDBKeyRange | undefined, visitar: (registro: RegistroWeb) => void): Promise<void> {
     const fuente = this.transaccion.objectStore(tabla).index(indice);
     const solicitud = fuente.openKeyCursor(rango, 'prev');
