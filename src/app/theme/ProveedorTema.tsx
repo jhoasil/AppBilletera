@@ -1,4 +1,4 @@
-import { useState, type PropsWithChildren } from 'react';
+import { useEffect, useState, type PropsWithChildren } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -28,6 +28,13 @@ export function ProveedorTema({ children }: PropsWithChildren) {
   const [modo, establecerModo] = useState<ModoTema>(leerModoGuardado);
   const sistemaOscuro = useMediaQuery('(prefers-color-scheme: dark)');
   const usarOscuro = modo === 'oscuro' || (modo === 'sistema' && sistemaOscuro);
+  /** Sincroniza los controles del navegador y su barra con el tema global. */
+  function sincronizarNavegador() {
+    document.documentElement.style.colorScheme = usarOscuro ? 'dark' : 'light';
+    const etiqueta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    if (etiqueta) etiqueta.content = (usarOscuro ? temaOscuro : temaClaro).palette.background.default;
+  }
+  useEffect(sincronizarNavegador, [usarOscuro]);
 
   /** Cambia la apariencia y guarda la preferencia para restaurarla al abrir la aplicación. */
   function cambiarModo(nuevoModo: ModoTema) {
