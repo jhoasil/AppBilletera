@@ -10,6 +10,13 @@ android/app/src/main/assets/public/
 android/app/src/main/assets/capacitor.config.json
 android/app/src/main/assets/capacitor.plugins.json
 android/capacitor-cordova-android-plugins/
+ios/App/App/public/
+ios/App/App/capacitor.config.json
+ios/App/App/config.xml
+ios/DerivedData/
+ios/App/build/
+ios/App/Pods/
+ios/**/xcuserdata/
 
 # Variables de entorno y secretos
 .env
