@@ -1,3 +1,4 @@
+import { RangoConsulta } from '../contracts/RangoConsulta';
 import { validarPagina, rangoFechas, exigirCatalogoActivo } from './consultasWeb';
 import type { RepositorioGastos } from '../../core/repositories/RepositorioGastos';
 import type { Gasto } from '../../core/entities/Gasto';
@@ -46,7 +47,7 @@ export class RepositorioGastosWeb implements RepositorioGastos {
       const detalles: DetalleGastoMedioPago[] = [];
       /** Excluye versiones históricas reemplazadas o eliminadas. */
       function seleccionar(registro: RegistroWeb) { if (registro.eliminado_en === null) detalles.push(convertirEntidad<DetalleGastoMedioPago>(registro)); }
-      await contexto.recorrer('gastos_medios_pago', seleccionar, 'por_gasto', IDBKeyRange.only(gastoId));
+      await contexto.recorrer('gastos_medios_pago', seleccionar, 'por_gasto', RangoConsulta.unico(gastoId));
       return detalles;
     }
     return baseWeb.ejecutarTransaccion({ recursos: ['gastos_medios_pago'], modo: 'lectura' }, leer);
@@ -66,12 +67,12 @@ export class RepositorioGastosWeb implements RepositorioGastos {
       const anteriores: RegistroWeb[] = [];
       /** Recupera referencias históricas para permitir mantener catálogos inactivos durante una edición. */
       function recordar(registro: RegistroWeb) { if (registro.eliminado_en === null) anteriores.push(registro); }
-      if (anterior) await contexto.recorrer('gastos_medios_pago', recordar, 'por_gasto', IDBKeyRange.only(gasto.id));
+      if (anterior) await contexto.recorrer('gastos_medios_pago', recordar, 'por_gasto', RangoConsulta.unico(gasto.id));
       await exigirCatalogoActivo(contexto, 'categorias_gasto', gasto.categoriaId, anterior?.categoria_id === gasto.categoriaId);
       if (gasto.actividadId) await exigirCatalogoActivo(contexto, 'actividades', gasto.actividadId, anterior?.actividad_id === gasto.actividadId);
       if (anterior) {
-        await invalidarRegistros(contexto, 'gastos_medios_pago', 'por_gasto', IDBKeyRange.only(gasto.id), gasto.actualizadoEn);
-        await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', IDBKeyRange.only(['gasto', gasto.id]), gasto.actualizadoEn);
+        await invalidarRegistros(contexto, 'gastos_medios_pago', 'por_gasto', RangoConsulta.unico(gasto.id), gasto.actualizadoEn);
+        await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', RangoConsulta.unico(['gasto', gasto.id]), gasto.actualizadoEn);
       }
       await contexto.guardar('gastos', convertirRegistro(gasto), !anterior);
       for (const detalle of detalles) {
@@ -101,8 +102,8 @@ export class RepositorioGastosWeb implements RepositorioGastos {
       const registro = await contexto.obtener('gastos', id);
       if (!registro || registro.eliminado_en !== null) return;
       if (actualizadoEnEsperado && registro.actualizado_en !== actualizadoEnEsperado) throw new Error('El gasto cambió; actualizá el listado antes de eliminar.');
-      await invalidarRegistros(contexto, 'gastos_medios_pago', 'por_gasto', IDBKeyRange.only(id), eliminadoEn);
-      await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', IDBKeyRange.only(['gasto', id]), eliminadoEn);
+      await invalidarRegistros(contexto, 'gastos_medios_pago', 'por_gasto', RangoConsulta.unico(id), eliminadoEn);
+      await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', RangoConsulta.unico(['gasto', id]), eliminadoEn);
       await contexto.guardar('gastos', { ...registro, actualizado_en: eliminadoEn, eliminado_en: eliminadoEn });
     }
     return baseWeb.ejecutarTransaccion({ recursos: ['gastos', 'gastos_medios_pago', 'movimientos_billetera', 'actividades', 'categorias_gasto', 'medios_pago', 'billeteras'], modo: 'escritura' }, eliminar);

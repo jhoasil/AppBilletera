@@ -1,3 +1,4 @@
+import { RangoConsulta } from '../contracts/RangoConsulta';
 import type { RepositorioTransferencias } from '../../core/repositories/RepositorioTransferencias';
 import type { TransferenciaBilletera } from '../../core/entities/TransferenciaBilletera';
 import type { MovimientoBilletera } from '../../core/entities/MovimientoBilletera';
@@ -53,7 +54,7 @@ export class RepositorioTransferenciasWeb implements RepositorioTransferencias {
       const origen = await exigirCatalogoActivo(contexto, 'billeteras', transferencia.billeteraOrigenId, anterior?.billetera_origen_id === transferencia.billeteraOrigenId);
       const destino = await exigirCatalogoActivo(contexto, 'billeteras', transferencia.billeteraDestinoId, anterior?.billetera_destino_id === transferencia.billeteraDestinoId);
       if (origen.moneda !== destino.moneda || origen.moneda !== transferencia.moneda) throw new Error('Las dos billeteras deben tener la misma moneda; no se realizan conversiones.');
-      if (anterior) await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', IDBKeyRange.only(['transferencia', transferencia.id]), transferencia.actualizadoEn);
+      if (anterior) await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', RangoConsulta.unico(['transferencia', transferencia.id]), transferencia.actualizadoEn);
       await contexto.guardar('transferencias_billeteras', convertirRegistro(transferencia), !anterior);
       const auditoria = { creadoEn: transferencia.actualizadoEn, actualizadoEn: transferencia.actualizadoEn, eliminadoEn: null };
       const comun = { ...auditoria, referenciaTipo: 'transferencia' as const, referenciaId: transferencia.id, fecha, descripcion: transferencia.descripcion };
@@ -72,7 +73,7 @@ export class RepositorioTransferenciasWeb implements RepositorioTransferencias {
     async function eliminar(contexto: ContextoWeb) {
       const registro = await contexto.obtener('transferencias_billeteras', id);
       if (!registro || registro.eliminado_en !== null) return;
-      await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', IDBKeyRange.only(['transferencia', id]), eliminadoEn);
+      await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', RangoConsulta.unico(['transferencia', id]), eliminadoEn);
       await contexto.guardar('transferencias_billeteras', { ...registro, actualizado_en: eliminadoEn, eliminado_en: eliminadoEn });
     }
     return baseWeb.ejecutarTransaccion({ recursos: ['transferencias_billeteras', 'billeteras', 'movimientos_billetera'], modo: 'escritura' }, eliminar);

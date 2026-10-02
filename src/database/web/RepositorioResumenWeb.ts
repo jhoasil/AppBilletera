@@ -1,3 +1,4 @@
+import { RangoConsulta } from '../contracts/RangoConsulta';
 import type { RepositorioResumen, ResumenPeriodo, ResumenMoneda, DesgloseResumen } from '../../core/repositories/RepositorioResumen';
 import type { MovimientoBilletera } from '../../core/entities/MovimientoBilletera';
 import { baseWeb, prepararBaseWeb } from './baseWeb';
@@ -42,7 +43,7 @@ export class RepositorioResumenWeb implements RepositorioResumen {
           const medios = new Map<string, bigint>();
           /** Agrupa los detalles del padre consultado mediante su índice de referencia. */
           function agregarMedio(detalle: RegistroWeb) { if (detalle.eliminado_en === null) { const medio = String(detalle.medio_pago_id); medios.set(medio, (medios.get(medio) ?? 0n) + BigInt(Number(detalle.importe_centavos))); } }
-          await contexto.recorrer(tabla === 'ingresos' ? 'ingresos_medios_pago' : 'gastos_medios_pago', agregarMedio, tabla === 'ingresos' ? 'por_ingreso' : 'por_gasto', IDBKeyRange.only(id));
+          await contexto.recorrer(tabla === 'ingresos' ? 'ingresos_medios_pago' : 'gastos_medios_pago', agregarMedio, tabla === 'ingresos' ? 'por_ingreso' : 'por_gasto', RangoConsulta.unico(id));
           for (const [medio, importe] of medios) await agrupar('medio', medio, moneda, importe, tabla);
         }
         await contexto.recorrerAsincrono(tabla, desglosar, 'por_fecha', rangoFechas(desde, hasta));

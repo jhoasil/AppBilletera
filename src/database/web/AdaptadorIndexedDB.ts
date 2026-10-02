@@ -1,7 +1,7 @@
 import type { AdaptadorWeb } from '../adapters/Web';
 import type { MigracionBaseLocal, OpcionesTransaccion } from '../contracts/AdaptadorBaseLocal';
 import type { ContextoMigracionEsquema, DefinicionTabla } from '../migrations/EsquemaBaseDatos';
-import { ContextoWeb } from './ContextoWeb';
+import { ContextoIndexedDB, type ContextoWeb } from './ContextoWeb';
 
 /** Implementa el puerto Web con eventos nativos y confirmación efectiva de transacciones. */
 export class AdaptadorIndexedDB implements AdaptadorWeb<ContextoWeb, ContextoMigracionEsquema> {
@@ -96,7 +96,7 @@ export class AdaptadorIndexedDB implements AdaptadorWeb<ContextoWeb, ContextoMig
       function fallar(error: unknown) { errorOperacion = error; try { transaccion.abort(); } catch { rechazar(error); } }
       transaccion.oncomplete = confirmar;
       transaccion.onabort = abortar;
-      try { void operacion(new ContextoWeb(transaccion)).then(recibir, fallar); } catch (error) { fallar(error); }
+      try { void operacion(new ContextoIndexedDB(transaccion)).then(recibir, fallar); } catch (error) { fallar(error); }
     }
     return new Promise(ejecutar);
   }

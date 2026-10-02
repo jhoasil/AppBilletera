@@ -1,5 +1,8 @@
 import type { NombreTabla } from '../migrations/EsquemaBaseDatos';
-import { tablasV1 } from '../migrations/v1';
+import { validarRegistro } from '../contracts/validarRegistro';
+import type { ContextoDatos } from '../contracts/ContextoDatos';
+import type { RangoConsulta } from '../contracts/RangoConsulta';
+export type ContextoWeb = ContextoDatos;
 
 /** Representación física con nombres snake_case, sin objetos de dominio en el motor. */
 export type RegistroWeb = Record<string, unknown>;
@@ -37,7 +40,7 @@ export function convertirEntidad<Entidad extends object>(registro: RegistroWeb):
 }
 
 /** Acceso acotado a una transacción, con validación de tipos, restricciones y claves foráneas. */
-export class ContextoWeb {
+export class ContextoIndexedDB implements ContextoDatos {
   /** Recibe la transacción creada por el adaptador; no abre conexiones adicionales. */
   constructor(private readonly transaccion: IDBTransaction) {}
 
@@ -57,9 +60,9 @@ export class ContextoWeb {
   }
 
   /** Recorre un almacén o índice dentro de la transacción, sin materializar todos sus registros. */
-  recorrer(tabla: NombreTabla, visitar: (registro: RegistroWeb) => void, indice?: string, rango?: IDBKeyRange): Promise<void> {
+  recorrer(tabla: NombreTabla, visitar: (registro: RegistroWeb) => void, indice?: string, rango?: RangoConsulta): Promise<void> {
     const almacen = this.transaccion.objectStore(tabla);
-    const solicitud = (indice ? almacen.index(indice) : almacen).openCursor(rango);
+    const solicitud = (indice ? almacen.index(indice) : almacen).openCursor(convertirRango(rango));
     /** Conecta el cursor y mantiene sus solicitudes dentro de la misma transacción. */
     function conectar(resolver: () => void, rechazar: (error: unknown) => void) {
       /** Visita un registro y avanza; un fallo de validación rechaza la operación. */
@@ -77,9 +80,9 @@ export class ContextoWeb {
   }
 
   /** Recorre por fecha descendente y UUID ascendente usando cursores, sin cargar todos los registros. */
-  recorrerAsincrono(tabla: NombreTabla, visitar: (registro: RegistroWeb) => Promise<void>, indice?: string, rango?: IDBKeyRange): Promise<void> {
+  recorrerAsincrono(tabla: NombreTabla, visitar: (registro: RegistroWeb) => Promise<void>, indice?: string, rango?: RangoConsulta): Promise<void> {
     const almacen = this.transaccion.objectStore(tabla);
-    const solicitud = (indice ? almacen.index(indice) : almacen).openCursor(rango);
+    const solicitud = (indice ? almacen.index(indice) : almacen).openCursor(convertirRango(rango));
     /** Conecta el cursor a visitas que solo pueden esperar solicitudes de esta misma transacción. */
     function conectar(resolver: () => void, rechazar: (error: unknown) => void) {
       /** Espera las lecturas dependientes antes de avanzar para no acumular identificadores del período. */
@@ -92,9 +95,9 @@ export class ContextoWeb {
   }
 
   /** Recorre por fecha descendente y UUID ascendente usando cursores, sin cargar todos los registros. */
-  recorrerPorFecha(tabla: NombreTabla, indice: string, rango: IDBKeyRange | undefined, visitar: (registro: RegistroWeb) => void): Promise<void> {
+  recorrerPorFecha(tabla: NombreTabla, indice: string, rango: RangoConsulta | undefined, visitar: (registro: RegistroWeb) => void): Promise<void> {
     const fuente = this.transaccion.objectStore(tabla).index(indice);
-    const solicitud = fuente.openKeyCursor(rango, 'prev');
+    const solicitud = fuente.openKeyCursor(convertirRango(rango), 'prev');
     /** Procesa fechas descendentes y, dentro de cada fecha, UUID ascendentes sin acumular historia. */
     function conectar(resolver: () => void, rechazar: (error: unknown) => void) {
       let claveAnterior = '';
@@ -126,31 +129,11 @@ export class ContextoWeb {
 
   /** Valida y guarda; insertar exige un id nuevo, actualizar permite conservar el id existente. */
   async guardar(tabla: NombreTabla, registro: RegistroWeb, insertar = false): Promise<void> {
-    const definicion = tablasV1.find(buscarTabla);
-    /** Localiza la definición física de la tabla solicitada. */
-    function buscarTabla(candidata: (typeof tablasV1)[number]) { return candidata.nombre === tabla; }
-    if (!definicion) throw new Error('La tabla no pertenece al esquema disponible.');
-    for (const columna of definicion.columnas) {
-      const valor = registro[columna.nombre];
-      if (valor === null && columna.permiteNulo) continue;
-      let valido = false;
-      switch (columna.tipo) {
-        case 'entero': valido = typeof valor === 'number' && Number.isSafeInteger(valor) && valor >= (columna.minimo ?? -Number.MAX_SAFE_INTEGER) && valor <= (columna.maximo ?? Number.MAX_SAFE_INTEGER) && (!columna.distintoDeCero || valor !== 0); break;
-        case 'booleano': valido = typeof valor === 'boolean'; break;
-        case 'uuid': valido = typeof valor === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(valor); break;
-        case 'moneda': valido = typeof valor === 'string' && /^[A-Z]{3}$/.test(valor); break;
-        case 'fecha': valido = typeof valor === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(valor) && !Number.isNaN(Date.parse(valor)) && new Date(valor).toISOString().slice(0, 10) === valor; break;
-        case 'instante': valido = typeof valor === 'string' && !Number.isNaN(Date.parse(valor)) && new Date(valor).toISOString() === valor; break;
-        case 'texto': valido = typeof valor === 'string'; break;
-      }
-      if (!valido || (columna.valoresPermitidos && !columna.valoresPermitidos.includes(String(valor)))) throw new Error(`Valor inválido en ${tabla}.${columna.nombre}.`);
-      if (columna.referencia && !(await this.obtener(columna.referencia, String(valor)))) throw new Error(`La referencia ${columna.nombre} no existe.`);
-    }
-    for (const restriccion of definicion.restricciones ?? []) {
-      if (restriccion.tipo === 'distintos' && registro[restriccion.columnas[0]] === registro[restriccion.columnas[1]]) throw new Error('Origen y destino deben ser distintos.');
-      if (restriccion.tipo === 'diferencia' && BigInt(registro[restriccion.resultado] as number) !== BigInt(registro[restriccion.minuendo] as number) - BigInt(registro[restriccion.sustraendo] as number)) throw new Error('La diferencia no coincide con los saldos.');
-    }
+    await validarRegistro(this, tabla, registro);
     const almacen = this.transaccion.objectStore(tabla);
     await esperarSolicitud(insertar ? almacen.add(registro) : almacen.put(registro));
   }
 }
+
+/** Traduce el rango portable únicamente en la frontera IndexedDB. */
+function convertirRango(rango?: RangoConsulta): IDBKeyRange | undefined { if (!rango) return undefined; if (rango.inferior !== undefined && rango.superior !== undefined) return IDBKeyRange.bound(rango.inferior as IDBValidKey, rango.superior as IDBValidKey); if (rango.inferior !== undefined) return IDBKeyRange.lowerBound(rango.inferior as IDBValidKey); if (rango.superior !== undefined) return IDBKeyRange.upperBound(rango.superior as IDBValidKey); return undefined; }

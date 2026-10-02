@@ -1,3 +1,4 @@
+import { RangoConsulta } from '../contracts/RangoConsulta';
 import type { Billetera } from '../../core/entities/Billetera';
 import type { MovimientoBilletera } from '../../core/entities/MovimientoBilletera';
 import type { RepositorioSaldoInicial } from '../../core/repositories/RepositorioSaldoInicial';
@@ -21,7 +22,7 @@ export class RepositorioSaldoInicialWeb implements RepositorioSaldoInicial {
       let registrado = false;
       /** Inspecciona el historial de esta billetera sin cargar todos los movimientos en memoria. */
       function comprobar(registro: RegistroWeb) { if (registro.tipo === 'SALDO_INICIAL') registrado = true; }
-      await contexto.recorrer('movimientos_billetera', comprobar, 'por_billetera_fecha', IDBKeyRange.bound([movimiento.billeteraId, ''], [movimiento.billeteraId, '\uffff']));
+      await contexto.recorrer('movimientos_billetera', comprobar, 'por_billetera_fecha', RangoConsulta.acotar([movimiento.billeteraId, ''], [movimiento.billeteraId, '\uffff']));
       if (registrado) throw new Error('Esta billetera ya tiene un saldo inicial registrado. Las correcciones deben realizarse mediante una conciliación.');
       await contexto.guardar('movimientos_billetera', convertirRegistro(movimiento), true);
     }

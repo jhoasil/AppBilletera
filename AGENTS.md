@@ -152,7 +152,7 @@ Por decisión del usuario, los nombres de las carpetas de arquitectura técnica 
 - Raíz de `src`: `app`, `core`, `database`, `modules`, `shared`.
 - `app`: `data`, `navigation`, `preferences`, `theme`.
 - `core`: `entities`, `money`, `repositories`, `services`.
-- `database`: `adapters`, `contracts`, `data`, `migrations`, `web`.
+- `database`: `adapters`, `contracts`, `data`, `migrations`, `web`, `repositories`.
 - `shared`: `components`, `dates`, `money`.
 
 Los módulos del negocio y sus subdivisiones permanecen en español: `ajustes`, `billeteras`, `gastos`, `ingresos`, `inicio`, `reportes`, `catalogos`. Los archivos, clases, componentes, funciones, variables, entidades, textos, tablas y columnas propios también permanecen en español. Esta excepción afecta únicamente a nombres de carpetas arquitectónicas; no autoriza traducir el contenido ni renombrar funcionalidades del negocio.

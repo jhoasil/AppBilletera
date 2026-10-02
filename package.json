@@ -16,6 +16,8 @@
     "capacitor": "node node_modules/@capacitor/cli/bin/capacitor"
   },
   "dependencies": {
+    "@capacitor-community/sqlite": "^8.1.1",
+    "@capacitor/android": "^8.5.2",
     "@capacitor/core": "^8.5.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",

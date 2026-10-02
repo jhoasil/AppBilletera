@@ -1,3 +1,4 @@
+import { RangoConsulta } from '../contracts/RangoConsulta';
 import type { ContextoWeb, RegistroWeb } from './ContextoWeb';
 
 /** Rechaza instantes no canónicos para mantener las comparaciones y rangos de índices consistentes. */
@@ -7,12 +8,12 @@ export function validarInstante(instante: string): void {
 }
 
 /** Delimita una billetera y su período mediante el índice compuesto; los extremos son inclusivos. */
-export function rangoBilletera(id: string, desde?: string, hasta?: string): IDBKeyRange {
+export function rangoBilletera(id: string, desde?: string, hasta?: string): RangoConsulta {
   if (!id) throw new Error('Seleccioná una billetera.');
   if (desde) validarInstante(desde);
   if (hasta) validarInstante(hasta);
   if (desde && hasta && desde > hasta) throw new Error('El período no es válido.');
-  return IDBKeyRange.bound([id, desde ?? ''], [id, hasta ?? '\uffff']);
+  return RangoConsulta.acotar([id, desde ?? ''], [id, hasta ?? '\uffff']);
 }
 
 /** Convierte el resultado de una agregación exacta al entero seguro admitido por el dominio. */

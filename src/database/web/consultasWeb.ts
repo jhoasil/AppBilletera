@@ -1,3 +1,4 @@
+import { RangoConsulta } from '../contracts/RangoConsulta';
 import type { ContextoWeb, RegistroWeb } from './ContextoWeb';
 
 /** Valida paginación acotada antes de abrir una transacción de consulta. */
@@ -6,11 +7,11 @@ export function validarPagina(consulta: { limite: number; desplazamiento: number
 }
 
 /** Delimita un período inclusivo para aprovechar el índice de fecha. */
-export function rangoFechas(desde?: string, hasta?: string): IDBKeyRange | undefined {
+export function rangoFechas(desde?: string, hasta?: string): RangoConsulta | undefined {
   if (desde && hasta && desde > hasta) throw new Error('El inicio del período no puede superar su fin.');
-  if (desde && hasta) return IDBKeyRange.bound(desde, hasta);
-  if (desde) return IDBKeyRange.lowerBound(desde);
-  if (hasta) return IDBKeyRange.upperBound(hasta);
+  if (desde && hasta) return RangoConsulta.acotar(desde, hasta);
+  if (desde) return RangoConsulta.desde(desde);
+  if (hasta) return RangoConsulta.hasta(hasta);
   return undefined;
 }
 

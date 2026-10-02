@@ -1,3 +1,4 @@
+import { RangoConsulta } from '../contracts/RangoConsulta';
 import type { EntidadAuditada } from '../../core/entities/EntidadAuditada';
 import type { ConsultaCatalogo, PaginaResultado } from '../../core/repositories/ConsultasRepositorio';
 import type { NombreTabla } from '../migrations/EsquemaBaseDatos';
@@ -58,7 +59,7 @@ export class RepositorioCatalogoWeb<Entidad extends EntidadAuditada & { nombre: 
           let tieneHistorial = false;
           /** Conserva la unidad monetaria de cualquier historial, incluido el borrado lógico. */
           function comprobar(_movimiento: RegistroWeb) { tieneHistorial = true; }
-          await contexto.recorrer('movimientos_billetera', comprobar, 'por_billetera_fecha', IDBKeyRange.bound([entidad.id, ''], [entidad.id, '\uffff']));
+          await contexto.recorrer('movimientos_billetera', comprobar, 'por_billetera_fecha', RangoConsulta.acotar([entidad.id, ''], [entidad.id, '\uffff']));
           if (tieneHistorial) throw new Error('No se puede cambiar la moneda de una billetera con movimientos registrados.');
         }
       }
