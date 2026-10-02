@@ -4,6 +4,10 @@
 
 ### Agregado
 
+- Preferencias de las últimas selecciones, formularios rápidos de ingreso y gasto con conversión exacta a centavos y detalles positivos.
+- Persistencia transaccional y ABM de ingresos y gastos con filtros, edición, borrado lógico y reemplazo auditado de movimientos.
+- Transferencias entre billeteras de la misma moneda, con entrada y salida atómicas sin modificar el resultado.
+- Consulta de patrimonio por moneda y detalle de billetera con saldo actual, movimientos paginados y filtros de período.
 - Índices financieros y persistencia IndexedDB con migraciones, validaciones y transacciones atómicas.
 - Datos iniciales insertados una sola vez sin reemplazar las personalizaciones del usuario.
 - Ajustes con administración paginada de medios de pago, categorías, actividades y billeteras.
@@ -16,7 +20,7 @@
 - Carga de Ajustes bajo demanda para reducir el paquete inicial.
 - Protección de la moneda de billeteras con historial de movimientos.
 
-Las tareas 011 a 020 no cierran una versión ni crean un tag. Los ingresos, gastos, transferencias y conciliaciones siguen pendientes de sus tareas respectivas.
+Las tareas 011 a 030 no cierran una versión ni crean un tag. La conciliación, los reportes y los resúmenes de Inicio siguen pendientes de sus tareas respectivas.
 
 ## [0.1.0]
 

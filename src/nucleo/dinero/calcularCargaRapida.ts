@@ -10,6 +10,7 @@ export function interpretarCampoRapido(texto: string): number {
 
 /** Suma campos rápidos exactamente; no oculta errores de escritura ni desbordamientos. */
 export function calcularCargaRapida(importes: readonly string[], moneda: string): number {
+  crearImporte(0, moneda);
   /** Convierte cada campo a una unidad monetaria entera antes de sumar. */
   function convertir(texto: string) { return crearImporte(interpretarCampoRapido(texto), moneda); }
   return sumarImportes(...importes.map(convertir)).centavos;

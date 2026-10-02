@@ -60,3 +60,21 @@ El saldo inicial es un movimiento `SALDO_INICIAL` con referencias nulas, UUID y 
 Crear una billetera con saldo inicial guarda ambos registros en una transacción. Configurar una existente comprueba que esté activa y que no exista ningún saldo inicial previo, incluso eliminado lógicamente. La comprobación recorre solamente el índice de esa billetera y queda en la misma transacción de escritura, evitando duplicados entre pestañas. No se modifica el movimiento inicial desde el ABM: las correcciones corresponderán a las tareas de conciliación. Una billetera con cualquier historial conserva su moneda.
 
 La fecha elegida se interpreta como medianoche en la zona horaria del dispositivo y se persiste como instante ISO UTC; la validación del día calendario es independiente de la zona horaria. Las fechas de auditoría también son UTC. El modelo no guarda un atributo de saldo mutable ni cuenta el saldo inicial como ingreso o rentabilidad.
+
+## Operaciones financieras y carga rápida
+
+Los formularios consumen servicios de aplicación y comparten controles, conversión a centavos y cálculo del total. Los campos vacíos equivalen a cero; no se permiten importes negativos en detalles ni un total cero. Las distribuciones persistidas son estrictamente positivas. Cada medio puede utilizar una billetera de la misma moneda o ninguna: un detalle sin billetera forma parte del ingreso o gasto, pero no modifica patrimonio. Los catálogos se administran exclusivamente desde Ajustes.
+
+El servicio de preferencias UI conserva únicamente los UUID `ultima_actividad_ingreso`, `ultima_actividad_gasto` y `ultima_categoria_gasto`. Solo precarga identidades disponibles y recuerda las selecciones después de confirmar la operación. Si localStorage está bloqueado o contiene datos inválidos, la operación financiera continúa normalmente. Los importes y operaciones permanecen en IndexedDB.
+
+Los repositorios de ingresos y gastos escriben cabecera, detalles y movimientos en una transacción común. La creación vuelve a comprobar catálogos activos y monedas dentro de la escritura. Una edición puede mantener referencias históricas inactivas; invalida detalles y movimientos anteriores mediante borrado lógico y crea nuevas distribuciones con UUID distintos. La cabecera conserva su UUID y fecha de creación. El borrado lógico invalida todos los efectos juntos. La versión `actualizado_en` esperada se comprueba dentro de la transacción para rechazar ediciones obsoletas de otra pestaña; la fecha de actualización avanza al menos un milisegundo respecto de la versión anterior.
+
+Una transferencia registra una cabecera y dos movimientos de igual magnitud y signos opuestos, en billeteras distintas de la misma moneda. No escribe ingresos ni gastos y no genera conversiones monetarias. Se permiten saldos negativos; no existe una regla de fondos suficientes en V1.
+
+## Consultas de patrimonio y movimientos
+
+Las consultas de billeteras agregan centavos con BigInt en persistencia mediante `movimientos_billetera(billetera_id, fecha)`. No materializan los movimientos ni los entregan al componente para sumar. El resultado debe caber en un entero seguro. Los totales se agrupan por moneda e incluyen billeteras inactivas para no ocultar patrimonio conservado.
+
+La página de billeteras obtiene catálogo, saldos y totales en una única transacción de lectura. El detalle obtiene billetera, saldo actual y página de movimientos también en una única instantánea, evitando mezclar valores durante transferencias o ediciones concurrentes. Cada consulta de operaciones o movimientos conserva solamente la página solicitada, ordenada por fecha descendente y UUID ascendente. El cursor procesa grupos de una fecha sin acumular toda la historia.
+
+Los filtros del detalle incluyen desde la medianoche local del primer día hasta el último milisegundo del día final, respetando cambios de horario del dispositivo. Filtrar movimientos no cambia el saldo actual mostrado. Los cierres periódicos y cachés reconstruibles continúan siendo una posibilidad futura; no se agregan en esta etapa. La acción de conciliación se presenta como pendiente hasta su implementación en la TAREA 031.

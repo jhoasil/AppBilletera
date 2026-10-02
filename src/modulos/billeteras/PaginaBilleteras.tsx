@@ -46,6 +46,7 @@ export function PaginaBilleteras() {
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}><IconoCatalogo identificador={billetera.icono} /><Typography variant="h6">{billetera.nombre}</Typography></Stack>
       <Typography variant="h5" color={saldoCentavos < 0 ? 'error.main' : 'success.main'}>{formatearImporte(crearImporte(saldoCentavos, billetera.moneda))}</Typography>
       <Typography color="text.secondary">{billetera.tipo} · {billetera.activo ? 'Activa' : 'Inactiva'}</Typography>
+      <Button component="a" href={`#/billetera?id=${billetera.id}`}>Ver detalle y movimientos</Button>
       <Button component="a" href={`#/transferencias?origen=${billetera.id}`} disabled={!billetera.activo}>Transferir</Button>
     </Stack></CardContent></Card>;
   }
