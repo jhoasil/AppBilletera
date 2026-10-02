@@ -1,12 +1,13 @@
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { CabeceraPagina } from '../../compartido/componentes/CabeceraPagina';
+import { EstadoVacio } from '../../compartido/componentes/EstadoVacio';
 
-/** Presenta la página provisional de Ingresos para habilitar su navegación. */
+/** Presenta Ingresos con los componentes comunes hasta incorporar su funcionalidad. */
 export function PaginaIngresos() {
   return (
-    <Stack spacing={2}>
-      <Typography component="h1" variant="h2">Ingresos</Typography>
-      <Typography color="text.secondary">La carga y consulta de ingresos se incorporará en próximas tareas.</Typography>
+    <Stack spacing={3}>
+      <CabeceraPagina titulo="Ingresos" />
+      <EstadoVacio titulo="Sección en preparación" descripcion="La carga y consulta de ingresos se incorporará en próximas tareas." />
     </Stack>
   );
 }

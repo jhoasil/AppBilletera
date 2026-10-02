@@ -1,12 +1,13 @@
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { CabeceraPagina } from '../../compartido/componentes/CabeceraPagina';
+import { EstadoVacio } from '../../compartido/componentes/EstadoVacio';
 
-/** Presenta la página provisional de Reportes para habilitar su navegación. */
+/** Presenta Reportes con los componentes comunes hasta incorporar su funcionalidad. */
 export function PaginaReportes() {
   return (
-    <Stack spacing={2}>
-      <Typography component="h1" variant="h2">Reportes</Typography>
-      <Typography color="text.secondary">Los resúmenes financieros y de rentabilidad se incorporarán en próximas tareas.</Typography>
+    <Stack spacing={3}>
+      <CabeceraPagina titulo="Reportes" />
+      <EstadoVacio titulo="Sección en preparación" descripcion="Los resúmenes financieros y de rentabilidad se incorporarán en próximas tareas." />
     </Stack>
   );
 }

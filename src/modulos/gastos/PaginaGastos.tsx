@@ -1,12 +1,13 @@
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { CabeceraPagina } from '../../compartido/componentes/CabeceraPagina';
+import { EstadoVacio } from '../../compartido/componentes/EstadoVacio';
 
-/** Presenta la página provisional de Gastos para habilitar su navegación. */
+/** Presenta Gastos con los componentes comunes hasta incorporar su funcionalidad. */
 export function PaginaGastos() {
   return (
-    <Stack spacing={2}>
-      <Typography component="h1" variant="h2">Gastos</Typography>
-      <Typography color="text.secondary">La carga y consulta de gastos se incorporará en próximas tareas.</Typography>
+    <Stack spacing={3}>
+      <CabeceraPagina titulo="Gastos" />
+      <EstadoVacio titulo="Sección en preparación" descripcion="La carga y consulta de gastos se incorporará en próximas tareas." />
     </Stack>
   );
 }

@@ -21,6 +21,10 @@ src/
     compartido/
 ```
 
+## Componentes visuales compartidos
+
+Los componentes visuales reutilizables están en `src/compartido/componentes/`: `CabeceraPagina`, `TarjetaResumen`, `CampoImporte`, `EstadoVacio`, `SelectorCatalogo`, `BotonAccion` y `ListaMovimiento`. Reciben propiedades y eventos desde los módulos, usan el tema y no acceden a persistencia. Los importes de entrada permanecen como texto y los resúmenes y movimientos reciben valores ya preparados; el cálculo y la conversión monetaria corresponden a tareas de dominio posteriores.
+
 ## Persistencia e integridad
 
 La infraestructura administra inicialización, migraciones versionadas, transacciones y cierre. Guardar cada operación financiera y sus movimientos de billetera de forma atómica. Mantener identidades UUID locales y borrado lógico para conservar la historia.
