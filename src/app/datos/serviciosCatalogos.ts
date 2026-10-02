@@ -1,5 +1,7 @@
 import type { MedioPago } from '../../nucleo/entidades/MedioPago';
 import type { Billetera } from '../../nucleo/entidades/Billetera';
+import type { CategoriaGasto } from '../../nucleo/entidades/CategoriaGasto';
+import type { RepositorioCategoriasGasto } from '../../nucleo/repositorios/RepositorioCategoriasGasto';
 import type { RepositorioMediosPago } from '../../nucleo/repositorios/RepositorioMediosPago';
 import type { RepositorioBilleteras } from '../../nucleo/repositorios/RepositorioBilleteras';
 import { ServicioCatalogo } from '../../nucleo/servicios/ServicioCatalogo';
@@ -15,6 +17,12 @@ function validarMedio(medio: MedioPago) {
 
 /** Servicio de medios; la composición de infraestructura permanece fuera de las pantallas. */
 export const servicioMedios = new ServicioCatalogo(repositorioMedios, validarMedio);
+
+/** Las categorías no necesitan reglas específicas adicionales al nombre y color comunes. */
+function validarCategoria(_categoria: CategoriaGasto): void {}
+
+const repositorioCategorias: RepositorioCategoriasGasto = new RepositorioCatalogoWeb<CategoriaGasto>('categorias_gasto');
+export const servicioCategorias = new ServicioCatalogo(repositorioCategorias, validarCategoria);
 
 /** Obtiene todas las billeteras activas recorriendo páginas acotadas, para ofrecer destinos editables. */
 export async function listarBilleterasActivas(): Promise<readonly Billetera[]> {
