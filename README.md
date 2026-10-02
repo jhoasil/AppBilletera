@@ -34,4 +34,4 @@ Comandos disponibles:
 - `pnpm compilar`: verifica tipos y genera la aplicación en `dist/`.
 - `pnpm previsualizar`: sirve localmente la compilación generada.
 
-Ejecutar solamente la tarea solicitada en su rama `codex/NNN` y finalizar con su commit. No generar ni ejecutar tests durante la preparación y el desarrollo inicial.
+Ejecutar solamente la tarea solicitada en su rama `NNN_descripcion_de_la_tarea` y finalizar con su commit. No generar ni ejecutar tests durante la preparación y el desarrollo inicial.

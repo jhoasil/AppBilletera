@@ -1589,11 +1589,11 @@ cuando su función no sea evidente.
 
 Cada tarea debe comenzar en su propia rama antes de modificar archivos y terminar con su propio commit.
 
-Nombre obligatorio: `codex/NNN`, donde `NNN` es el número de tarea con tres dígitos y ceros a la izquierda.
+Nombre obligatorio: `NNN_descripcion_de_la_tarea`, donde `NNN` es el número de tarea con tres dígitos y ceros a la izquierda. La descripción resume el título de la tarea en español, en minúsculas, sin tildes ni espacios y con palabras separadas por guiones bajos. No agregar el prefijo `codex/`.
 
-Ejemplos: TAREA 00 → `codex/000`; TAREA 01 (001) → `codex/001`; TAREA 10 → `codex/010`.
+Ejemplos: TAREA 00 → `000_crear_repositorio_y_documentacion`; TAREA 01 (001) → `001_crear_react_typescript_y_vite`; TAREA 10 → `010_disenar_base_de_datos_v1`.
 
-Después de leer las reglas y la documentación relacionada, revisar `git status` y crear la rama con `git switch -c codex/NNN`. Verificar la rama activa antes de modificar archivos. Si ya existe por una ejecución anterior de la misma tarea, comprobar su correspondencia y continuar en ella sin borrarla ni recrearla.
+Después de leer las reglas y la documentación relacionada, revisar `git status` y crear la rama con `git switch -c NNN_descripcion_de_la_tarea`. Verificar la rama activa antes de modificar archivos. Si ya existe por una ejecución anterior de la misma tarea, comprobar su correspondencia y continuar en ella sin borrarla ni recrearla.
 
 No realizar tareas directamente en `main` o `master`. No mezclar cambios de otras tareas ni fusionar ramas automáticamente. Crear la rama de la tarea siguiente solamente cuando el usuario autorice esa tarea.
 
