@@ -1,5 +1,23 @@
 # Historial de cambios
 
+## [Sin publicar]
+
+### Agregado
+
+- Índices financieros y persistencia IndexedDB con migraciones, validaciones y transacciones atómicas.
+- Datos iniciales insertados una sola vez sin reemplazar las personalizaciones del usuario.
+- Ajustes con administración paginada de medios de pago, categorías, actividades y billeteras.
+- Selectores visuales de Material Icons y colores para actividades y billeteras.
+- Trabajos temporales mediante Actividad, con fechas y estados activo, finalizado y archivado.
+- Saldo inicial opcional al crear o configurar una billetera, registrado una sola vez como movimiento SALDO_INICIAL.
+
+### Modificado
+
+- Carga de Ajustes bajo demanda para reducir el paquete inicial.
+- Protección de la moneda de billeteras con historial de movimientos.
+
+Las tareas 011 a 020 no cierran una versión ni crean un tag. Los ingresos, gastos, transferencias y conciliaciones siguen pendientes de sus tareas respectivas.
+
 ## [0.1.0]
 
 ### Agregado

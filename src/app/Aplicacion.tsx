@@ -1,10 +1,18 @@
+import { lazy, Suspense } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 import { EstructuraPrincipal } from './navegacion/EstructuraPrincipal';
 import { usePaginaActual } from './navegacion/usePaginaActual';
 import { PaginaInicio } from '../modulos/inicio/PaginaInicio';
 import { PaginaIngresos } from '../modulos/ingresos/PaginaIngresos';
 import { PaginaGastos } from '../modulos/gastos/PaginaGastos';
 import { PaginaReportes } from '../modulos/reportes/PaginaReportes';
-import { PaginaAjustes } from '../modulos/ajustes/PaginaAjustes';
+
+/** Carga los editores de catálogos al abrir Ajustes para reducir el paquete inicial. */
+async function cargarAjustes() {
+  const modulo = await import('../modulos/ajustes/PaginaAjustes');
+  return { default: modulo.PaginaAjustes };
+}
+const PaginaAjustes = lazy(cargarAjustes);
 
 const paginas = {
   inicio: <PaginaInicio />,
@@ -19,7 +27,7 @@ export function Aplicacion() {
   const paginaActual = usePaginaActual();
   return (
     <EstructuraPrincipal paginaActual={paginaActual}>
-      {paginas[paginaActual]}
+      <Suspense fallback={<CircularProgress aria-label="Cargando página" />}>{paginas[paginaActual]}</Suspense>
     </EstructuraPrincipal>
   );
 }

@@ -14,6 +14,7 @@ import Toll from '@mui/icons-material/Toll';
 import Build from '@mui/icons-material/Build';
 import Category from '@mui/icons-material/Category';
 import AccountBalance from '@mui/icons-material/AccountBalance';
+import AccountBalanceWallet from '@mui/icons-material/AccountBalanceWallet';
 
 /** Selección curada de Material Icons, con etiquetas españolas y carga sin descargar SVG externos. */
 export const iconosCatalogo = [
@@ -33,6 +34,7 @@ export const iconosCatalogo = [
   { id: 'build', nombre: 'Mantenimiento', componente: Build },
   { id: 'category', nombre: 'Otros', componente: Category },
   { id: 'account_balance', nombre: 'Banco', componente: AccountBalance },
+  { id: 'account_balance_wallet', nombre: 'Billetera', componente: AccountBalanceWallet },
 ] as const;
 
 /** Presenta un identificador de icono sin guardar su SVG en los datos. */

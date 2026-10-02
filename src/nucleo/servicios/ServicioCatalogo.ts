@@ -29,6 +29,11 @@ export class ServicioCatalogo<Entidad extends EntidadCatalogo> {
 
   /** Crea o actualiza sin cambiar el UUID ni la fecha de creación de registros existentes. */
   async guardar(borrador: Entidad): Promise<void> {
+    await this.repositorio.guardar(await this.preparar(borrador));
+  }
+
+  /** Valida y prepara la auditoría para operaciones que deben guardar varios registros juntos. */
+  async preparar(borrador: Entidad): Promise<Entidad> {
     const nombre = borrador.nombre.trim();
     if (!nombre || nombre.length > 120) throw new Error('El nombre debe tener entre 1 y 120 caracteres.');
     if (borrador.color && !/^#[0-9a-f]{6}$/i.test(borrador.color)) throw new Error('El color debe tener formato hexadecimal, por ejemplo #005bea.');
@@ -36,7 +41,7 @@ export class ServicioCatalogo<Entidad extends EntidadCatalogo> {
     const anterior = borrador.id ? await this.repositorio.obtenerPorId(borrador.id) : null;
     if (borrador.id && !anterior) throw new Error('El registro ya no está disponible; actualice el listado.');
     const ahora = new Date().toISOString();
-    await this.repositorio.guardar({ ...borrador, nombre, id: anterior?.id ?? crypto.randomUUID(), creadoEn: anterior?.creadoEn ?? ahora, actualizadoEn: ahora, eliminadoEn: null });
+    return { ...borrador, nombre, id: anterior?.id ?? crypto.randomUUID(), creadoEn: anterior?.creadoEn ?? ahora, actualizadoEn: ahora, eliminadoEn: null };
   }
 
   /** Activa o desactiva conservando el registro para su uso histórico. */

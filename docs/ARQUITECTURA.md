@@ -50,3 +50,13 @@ El adaptador IndexedDB está en `src/base-datos/web/`. La versión física es la
 ## Datos iniciales
 
 Los datos sugeridos se insertan una sola vez, en una transacción común con la marca `datos_iniciales_v1` del almacén técnico `_metadatos`. Editar, desactivar o renombrar un catálogo no vuelve a crear sus valores sugeridos. `_metadatos` no es una entidad de negocio ni contiene datos financieros. Una instalación nueva crea DiDi, Uber, seis categorías, tres medios de pago y la billetera Efectivo; únicamente Efectivo recibe esa billetera predeterminada.
+
+## Catálogos y saldo inicial
+
+Los cuatro catálogos se administran desde Ajustes mediante servicios, con paginación de veinte registros, auditoría y activación sin borrar referencias históricas. Los trabajos temporales utilizan la misma entidad Actividad: `tipo = trabajo_temporal`, fechas opcionales y estados activo, finalizado o archivado. El estado del trabajo y su disponibilidad en catálogos son propiedades independientes. Se rechaza una fecha de fin anterior al inicio.
+
+El saldo inicial es un movimiento `SALDO_INICIAL` con referencias nulas, UUID y centavos enteros firmados. El importe acepta coma o punto decimal, hasta dos decimales y ningún separador de miles; se convierte mediante BigInt antes de comprobar el rango seguro. Cero representa una apertura explícita sin importe; un valor negativo permite iniciar con deuda. Dejar el campo vacío al crear una billetera no genera movimiento y permite configurarlo después.
+
+Crear una billetera con saldo inicial guarda ambos registros en una transacción. Configurar una existente comprueba que esté activa y que no exista ningún saldo inicial previo, incluso eliminado lógicamente. La comprobación recorre solamente el índice de esa billetera y queda en la misma transacción de escritura, evitando duplicados entre pestañas. No se modifica el movimiento inicial desde el ABM: las correcciones corresponderán a las tareas de conciliación. Una billetera con cualquier historial conserva su moneda.
+
+La fecha elegida se interpreta como medianoche en la zona horaria del dispositivo y se persiste como instante ISO UTC; la validación del día calendario es independiente de la zona horaria. Las fechas de auditoría también son UTC. El modelo no guarda un atributo de saldo mutable ni cuenta el saldo inicial como ingreso o rentabilidad.

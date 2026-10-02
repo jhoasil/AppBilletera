@@ -25,10 +25,12 @@ export interface PropiedadesEditorCatalogo<Entidad extends EntidadCatalogo> {
   crearNuevo: () => Entidad;
   campos: (entidad: Entidad, actualizar: (cambios: Partial<Entidad>) => void) => ReactNode;
   detalle?: (entidad: Entidad) => string;
+  guardarPersonalizado?: (entidad: Entidad) => Promise<void>;
+  accionAdicional?: (entidad: Entidad, deshabilitado: boolean) => ReactNode;
 }
 
 /** Presenta un ABM paginado con errores visibles y controles deshabilitados durante escrituras. */
-export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, servicio, crearNuevo, campos, detalle }: PropiedadesEditorCatalogo<Entidad>) {
+export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, servicio, crearNuevo, campos, detalle, guardarPersonalizado, accionAdicional }: PropiedadesEditorCatalogo<Entidad>) {
   const [elementos, establecerElementos] = useState<readonly Entidad[]>([]);
   const [total, establecerTotal] = useState(0);
   const [pagina, establecerPagina] = useState(0);
@@ -74,7 +76,7 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
   async function guardar(evento: FormEvent) {
     evento.preventDefault(); if (!borrador || pendiente) return;
     establecerPendiente(true); establecerErrorFormulario('');
-    try { await servicio.guardar(borrador); establecerBorrador(null); recargar(); }
+    try { if (guardarPersonalizado) await guardarPersonalizado(borrador); else await servicio.guardar(borrador); establecerBorrador(null); recargar(); }
     catch (causa) { establecerErrorFormulario(mensajeError(causa)); }
     finally { establecerPendiente(false); }
   }
@@ -98,6 +100,7 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
       <Stack sx={{ flex: 1 }}><Typography variant="h6">{entidad.nombre}</Typography>
         <Typography variant="body2" color="text.secondary">{detalle?.(entidad) ?? (entidad.activo ? 'Activo' : 'Inactivo')}</Typography></Stack>
       <Button onClick={editar} disabled={pendiente} aria-label={`Consultar o editar ${entidad.nombre}`}>Editar</Button>
+      {accionAdicional?.(entidad, pendiente)}
       <FormControlLabel label={entidad.activo ? 'Activo' : 'Inactivo'} control={<Switch checked={entidad.activo} onChange={cambiarActivo} disabled={pendiente} slotProps={{ input: { 'aria-label': `Activar ${entidad.nombre}` } }} />} />
     </Stack></CardContent></Card>;
   }
@@ -114,7 +117,7 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
       <DialogTitle id={`${formularioId}-titulo`}>{borrador?.id ? 'Editar' : 'Crear'} {singular}</DialogTitle>
       <DialogContent><Stack component="form" id={formularioId} onSubmit={guardar} spacing={2} sx={{ pt: 1 }}>
         {errorFormulario && <Alert severity="error">{errorFormulario}</Alert>}
-        {borrador && <><CampoTextoCatalogo etiqueta="Nombre" valor={borrador.nombre} alCambiar={cambiarNombre} obligatorio />{campos(borrador, actualizar)}</>}
+        {borrador && <Stack component="fieldset" disabled={pendiente} spacing={2} sx={{ border: 0, p: 0, m: 0, minWidth: 0 }}><CampoTextoCatalogo etiqueta="Nombre" valor={borrador.nombre} alCambiar={cambiarNombre} obligatorio />{campos(borrador, actualizar)}</Stack>}
       </Stack></DialogContent>
       <DialogActions><Button onClick={cerrar} disabled={pendiente}>Cancelar</Button><Button type="submit" form={formularioId} variant="contained" loading={pendiente}>Guardar</Button></DialogActions>
     </Dialog>

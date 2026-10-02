@@ -50,7 +50,20 @@ export class RepositorioCatalogoWeb<Entidad extends EntidadAuditada & { nombre: 
   async guardar(entidad: Entidad): Promise<void> {
     await prepararBaseWeb();
     /** Escribe usando una transacción común que incluye las tablas referenciadas. */
-    const escribir = async (contexto: ContextoWeb) => { await contexto.guardar(this.tabla, convertirRegistro(entidad)); };
+    const escribir = async (contexto: ContextoWeb) => {
+      const registro = convertirRegistro(entidad);
+      if (this.tabla === 'billeteras') {
+        const anterior = await contexto.obtener('billeteras', entidad.id);
+        if (anterior && anterior.moneda !== registro.moneda) {
+          let tieneHistorial = false;
+          /** Conserva la unidad monetaria de cualquier historial, incluido el borrado lógico. */
+          function comprobar(_movimiento: RegistroWeb) { tieneHistorial = true; }
+          await contexto.recorrer('movimientos_billetera', comprobar, 'por_billetera_fecha', IDBKeyRange.bound([entidad.id, ''], [entidad.id, '\uffff']));
+          if (tieneHistorial) throw new Error('No se puede cambiar la moneda de una billetera con movimientos registrados.');
+        }
+      }
+      await contexto.guardar(this.tabla, registro);
+    };
     return baseWeb.ejecutarTransaccion({ recursos: tablasV1.map(nombreTabla), modo: 'escritura' }, escribir);
   }
 
