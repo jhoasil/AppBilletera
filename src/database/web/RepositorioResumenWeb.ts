@@ -59,6 +59,14 @@ export class RepositorioResumenWeb implements RepositorioResumen {
       }
       await contexto.recorrer('movimientos_billetera', reciente);
       const desgloses: DesgloseResumen[] = [];
+      /** Incluye actividades sin operaciones en el período para que su rentabilidad también sea visible. */
+      function incluirActividad(registro: RegistroWeb) {
+        if (registro.eliminado_en !== null) return;
+        const id = String(registro.id);
+        for (const grupo of grupos.values()) if (grupo.tipo === 'actividad' && grupo.id === id) return;
+        grupos.set(`actividad/${id}/ARS`, { id, nombre: String(registro.nombre), tipo: 'actividad', moneda: 'ARS', ingresos: 0n, gastos: 0n });
+      }
+      await contexto.recorrer('actividades', incluirActividad);
       for (const grupo of grupos.values()) desgloses.push({ id: grupo.id, nombre: grupo.nombre, tipo: grupo.tipo, moneda: grupo.moneda, ingresosCentavos: convertirSaldo(grupo.ingresos), gastosCentavos: convertirSaldo(grupo.gastos), gananciaCentavos: convertirSaldo(grupo.ingresos - grupo.gastos) });
       return { totales, movimientos, desgloses };
     }

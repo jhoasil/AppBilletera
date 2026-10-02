@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
+import Paper from '@mui/material/Paper';
 import { CabeceraPagina } from '../../shared/components/CabeceraPagina';
 import { TarjetaResumen } from '../../shared/components/TarjetaResumen';
 import { CampoTextoCatalogo } from '../../shared/components/CampoTextoCatalogo';
@@ -43,7 +44,10 @@ export function PaginaReportes() {
     {error && <Alert severity="error">{error}</Alert>}
     {!datos ? !error && <CircularProgress aria-label="Consultando reportes" /> : <>
       {datos.totales.map(function presentar(total) { return <Stack key={total.moneda} direction={{ xs: 'column', md: 'row' }} spacing={2}><TarjetaResumen titulo="Ingresos" valor={importe(total.ingresosCentavos, total.moneda)} tono="positivo" /><TarjetaResumen titulo="Gastos" valor={importe(total.gastosCentavos, total.moneda)} tono="negativo" /><TarjetaResumen titulo="Ganancia neta" valor={importe(total.gananciaCentavos, total.moneda)} tono="destacado" /></Stack>; })}
-      {(['actividad', 'medio', 'categoria'] as const).map(function seccion(grupo) { return <Stack key={grupo} spacing={1}><Typography variant="h6">{grupo === 'actividad' ? 'Por actividad' : grupo === 'medio' ? 'Por medio de pago' : 'Gastos por categoría'}</Typography>{datos.desgloses.filter(function seleccionar(fila) { return fila.tipo === grupo; }).map(function presentar(fila) { return <Typography key={`${fila.id}/${fila.moneda}`}>{fila.nombre} · Ingresos {importe(fila.ingresosCentavos, fila.moneda)} · Gastos {importe(fila.gastosCentavos, fila.moneda)}</Typography>; })}</Stack>; })}
+      <Typography variant="h6">Rentabilidad por actividad</Typography>
+      <Typography color="text.secondary">La ganancia de cada actividad descuenta únicamente sus gastos asociados. Los gastos sin actividad se muestran separados.</Typography>
+      {datos.desgloses.filter(function seleccionar(fila) { return fila.tipo === 'actividad'; }).map(function presentar(fila) { return <Paper key={`${fila.id}/${fila.moneda}`} variant="outlined" sx={{ p: 2 }}><Typography variant="subtitle1">{fila.nombre}</Typography><Typography>Ingresos: {importe(fila.ingresosCentavos, fila.moneda)}</Typography><Typography>Gastos asociados: {importe(fila.gastosCentavos, fila.moneda)}</Typography><Typography color={fila.gananciaCentavos < 0 ? 'error.main' : 'success.main'}>Ganancia neta: {importe(fila.gananciaCentavos, fila.moneda)}</Typography></Paper>; })}
+      {(['medio', 'categoria'] as const).map(function seccion(grupo) { return <Stack key={grupo} spacing={1}><Typography variant="h6">{grupo === 'medio' ? 'Por medio de pago' : 'Gastos por categoría'}</Typography>{datos.desgloses.filter(function seleccionar(fila) { return fila.tipo === grupo; }).map(function presentar(fila) { return <Typography key={`${fila.id}/${fila.moneda}`}>{fila.nombre} · Ingresos {importe(fila.ingresosCentavos, fila.moneda)} · Gastos {importe(fila.gastosCentavos, fila.moneda)}</Typography>; })}</Stack>; })}
     </>}
   </Stack>;
 }
