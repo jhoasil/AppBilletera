@@ -1,11 +1,11 @@
 import type { Actividad } from '../../../core/entities/Actividad';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
-import { servicioActividades } from '../../../app/datos/serviciosCatalogos';
-import { SelectorCatalogo } from '../../../shared/componentes/SelectorCatalogo';
-import { SelectorIcono } from '../../../shared/componentes/SelectorIcono';
-import { SelectorColor } from '../../../shared/componentes/SelectorColor';
-import { CampoTextoCatalogo } from '../../../shared/componentes/CampoTextoCatalogo';
+import { servicioActividades } from '../../../app/data/serviciosCatalogos';
+import { SelectorCatalogo } from '../../../shared/components/SelectorCatalogo';
+import { SelectorIcono } from '../../../shared/components/SelectorIcono';
+import { SelectorColor } from '../../../shared/components/SelectorColor';
+import { CampoTextoCatalogo } from '../../../shared/components/CampoTextoCatalogo';
 import { EditorCatalogo } from './EditorCatalogo';
 
 /** Inicializa la actividad con identidad pendiente y fechas opcionales. */

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { FormularioOperacionRapida, type CargaOperacion } from '../../shared/componentes/FormularioOperacionRapida';
+import { FormularioOperacionRapida, type CargaOperacion } from '../../shared/components/FormularioOperacionRapida';
 import type { CargaGasto } from '../../core/services/CargaGasto';
 
 /** Conecta la carga de gasto a una acción de aplicación sin acceder a persistencia desde la pantalla. */

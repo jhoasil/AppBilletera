@@ -12,11 +12,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
-import { BotonAccion } from '../../../shared/componentes/BotonAccion';
-import { EstadoVacio } from '../../../shared/componentes/EstadoVacio';
+import { BotonAccion } from '../../../shared/components/BotonAccion';
+import { EstadoVacio } from '../../../shared/components/EstadoVacio';
 import { ServicioCatalogo, type EntidadCatalogo } from '../../../core/services/ServicioCatalogo';
-import { CampoTextoCatalogo } from '../../../shared/componentes/CampoTextoCatalogo';
-import { IconoCatalogo } from '../../../shared/componentes/IconoCatalogo';
+import { CampoTextoCatalogo } from '../../../shared/components/CampoTextoCatalogo';
+import { IconoCatalogo } from '../../../shared/components/IconoCatalogo';
 
 /** Contrato visual para reutilizar el listado y diálogo sin mezclar campos de entidades. */
 export interface PropiedadesEditorCatalogo<Entidad extends EntidadCatalogo> {

@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import { CabeceraPagina } from './CabeceraPagina';
 import { CampoTextoCatalogo } from './CampoTextoCatalogo';
 import { EstadoVacio } from './EstadoVacio';
-import { formatearImporte } from '../dinero/formatearImporte';
+import { formatearImporte } from '../money/formatearImporte';
 import { crearImporte } from '../../core/money/Importe';
 import type { ConsultaOperaciones, PaginaResultado } from '../../core/repositories/ConsultasRepositorio';
 

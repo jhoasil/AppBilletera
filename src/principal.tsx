@@ -1,8 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Aplicacion } from './app/Aplicacion';
-import { ProveedorTema } from './app/tema/ProveedorTema';
-import { ProveedorDatos } from './app/datos/ProveedorDatos';
+import { ProveedorTema } from './app/theme/ProveedorTema';
+import { ProveedorDatos } from './app/data/ProveedorDatos';
 
 const elementoRaiz = document.getElementById('raiz');
 

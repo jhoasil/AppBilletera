@@ -10,24 +10,46 @@ La presentación consume servicios y nunca accede directamente a los motores de 
 
 React, TypeScript estricto y Vite para la aplicación; Material UI y Material Icons para la interfaz; Capacitor para plataformas nativas; pnpm para dependencias. IndexedDB en Web y SQLite en Android, iOS e iPadOS.
 
-Las carpetas principales de `src` y las subcarpetas técnicas de `core` y `database` utilizan nombres convencionales en inglés por decisión del usuario. Los archivos y el contenido propio permanecen en español:
+Las carpetas de arquitectura técnica utilizan nombres convencionales en inglés por decisión del usuario. Los módulos del negocio, los archivos y el contenido propio permanecen en español:
 
 ```text
 src/
     app/
+        data/
+        navigation/
+        preferences/
+        theme/
     core/
+        entities/
+        money/
+        repositories/
+        services/
     database/
+        adapters/
+        contracts/
+        data/
+        migrations/
+        web/
     modules/
+        ajustes/catalogos/
+        billeteras/
+        gastos/
+        ingresos/
+        inicio/
+        reportes/
     shared/
+        components/
+        dates/
+        money/
 ```
 
 `app` compone la aplicación; `core` contiene el dominio; `database`, la persistencia; `modules`, las pantallas por funcionalidad; y `shared`, los recursos reutilizables.
 
-En `core`, las subcarpetas técnicas son `money`, `entities`, `repositories` y `services`. En `database`, son `adapters`, `contracts`, `data`, `migrations` y `web`. La excepción se limita a las rutas indicadas: por ejemplo, `src/shared/dinero` y `src/app/datos` conservan su nombre en español.
+La excepción se aplica únicamente a nombres de carpetas técnicas. Por ejemplo, `src/shared/money/formatearImporte.ts` mantiene el archivo y su función en español; `src/modules/ingresos/PaginaIngresos.tsx` conserva en español tanto la funcionalidad del negocio como el componente. No existe un único nombre de carpeta obligatorio para todo proyecto: esta estructura establece la convención elegida para AppBilletera.
 
 ## Componentes visuales compartidos
 
-Los componentes visuales reutilizables están en `src/shared/componentes/`: `CabeceraPagina`, `TarjetaResumen`, `CampoImporte`, `EstadoVacio`, `SelectorCatalogo`, `BotonAccion` y `ListaMovimiento`. Reciben propiedades y eventos desde los módulos, usan el tema y no acceden a persistencia. Los importes de entrada permanecen como texto y los resúmenes y movimientos reciben valores ya preparados; el cálculo y la conversión monetaria corresponden a tareas de dominio posteriores.
+Los componentes visuales reutilizables están en `src/shared/components/`: `CabeceraPagina`, `TarjetaResumen`, `CampoImporte`, `EstadoVacio`, `SelectorCatalogo`, `BotonAccion` y `ListaMovimiento`. Reciben propiedades y eventos desde los módulos, usan el tema y no acceden a persistencia. Los importes de entrada permanecen como texto y los resúmenes y movimientos reciben valores ya preparados; el cálculo y la conversión monetaria corresponden a tareas de dominio posteriores.
 
 ## Persistencia e integridad
 

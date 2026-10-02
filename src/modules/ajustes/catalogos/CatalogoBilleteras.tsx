@@ -3,12 +3,12 @@ import { useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { servicioBilleteras } from '../../../app/datos/serviciosCatalogos';
-import { guardarBilletera } from '../../../app/datos/servicioSaldoInicial';
-import { fechaActual } from '../../../shared/fechas/fechaActual';
-import { CampoTextoCatalogo } from '../../../shared/componentes/CampoTextoCatalogo';
-import { SelectorIcono } from '../../../shared/componentes/SelectorIcono';
-import { SelectorColor } from '../../../shared/componentes/SelectorColor';
+import { servicioBilleteras } from '../../../app/data/serviciosCatalogos';
+import { guardarBilletera } from '../../../app/data/servicioSaldoInicial';
+import { fechaActual } from '../../../shared/dates/fechaActual';
+import { CampoTextoCatalogo } from '../../../shared/components/CampoTextoCatalogo';
+import { SelectorIcono } from '../../../shared/components/SelectorIcono';
+import { SelectorColor } from '../../../shared/components/SelectorColor';
 import { EditorCatalogo } from './EditorCatalogo';
 import { DialogoSaldoInicial } from './DialogoSaldoInicial';
 

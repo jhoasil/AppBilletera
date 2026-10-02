@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { CabeceraPagina } from '../../shared/componentes/CabeceraPagina';
-import { EstadoVacio } from '../../shared/componentes/EstadoVacio';
+import { CabeceraPagina } from '../../shared/components/CabeceraPagina';
+import { EstadoVacio } from '../../shared/components/EstadoVacio';
 
 /** Presenta Inicio con los componentes comunes hasta incorporar su funcionalidad. */
 export function PaginaInicio() {

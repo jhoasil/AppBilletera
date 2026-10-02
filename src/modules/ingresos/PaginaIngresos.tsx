@@ -1,6 +1,6 @@
 import { FormularioIngreso } from './FormularioIngreso';
-import { servicioIngresos } from '../../app/datos/servicioIngresos';
-import { PantallaOperaciones } from '../../shared/componentes/PantallaOperaciones';
+import { servicioIngresos } from '../../app/data/servicioIngresos';
+import { PantallaOperaciones } from '../../shared/components/PantallaOperaciones';
 import type { CargaIngreso } from '../../core/services/CargaIngreso';
 
 /** Conecta el formulario de ingreso con las acciones del ABM compartido. */

@@ -6,12 +6,12 @@ import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { servicioConsultaBilleteras } from '../../app/datos/servicioConsultaBilleteras';
-import { CabeceraPagina } from '../../shared/componentes/CabeceraPagina';
-import { EstadoVacio } from '../../shared/componentes/EstadoVacio';
-import { TarjetaResumen } from '../../shared/componentes/TarjetaResumen';
-import { IconoCatalogo } from '../../shared/componentes/IconoCatalogo';
-import { formatearImporte } from '../../shared/dinero/formatearImporte';
+import { servicioConsultaBilleteras } from '../../app/data/servicioConsultaBilleteras';
+import { CabeceraPagina } from '../../shared/components/CabeceraPagina';
+import { EstadoVacio } from '../../shared/components/EstadoVacio';
+import { TarjetaResumen } from '../../shared/components/TarjetaResumen';
+import { IconoCatalogo } from '../../shared/components/IconoCatalogo';
+import { formatearImporte } from '../../shared/money/formatearImporte';
 import { crearImporte } from '../../core/money/Importe';
 import type { BilleteraConSaldo, ConsultaBilleterasConSaldo } from '../../core/repositories/RepositorioConsultaBilleteras';
 

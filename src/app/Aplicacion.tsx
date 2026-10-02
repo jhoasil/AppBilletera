@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
-import { EstructuraPrincipal } from './navegacion/EstructuraPrincipal';
-import { usePaginaActual } from './navegacion/usePaginaActual';
+import { EstructuraPrincipal } from './navigation/EstructuraPrincipal';
+import { usePaginaActual } from './navigation/usePaginaActual';
 import { PaginaInicio } from '../modules/inicio/PaginaInicio';
 import { PaginaIngresos } from '../modules/ingresos/PaginaIngresos';
 import { PaginaGastos } from '../modules/gastos/PaginaGastos';

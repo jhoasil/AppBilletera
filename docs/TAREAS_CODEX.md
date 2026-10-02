@@ -131,7 +131,7 @@ Material Icons
 Crear:
 
 ```text
-src/app/tema/
+src/app/theme/
     tema.ts
     colores.ts
     tipografia.ts

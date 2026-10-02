@@ -4,9 +4,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import type { MedioPago } from '../../../core/entities/MedioPago';
 import type { Billetera } from '../../../core/entities/Billetera';
-import { listarBilleterasActivas, servicioMedios } from '../../../app/datos/serviciosCatalogos';
-import { SelectorCatalogo } from '../../../shared/componentes/SelectorCatalogo';
-import { CampoTextoCatalogo } from '../../../shared/componentes/CampoTextoCatalogo';
+import { listarBilleterasActivas, servicioMedios } from '../../../app/data/serviciosCatalogos';
+import { SelectorCatalogo } from '../../../shared/components/SelectorCatalogo';
+import { CampoTextoCatalogo } from '../../../shared/components/CampoTextoCatalogo';
 import { EditorCatalogo } from './EditorCatalogo';
 
 /** Inicializa un borrador visual; la identidad y auditoría se asignan al guardar. */

@@ -4,16 +4,16 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { listarBilleterasActivas } from '../../app/datos/serviciosCatalogos';
-import { servicioTransferencias } from '../../app/datos/servicioTransferencias';
-import { CabeceraPagina } from '../../shared/componentes/CabeceraPagina';
-import { CampoTextoCatalogo } from '../../shared/componentes/CampoTextoCatalogo';
-import { CampoImporte } from '../../shared/componentes/CampoImporte';
-import { SelectorCatalogo } from '../../shared/componentes/SelectorCatalogo';
-import { fechaActual } from '../../shared/fechas/fechaActual';
+import { listarBilleterasActivas } from '../../app/data/serviciosCatalogos';
+import { servicioTransferencias } from '../../app/data/servicioTransferencias';
+import { CabeceraPagina } from '../../shared/components/CabeceraPagina';
+import { CampoTextoCatalogo } from '../../shared/components/CampoTextoCatalogo';
+import { CampoImporte } from '../../shared/components/CampoImporte';
+import { SelectorCatalogo } from '../../shared/components/SelectorCatalogo';
+import { fechaActual } from '../../shared/dates/fechaActual';
 import { crearImporte } from '../../core/money/Importe';
 import { interpretarImporte } from '../../core/money/interpretarImporte';
-import { formatearImporte } from '../../shared/dinero/formatearImporte';
+import { formatearImporte } from '../../shared/money/formatearImporte';
 import type { Billetera } from '../../core/entities/Billetera';
 
 /** Recupera una billetera de origen sugerida desde un enlace, sin guardar dinero en preferencias. */

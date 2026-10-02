@@ -1,4 +1,4 @@
-import { FormularioOperacionRapida } from '../../shared/componentes/FormularioOperacionRapida';
+import { FormularioOperacionRapida } from '../../shared/components/FormularioOperacionRapida';
 import type { CargaIngreso } from '../../core/services/CargaIngreso';
 
 /** Conexión del ingreso a sus datos iniciales y operación de aplicación. */

@@ -17,6 +17,7 @@
 
 ### Modificado
 
+- Nomenclatura arquitectónica de `app` y `shared` completada en inglés; módulos del negocio y contenido propio conservados en español.
 - Subcarpetas técnicas de `core` y `database` con nombres convencionales en inglés; sus archivos y contenido permanecen en español.
 - Carpetas principales de `src` en inglés (`app`, `database`, `shared`, `modules`, `core`), con importaciones y documentación actualizadas; su contenido propio permanece en español.
 - Carga de Ajustes bajo demanda para reducir el paquete inicial.

@@ -1,6 +1,6 @@
 import Stack from '@mui/material/Stack';
-import { CabeceraPagina } from '../../shared/componentes/CabeceraPagina';
-import { EstadoVacio } from '../../shared/componentes/EstadoVacio';
+import { CabeceraPagina } from '../../shared/components/CabeceraPagina';
+import { EstadoVacio } from '../../shared/components/EstadoVacio';
 
 /** Presenta Reportes con los componentes comunes hasta incorporar su funcionalidad. */
 export function PaginaReportes() {
