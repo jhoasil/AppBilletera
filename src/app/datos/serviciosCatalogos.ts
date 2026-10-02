@@ -13,6 +13,14 @@ import { RepositorioCatalogoWeb } from '../../base-datos/web/RepositorioCatalogo
 const repositorioMedios: RepositorioMediosPago = new RepositorioCatalogoWeb<MedioPago>('medios_pago');
 const repositorioBilleteras: RepositorioBilleteras = new RepositorioCatalogoWeb<Billetera>('billeteras');
 
+/** Valida clasificación y código monetario sin almacenar un saldo en la billetera. */
+function validarBilletera(billetera: Billetera) {
+  if (!billetera.tipo.trim()) throw new Error('Indicá el tipo de billetera.');
+  if (!/^[A-Z]{3}$/.test(billetera.moneda)) throw new Error('La moneda debe tener tres letras mayúsculas, por ejemplo ARS.');
+}
+
+export const servicioBilleteras = new ServicioCatalogo(repositorioBilleteras, validarBilletera);
+
 /** Valida preferencias propias del medio antes de persistirlas. */
 function validarMedio(medio: MedioPago) {
   if (!Number.isSafeInteger(medio.orden) || medio.orden < 0) throw new Error('El orden debe ser un entero no negativo.');
