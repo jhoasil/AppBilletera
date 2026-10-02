@@ -1597,6 +1597,8 @@ Después de leer las reglas y la documentación relacionada, revisar `git status
 
 No realizar tareas directamente en `main` o `master`. No mezclar cambios de otras tareas ni fusionar ramas automáticamente. Crear la rama de la tarea siguiente solamente cuando el usuario autorice esa tarea.
 
+Cuando el usuario indique «continúa con la siguiente tarea» o una expresión equivalente, esa instrucción autoriza fusionar la tarea terminada en `main` y ejecutar únicamente la siguiente tarea del plan en su rama `task_AA/NNN_descripcion_de_la_tarea`. Revisar primero el estado de Git y confirmar que la tarea anterior esté completa y sus cambios estén commiteados. Preferir una fusión fast-forward cuando sea posible. Al finalizar la nueva tarea, realizar su commit, informar el resumen y detenerse. Esta instrucción no autoriza push ni generar o ejecutar tests fuera de las reglas del plan.
+
 Antes:
 
 ```bash

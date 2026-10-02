@@ -17,6 +17,8 @@ Cada tarea debe:
 
 NO avanzar automáticamente.
 
+La instrucción «continúa con la siguiente tarea» autoriza fusionar primero la tarea terminada en `main` y luego ejecutar solamente la siguiente tarea en su rama `task_AA/NNN_descripcion_de_la_tarea`, siguiendo las comprobaciones de Git de `AGENTS.md`. Al terminar, realizar commit, informar resumen y detenerse; no realizar push ni ejecutar tests por esta instrucción.
+
 NO crear tests hasta la tarea específica.
 
 NO ejecutar tests sin autorización explícita.
