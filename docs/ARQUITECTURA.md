@@ -33,6 +33,10 @@ Guardar ingresos o gastos incluye sus detalles: una edición reemplaza el conjun
 
 La infraestructura administra inicialización, migraciones versionadas, transacciones y cierre. Guardar cada operación financiera y sus movimientos de billetera de forma atómica. Mantener identidades UUID locales y borrado lógico para conservar la historia.
 
+La coordinación está en `src/base-datos/BaseLocal.ts`, con el puerto `AdaptadorBaseLocal` y puntos de integración Web y Nativo. El motor físico se inyecta explícitamente; todavía no hay implementación de IndexedDB ni SQLite. Las migraciones comienzan en uno, son consecutivas y se aplican después de leer la versión persistida. Una base más reciente se rechaza para evitar degradaciones. Cada cambio y su versión deben confirmarse atómicamente por el adaptador; si uno falla, se cierra la conexión y se conservan las migraciones anteriores confirmadas.
+
+Las operaciones se encolan para proteger apertura, transacciones y cierre. Cada transacción declara recursos y modo de acceso y entrega un contexto común a futuros repositorios; el adaptador confirma o revierte antes de resolver la promesa. El cierre espera las operaciones previas, es repetible y permite reinicializar. No llamar a `BaseLocal` desde su propia transacción o migración: los repositorios deben utilizar el contexto recibido, sin transacciones anidadas. En IndexedDB, ese contexto deberá respetar la vida útil de la transacción y evitar esperas externas; las migraciones se ejecutarán en el contexto de actualización de esquema. La coordinación no se conecta todavía a la interfaz ni crea repositorios físicos.
+
 Los movimientos de billetera son la fuente de verdad del saldo. Resolver consultas y agregaciones en persistencia, evitando cargar toda la historia en la interfaz. Una caché futura debe ser reconstruible; los cierres por período se evaluarán cuando sean necesarios.
 
 ## Preferencias y evolución

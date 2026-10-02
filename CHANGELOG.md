@@ -4,6 +4,7 @@
 
 ### Agregado
 
+- Abstracción de base local con ciclo de vida, migraciones, transacciones y puntos de integración Web y Nativo.
 - Ocho contratos de repositorios independientes del motor, con paginación, borrado lógico y consulta de saldos.
 - Manejo seguro de centavos, suma y resta por moneda y formateo visual separado sin pérdida de precisión.
 - Once entidades de dominio TypeScript documentadas, con identidad UUID, auditoría y relaciones financieras.
