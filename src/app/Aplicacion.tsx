@@ -5,6 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { SelectorModoTema } from './tema/SelectorModoTema';
 
 /**
  * Presenta la pantalla inicial de AppBilletera para disponer de una base
@@ -38,6 +39,7 @@ export function Aplicacion() {
             </Stack>
           </CardContent>
         </Card>
+        <SelectorModoTema />
       </Stack>
     </Container>
   );

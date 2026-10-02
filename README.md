@@ -21,6 +21,8 @@ Una base compartida para Web, PWA, Android, iOS e iPadOS mediante React, TypeScr
 
 ## Desarrollo
 
+La apariencia permite elegir Sistema (predeterminado), Claro u Oscuro. Sistema sigue los cambios del dispositivo; la selección se recuerda localmente. Los colores se centralizan en `src/app/tema/colores.ts`.
+
 Requisitos: Node.js 20.19+ o 22.12+ y pnpm 11.19.0, fijado en `package.json`. Se recomienda Node.js 24 LTS.
 
 ```sh
