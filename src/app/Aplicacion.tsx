@@ -23,6 +23,9 @@ const PaginaBilleteras = lazy(cargarBilleteras);
 /** Carga el detalle financiero solamente cuando se consulta una billetera. */
 async function cargarDetalleBilletera() { const modulo = await import('../modules/billeteras/PaginaDetalleBilletera'); return { default: modulo.PaginaDetalleBilletera }; }
 const PaginaDetalleBilletera = lazy(cargarDetalleBilletera);
+/** Carga la comparación de saldos al iniciar una conciliación. */
+async function cargarConciliacion() { const modulo = await import('../modules/billeteras/PaginaConciliacion'); return { default: modulo.PaginaConciliacion }; }
+const PaginaConciliacion = lazy(cargarConciliacion);
 
 const paginas = {
   inicio: <PaginaInicio />,
@@ -33,6 +36,7 @@ const paginas = {
   transferencias: <PaginaTransferencia />,
   billeteras: <PaginaBilleteras />,
   billetera: <PaginaDetalleBilletera />,
+  conciliacion: <PaginaConciliacion />,
 };
 
 /** Muestra una única página dentro de la navegación compartida por todas las pantallas. */

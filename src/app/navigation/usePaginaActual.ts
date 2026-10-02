@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 
 /** Destinos iniciales compartidos por ambas navegaciones. */
-export type Pagina = 'inicio' | 'ingresos' | 'gastos' | 'reportes' | 'ajustes' | 'transferencias' | 'billeteras' | 'billetera';
+export type Pagina = 'inicio' | 'ingresos' | 'gastos' | 'reportes' | 'ajustes' | 'transferencias' | 'billeteras' | 'billetera' | 'conciliacion';
 
 /** Lee la ruta del fragmento y usa Inicio para rutas desconocidas. */
 function leerPaginaActual(): Pagina {
   const ruta = window.location.hash.slice(2).split('?')[0]?.split('/')[0];
-  if (ruta === 'ingresos' || ruta === 'gastos' || ruta === 'reportes' || ruta === 'ajustes' || ruta === 'transferencias' || ruta === 'billeteras' || ruta === 'billetera') {
+  if (ruta === 'ingresos' || ruta === 'gastos' || ruta === 'reportes' || ruta === 'ajustes' || ruta === 'transferencias' || ruta === 'billeteras' || ruta === 'billetera' || ruta === 'conciliacion') {
     return ruta;
   }
   return 'inicio';

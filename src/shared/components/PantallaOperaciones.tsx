@@ -16,6 +16,7 @@ import { EstadoVacio } from './EstadoVacio';
 import { formatearImporte } from '../money/formatearImporte';
 import { crearImporte } from '../../core/money/Importe';
 import type { ConsultaOperaciones, PaginaResultado } from '../../core/repositories/ConsultasRepositorio';
+import { useParametroRuta } from '../../app/navigation/useParametroRuta';
 
 /** Campos mínimos para presentar una operación con auditoría y total monetario. */
 export interface RegistroOperacion { id: string; fecha: string; descripcion: string | null; importeCentavos: number; moneda: string; actualizadoEn: string }
@@ -35,6 +36,7 @@ interface PropiedadesPantallaOperaciones<Entidad extends RegistroOperacion, Carg
 
 /** Presenta listado paginado, detalle editable y confirmación de borrado lógico con filtros de período. */
 export function PantallaOperaciones<Entidad extends RegistroOperacion, Carga>({ titulo, singular, servicio, formulario }: PropiedadesPantallaOperaciones<Entidad, Carga>) {
+  const cargaDirecta = useParametroRuta('nuevo');
   const [pagina, establecerPagina] = useState(0);
   const [revision, establecerRevision] = useState(0);
   const [desde, establecerDesde] = useState(''); const [hasta, establecerHasta] = useState('');
@@ -47,6 +49,9 @@ export function PantallaOperaciones<Entidad extends RegistroOperacion, Carga>({ 
   const [nuevo, establecerNuevo] = useState(false);
   const [seleccion, establecerSeleccion] = useState<{ entidad: Entidad; carga: Carga } | null>(null);
   const [aEliminar, establecerAEliminar] = useState<Entidad | null>(null);
+  /** Abre una carga directa desde Inicio o desde una conciliación sin un menú intermedio. */
+  function abrirCargaDirecta() { if (cargaDirecta === '1') { establecerNuevo(true); establecerSeleccion(null); } }
+  useEffect(abrirCargaDirecta, [cargaDirecta]);
   /** Consulta una página acotada, descartando respuestas de filtros o páginas anteriores. */
   function cargar() {
     let vigente = true; establecerCargando(true); establecerError('');

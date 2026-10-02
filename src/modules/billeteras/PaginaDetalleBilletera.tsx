@@ -78,8 +78,7 @@ export function PaginaDetalleBilletera() {
     {error && <Alert severity="error" action={<Button onClick={actualizar}>Reintentar</Button>}>{error}</Alert>}
     {cargando ? <CircularProgress aria-label="Cargando saldo y movimientos" /> : !error && datos && <>
       <TarjetaResumen titulo="Saldo actual" valor={formatearImporte(crearImporte(datos.saldoCentavos, datos.billetera.moneda))} icono={<IconoCatalogo identificador={datos.billetera.icono} />} tono={datos.saldoCentavos < 0 ? 'negativo' : 'positivo'} detalle={datos.billetera.activo ? 'Billetera activa' : 'Billetera inactiva; se conserva su historial'} />
-      <Stack direction="row" spacing={1}><Button component="a" href={`#/transferencias?origen=${id}`} variant="contained" disabled={!datos.billetera.activo}>Transferir</Button><Button disabled aria-describedby="estado-conciliacion">Conciliar</Button><Button onClick={actualizar}>Actualizar</Button></Stack>
-      <Typography id="estado-conciliacion" variant="body2" color="text.secondary">La conciliación estará disponible próximamente.</Typography>
+      <Stack direction="row" spacing={1}><Button component="a" href={`#/transferencias?origen=${id}`} variant="contained" disabled={!datos.billetera.activo}>Transferir</Button><Button component="a" href={`#/conciliacion?id=${id}`} disabled={!datos.billetera.activo}>Conciliar</Button><Button onClick={actualizar}>Actualizar</Button></Stack>
       <Typography variant="h6">Últimos movimientos</Typography>
       <Typography variant="body2" color="text.secondary">El período filtra los movimientos; el saldo mostrado sigue siendo el actual.</Typography>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}><CampoTextoCatalogo etiqueta="Desde" valor={desde} alCambiar={establecerDesde} tipo="date" /><CampoTextoCatalogo etiqueta="Hasta" valor={hasta} alCambiar={establecerHasta} tipo="date" /><Button onClick={aplicar}>Aplicar</Button><Button onClick={limpiar}>Limpiar</Button></Stack>
