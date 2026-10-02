@@ -6,7 +6,7 @@ import type { MedioPago } from '../../../nucleo/entidades/MedioPago';
 import type { Billetera } from '../../../nucleo/entidades/Billetera';
 import { listarBilleterasActivas, servicioMedios } from '../../../app/datos/serviciosCatalogos';
 import { SelectorCatalogo } from '../../../compartido/componentes/SelectorCatalogo';
-import { CampoTextoCatalogo } from './CampoTextoCatalogo';
+import { CampoTextoCatalogo } from '../../../compartido/componentes/CampoTextoCatalogo';
 import { EditorCatalogo } from './EditorCatalogo';
 
 /** Inicializa un borrador visual; la identidad y auditoría se asignan al guardar. */

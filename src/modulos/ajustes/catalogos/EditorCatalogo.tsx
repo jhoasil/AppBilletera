@@ -15,7 +15,8 @@ import Typography from '@mui/material/Typography';
 import { BotonAccion } from '../../../compartido/componentes/BotonAccion';
 import { EstadoVacio } from '../../../compartido/componentes/EstadoVacio';
 import { ServicioCatalogo, type EntidadCatalogo } from '../../../nucleo/servicios/ServicioCatalogo';
-import { CampoTextoCatalogo } from './CampoTextoCatalogo';
+import { CampoTextoCatalogo } from '../../../compartido/componentes/CampoTextoCatalogo';
+import { IconoCatalogo } from '../../../compartido/componentes/IconoCatalogo';
 
 /** Contrato visual para reutilizar el listado y diálogo sin mezclar campos de entidades. */
 export interface PropiedadesEditorCatalogo<Entidad extends EntidadCatalogo> {
@@ -93,6 +94,7 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
       finally { establecerPendiente(false); }
     }
     return <Card key={entidad.id}><CardContent><Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ alignItems: { sm: 'center' } }}>
+      <IconoCatalogo identificador={entidad.icono} />
       <Stack sx={{ flex: 1 }}><Typography variant="h6">{entidad.nombre}</Typography>
         <Typography variant="body2" color="text.secondary">{detalle?.(entidad) ?? (entidad.activo ? 'Activo' : 'Inactivo')}</Typography></Stack>
       <Button onClick={editar} disabled={pendiente} aria-label={`Consultar o editar ${entidad.nombre}`}>Editar</Button>

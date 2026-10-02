@@ -1,6 +1,8 @@
 import type { MedioPago } from '../../nucleo/entidades/MedioPago';
 import type { Billetera } from '../../nucleo/entidades/Billetera';
 import type { CategoriaGasto } from '../../nucleo/entidades/CategoriaGasto';
+import type { Actividad } from '../../nucleo/entidades/Actividad';
+import type { RepositorioActividades } from '../../nucleo/repositorios/RepositorioActividades';
 import type { RepositorioCategoriasGasto } from '../../nucleo/repositorios/RepositorioCategoriasGasto';
 import type { RepositorioMediosPago } from '../../nucleo/repositorios/RepositorioMediosPago';
 import type { RepositorioBilleteras } from '../../nucleo/repositorios/RepositorioBilleteras';
@@ -23,6 +25,14 @@ function validarCategoria(_categoria: CategoriaGasto): void {}
 
 const repositorioCategorias: RepositorioCategoriasGasto = new RepositorioCatalogoWeb<CategoriaGasto>('categorias_gasto');
 export const servicioCategorias = new ServicioCatalogo(repositorioCategorias, validarCategoria);
+
+/** Comprueba los campos mínimos de una actividad sin crear entidades separadas para trabajos. */
+function validarActividad(actividad: Actividad) {
+  if (!actividad.tipo.trim()) throw new Error('Indicá el tipo de actividad.');
+}
+
+const repositorioActividades: RepositorioActividades = new RepositorioCatalogoWeb<Actividad>('actividades');
+export const servicioActividades = new ServicioCatalogo(repositorioActividades, validarActividad);
 
 /** Obtiene todas las billeteras activas recorriendo páginas acotadas, para ofrecer destinos editables. */
 export async function listarBilleterasActivas(): Promise<readonly Billetera[]> {

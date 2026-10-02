@@ -10,6 +10,7 @@ import { CabeceraPagina } from '../../compartido/componentes/CabeceraPagina';
 import { EstadoVacio } from '../../compartido/componentes/EstadoVacio';
 import { CatalogoMediosPago } from './catalogos/CatalogoMediosPago';
 import { CatalogoCategoriasGasto } from './catalogos/CatalogoCategoriasGasto';
+import { CatalogoActividades } from './catalogos/CatalogoActividades';
 
 const secciones = [
   { id: 'actividades', titulo: 'Actividades' },
@@ -42,6 +43,6 @@ export function PaginaAjustes() {
   </Stack>;
   return <Stack spacing={3}>
     <CabeceraPagina titulo={secciones.find(buscarSeccion)?.titulo ?? 'Ajustes'} acciones={<Button onClick={volver}>Volver a Ajustes</Button>} />
-    {seccion === 'categorias' ? <CatalogoCategoriasGasto /> : seccion === 'medios' ? <CatalogoMediosPago /> : seccion === 'apariencia' ? <SelectorModoTema /> : <EstadoVacio titulo="Sección en preparación" descripcion="Esta configuración se incorporará en su tarea correspondiente." />}
+    {seccion === 'actividades' ? <CatalogoActividades /> : seccion === 'categorias' ? <CatalogoCategoriasGasto /> : seccion === 'medios' ? <CatalogoMediosPago /> : seccion === 'apariencia' ? <SelectorModoTema /> : <EstadoVacio titulo="Sección en preparación" descripcion="Esta configuración se incorporará en su tarea correspondiente." />}
   </Stack>;
 }

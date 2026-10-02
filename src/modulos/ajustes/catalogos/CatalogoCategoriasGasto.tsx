@@ -1,7 +1,7 @@
 import type { CategoriaGasto } from '../../../nucleo/entidades/CategoriaGasto';
 import { servicioCategorias } from '../../../app/datos/serviciosCatalogos';
 import { EditorCatalogo } from './EditorCatalogo';
-import { CampoTextoCatalogo } from './CampoTextoCatalogo';
+import { CampoTextoCatalogo } from '../../../compartido/componentes/CampoTextoCatalogo';
 
 /** Prepara una categoría editable sin asignar identidad antes del guardado. */
 function crearCategoria(): CategoriaGasto {
