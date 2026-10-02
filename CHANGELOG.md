@@ -4,6 +4,7 @@
 
 ### Agregado
 
+- Material UI y Material Icons con tema central, paleta, tipografía y estilos compartidos.
 - Base ejecutable React + TypeScript + Vite con TypeScript estricto y pnpm.
 - Estructura inicial de carpetas y comandos de desarrollo, tipos y compilación.
 - Documentación inicial del producto, arquitectura, modelo conceptual y decisiones.

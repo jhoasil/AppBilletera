@@ -2,7 +2,7 @@
 
 Aplicación personal para administrar actividades, ingresos, gastos y billeteras, con prioridad en la carga rápida, el funcionamiento offline y la trazabilidad.
 
-Versión inicial: **0.1.0**. Estado: aplicación base React + TypeScript + Vite, todavía sin módulos funcionales ni persistencia.
+Versión inicial: **0.1.0**. Estado: aplicación base React + TypeScript + Vite con Material UI, todavía sin módulos funcionales ni persistencia.
 
 ## Plataformas y tecnologías previstas
 

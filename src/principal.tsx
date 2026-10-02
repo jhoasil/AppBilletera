@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Aplicacion } from './app/Aplicacion';
+import { ProveedorTema } from './app/tema/ProveedorTema';
 
 const elementoRaiz = document.getElementById('raiz');
 
@@ -10,6 +11,8 @@ if (!elementoRaiz) {
 
 createRoot(elementoRaiz).render(
   <StrictMode>
-    <Aplicacion />
+    <ProveedorTema>
+      <Aplicacion />
+    </ProveedorTema>
   </StrictMode>,
 );
