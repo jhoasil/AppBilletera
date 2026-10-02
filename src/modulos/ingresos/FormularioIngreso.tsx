@@ -53,7 +53,7 @@ export function FormularioIngreso({ alGuardar, inicial, alCompletar }: Propiedad
       /** Incluye solamente medios activos configurados para carga rápida. */
       function rapido(medio: MedioPago) { return medio.activo && medio.mostrarEnCargaRapida; }
       /** Convierte centavos históricos a texto decimal exacto sin formateo con miles. */
-      function recuperar(linea: LineaCobro): LineaFormulario { return { medioPagoId: linea.medioPagoId, billeteraId: linea.billeteraId ?? '', importe: `${Math.trunc(linea.importeCentavos / 100)},${String(linea.importeCentavos % 100).padStart(2, '0')}` }; }
+      function recuperar(linea: LineaCobro): LineaFormulario { const centavos = BigInt(linea.importeCentavos); return { medioPagoId: linea.medioPagoId, billeteraId: linea.billeteraId ?? '', importe: `${centavos / 100n},${String(centavos % 100n).padStart(2, '0')}` }; }
       establecerLineas(inicial ? inicial.lineas.map(recuperar) : resultado.medios.filter(rapido).map(preparar));
     }
     /** Comunica un fallo de lectura con reintento. */

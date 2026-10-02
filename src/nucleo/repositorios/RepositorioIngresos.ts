@@ -12,7 +12,7 @@ export interface RepositorioIngresos {
   /** Recupera los detalles vigentes de un ingreso; devuelve una lista vacía si no hay resultados. */
   obtenerDetalles(ingresoId: Identificador): Promise<readonly DetalleIngresoMedioPago[]>;
   /** Guarda o actualiza cabecera y reemplaza sus detalles vigentes atómicamente, conservando historia. */
-  guardar(ingreso: Ingreso, detalles: readonly DetalleIngresoMedioPago[]): Promise<void>;
+  guardar(ingreso: Ingreso, detalles: readonly DetalleIngresoMedioPago[], actualizadoEnEsperado?: FechaHora): Promise<void>;
   /** Marca cabecera y detalles como eliminados en el instante indicado, sin borrar historia. */
-  eliminarLogicamente(id: Identificador, eliminadoEn: FechaHora): Promise<void>;
+  eliminarLogicamente(id: Identificador, eliminadoEn: FechaHora, actualizadoEnEsperado?: FechaHora): Promise<void>;
 }

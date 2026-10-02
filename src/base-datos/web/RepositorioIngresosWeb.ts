@@ -6,6 +6,7 @@ import type { ConsultaOperaciones, PaginaResultado } from '../../nucleo/reposito
 import { instanteDeFecha, totalLineas } from '../../nucleo/servicios/validarCarga';
 import { baseWeb, prepararBaseWeb } from './baseWeb';
 import { convertirEntidad, convertirRegistro, type ContextoWeb, type RegistroWeb } from './ContextoWeb';
+import { invalidarRegistros } from './invalidarRegistros';
 
 /** Persistencia de ingresos con cabecera, distribuciones y movimientos positivos inseparables. */
 export class RepositorioIngresosWeb implements RepositorioIngresos {
@@ -51,33 +52,59 @@ export class RepositorioIngresosWeb implements RepositorioIngresos {
   }
 
   /** Guarda los tres conjuntos en una transacción y valida catálogos y monedas dentro de ella. */
-  async guardar(ingreso: Ingreso, detalles: readonly DetalleIngresoMedioPago[]): Promise<void> {
+  async guardar(ingreso: Ingreso, detalles: readonly DetalleIngresoMedioPago[], actualizadoEnEsperado?: string): Promise<void> {
+    if (ingreso.eliminadoEn !== null) throw new Error('No se puede guardar una operación eliminada como vigente.');
     if (totalLineas(detalles, ingreso.moneda) !== ingreso.importeCentavos) throw new Error('El total no coincide con los detalles.');
     const fechaMovimiento = instanteDeFecha(ingreso.fecha);
     await prepararBaseWeb();
     /** Inserta el ingreso y cada efecto financiero; cualquier fallo revierte todo. */
     async function escribir(contexto: ContextoWeb) {
-      if (await contexto.obtener('ingresos', ingreso.id)) throw new Error('El ingreso ya existe; utilizá su edición.');
-      await exigirCatalogoActivo(contexto, 'actividades', ingreso.actividadId);
-      await contexto.guardar('ingresos', convertirRegistro(ingreso), true);
+      const anterior = await contexto.obtener('ingresos', ingreso.id);
+      if (anterior && (anterior.eliminado_en !== null || !actualizadoEnEsperado || anterior.actualizado_en !== actualizadoEnEsperado)) throw new Error('El ingreso cambió o fue eliminado; volvé a abrirlo antes de editar.');
+      if (!anterior && actualizadoEnEsperado) throw new Error('El ingreso ya no existe.');
+      const anteriores: RegistroWeb[] = [];
+      /** Recupera referencias históricas para permitir mantener catálogos inactivos durante una edición. */
+      function recordar(registro: RegistroWeb) { if (registro.eliminado_en === null) anteriores.push(registro); }
+      if (anterior) await contexto.recorrer('ingresos_medios_pago', recordar, 'por_ingreso', IDBKeyRange.only(ingreso.id));
+      await exigirCatalogoActivo(contexto, 'actividades', ingreso.actividadId, anterior?.actividad_id === ingreso.actividadId);
+      if (anterior) {
+        await invalidarRegistros(contexto, 'ingresos_medios_pago', 'por_ingreso', IDBKeyRange.only(ingreso.id), ingreso.actualizadoEn);
+        await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', IDBKeyRange.only(['ingreso', ingreso.id]), ingreso.actualizadoEn);
+      }
+      await contexto.guardar('ingresos', convertirRegistro(ingreso), !anterior);
       for (const detalle of detalles) {
-        if (detalle.ingresoId !== ingreso.id) throw new Error('El detalle pertenece a otro ingreso.');
-        await exigirCatalogoActivo(contexto, 'medios_pago', detalle.medioPagoId);
+        if (detalle.ingresoId !== ingreso.id || detalle.eliminadoEn !== null) throw new Error('El detalle pertenece a otro ingreso.');
+        /** Reconoce una referencia ya utilizada para conservarla sin habilitar nuevas selecciones inactivas. */
+        function coincideHistorico(registro: RegistroWeb) { return registro.medio_pago_id === detalle.medioPagoId && registro.billetera_id === detalle.billeteraId; }
+        const historico = anteriores.some(coincideHistorico);
+        await exigirCatalogoActivo(contexto, 'medios_pago', detalle.medioPagoId, historico);
         if (detalle.billeteraId) {
-          const billetera = await exigirCatalogoActivo(contexto, 'billeteras', detalle.billeteraId);
+          const billetera = await exigirCatalogoActivo(contexto, 'billeteras', detalle.billeteraId, historico);
           if (billetera.moneda !== ingreso.moneda) throw new Error('La billetera y el ingreso deben tener la misma moneda.');
         }
         await contexto.guardar('ingresos_medios_pago', convertirRegistro(detalle), true);
         if (!detalle.billeteraId) continue;
-        const movimiento: MovimientoBilletera = { id: crypto.randomUUID(), billeteraId: detalle.billeteraId, tipo: 'INGRESO', referenciaTipo: 'ingreso', referenciaId: ingreso.id, importeCentavos: detalle.importeCentavos, fecha: fechaMovimiento, descripcion: ingreso.descripcion, creadoEn: ingreso.creadoEn, actualizadoEn: ingreso.actualizadoEn, eliminadoEn: null };
+        const movimiento: MovimientoBilletera = { id: crypto.randomUUID(), billeteraId: detalle.billeteraId, tipo: 'INGRESO', referenciaTipo: 'ingreso', referenciaId: ingreso.id, importeCentavos: detalle.importeCentavos, fecha: fechaMovimiento, descripcion: ingreso.descripcion, creadoEn: ingreso.actualizadoEn, actualizadoEn: ingreso.actualizadoEn, eliminadoEn: null };
         await contexto.guardar('movimientos_billetera', convertirRegistro(movimiento), true);
       }
     }
     return baseWeb.ejecutarTransaccion({ recursos: ['ingresos', 'ingresos_medios_pago', 'movimientos_billetera', 'actividades', 'medios_pago', 'billeteras'], modo: 'escritura' }, escribir);
   }
 
-  /** La invalidación se habilitará junto al ABM; nunca realiza un borrado parcial. */
-  async eliminarLogicamente(_id: string, _eliminadoEn: string): Promise<void> { throw new Error('El borrado de ingresos se incorporará con su ABM.'); }
+  /** Invalida cabecera, detalles y movimientos juntos; un ingreso ausente no produce cambios. */
+  async eliminarLogicamente(id: string, eliminadoEn: string, actualizadoEnEsperado?: string): Promise<void> {
+    await prepararBaseWeb();
+    /** Aplica un borrado trazable en el mismo alcance que las escrituras financieras. */
+    async function eliminar(contexto: ContextoWeb) {
+      const registro = await contexto.obtener('ingresos', id);
+      if (!registro || registro.eliminado_en !== null) return;
+      if (actualizadoEnEsperado && registro.actualizado_en !== actualizadoEnEsperado) throw new Error('El ingreso cambió; actualizá el listado antes de eliminar.');
+      await invalidarRegistros(contexto, 'ingresos_medios_pago', 'por_ingreso', IDBKeyRange.only(id), eliminadoEn);
+      await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', IDBKeyRange.only(['ingreso', id]), eliminadoEn);
+      await contexto.guardar('ingresos', { ...registro, actualizado_en: eliminadoEn, eliminado_en: eliminadoEn });
+    }
+    return baseWeb.ejecutarTransaccion({ recursos: ['ingresos', 'ingresos_medios_pago', 'movimientos_billetera', 'actividades', 'medios_pago', 'billeteras'], modo: 'escritura' }, eliminar);
+  }
 }
 
 /** Valida paginación acotada antes de abrir una transacción de consulta. */
@@ -95,8 +122,8 @@ export function rangoFechas(desde?: string, hasta?: string): IDBKeyRange | undef
 }
 
 /** Comprueba disponibilidad dentro de la escritura para impedir referencias obsoletas desde otra pestaña. */
-export async function exigirCatalogoActivo(contexto: ContextoWeb, tabla: 'actividades' | 'medios_pago' | 'billeteras' | 'categorias_gasto', id: string): Promise<RegistroWeb> {
+export async function exigirCatalogoActivo(contexto: ContextoWeb, tabla: 'actividades' | 'medios_pago' | 'billeteras' | 'categorias_gasto', id: string, permitirHistorico = false): Promise<RegistroWeb> {
   const registro = await contexto.obtener(tabla, id);
-  if (!registro || registro.eliminado_en !== null || !registro.activo) throw new Error('Una selección ya no está activa; actualizá los catálogos antes de guardar.');
+  if (!registro || (!permitirHistorico && (registro.eliminado_en !== null || !registro.activo))) throw new Error('Una selección ya no está activa; actualizá los catálogos antes de guardar.');
   return registro;
 }
