@@ -1587,7 +1587,15 @@ cuando su función no sea evidente.
 
 # 65. Git
 
-Cada tarea debe terminar con su propio commit.
+Cada tarea debe comenzar en su propia rama antes de modificar archivos y terminar con su propio commit.
+
+Nombre obligatorio: `codex/NNN`, donde `NNN` es el número de tarea con tres dígitos y ceros a la izquierda.
+
+Ejemplos: TAREA 00 → `codex/000`; TAREA 01 (001) → `codex/001`; TAREA 10 → `codex/010`.
+
+Después de leer las reglas y la documentación relacionada, revisar `git status` y crear la rama con `git switch -c codex/NNN`. Verificar la rama activa antes de modificar archivos. Si ya existe por una ejecución anterior de la misma tarea, comprobar su correspondencia y continuar en ella sin borrarla ni recrearla.
+
+No realizar tareas directamente en `main` o `master`. No mezclar cambios de otras tareas ni fusionar ramas automáticamente. Crear la rama de la tarea siguiente solamente cuando el usuario autorice esa tarea.
 
 Antes:
 
@@ -1719,6 +1727,7 @@ Informar:
 Tarea completada:
 Cambios principales:
 Archivos principales:
+Rama:
 Commit:
 Hash:
 Tests: no ejecutados.

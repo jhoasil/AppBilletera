@@ -8,11 +8,12 @@ Cada tarea debe:
 
 1. leer AGENTS.md;
 2. leer solo documentación relacionada;
-3. modificar solo lo necesario;
-4. revisar git diff;
-5. realizar commit;
-6. informar resumen;
-7. detenerse.
+3. revisar git status y crear la rama codex/NNN de la tarea, con tres dígitos (00 → 000, 01 → 001, 10 → 010); si ya existe para la misma tarea, verificarla y continuar en ella;
+4. verificar la rama activa y modificar solo lo necesario;
+5. revisar git diff;
+6. realizar commit en esa rama;
+7. informar resumen, rama y hash;
+8. detenerse.
 
 NO avanzar automáticamente.
 
