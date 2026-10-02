@@ -51,7 +51,7 @@ Todas las tablas tienen `id`, `creado_en`, `actualizado_en` y `eliminado_en`. Lo
 | ajustes_billetera | billetera_id, fecha, saldo_calculado_centavos, saldo_real_centavos, diferencia_centavos, motivo y observaciones. |
 | movimientos_billetera | billetera_id, tipo, referencia_tipo, referencia_id, importe_centavos, fecha y descripción. |
 
-La referencia de movimientos es polimórfica y no declara una FK a una tabla única. Los servicios verificarán conjuntamente referencia y tipo, signos, monedas de las billeteras, suma de detalles y creación de movimientos en la transacción de cada operación. Los catálogos son datos editables; la migración no inserta valores iniciales. No incluye índices adicionales ni cachés de saldos. El adaptador administra la versión de esquema fuera de estas once tablas de negocio.
+La referencia de movimientos es polimórfica y no declara una FK a una tabla única. Los servicios verificarán conjuntamente referencia y tipo, signos, monedas de las billeteras, suma de detalles y creación de movimientos en la transacción de cada operación. Los catálogos son datos editables; la migración no inserta valores iniciales. No incluye cachés de saldos. El adaptador administra la versión de esquema fuera de estas once tablas de negocio.
 
 ```mermaid
 erDiagram
@@ -145,3 +145,7 @@ El formateo se separa en `src/compartido/dinero/formatearImporte.ts`, con idioma
 Ingresos y gastos tienen detalles por medio de pago, sin columnas fijas para efectivo o tarjeta. Los movimientos usan importes positivos para entradas y negativos para salidas. Tipos previstos: `SALDO_INICIAL`, `INGRESO`, `GASTO`, `TRANSFERENCIA_ENTRADA`, `TRANSFERENCIA_SALIDA`, `AJUSTE_POSITIVO` y `AJUSTE_NEGATIVO`.
 
 Una transferencia genera salida y entrada por el mismo importe sin modificar el resultado. El saldo inicial y las diferencias de conciliación se registran como movimientos; el saldo no se edita directamente. Una diferencia cero no genera ajuste.
+
+## Índices V1
+
+Los siete índices financieros exigidos y dos índices por cabecera de detalles están en src/base-datos/migraciones/indicesV1.ts, cada uno con su motivo. Se incluyen en V1 antes de su primera implementación física. Los adaptadores deben crearlos en la misma actualización de esquema; no se agregan índices de catálogo sin una necesidad medida.

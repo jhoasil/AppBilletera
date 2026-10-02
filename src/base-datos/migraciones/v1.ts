@@ -1,5 +1,6 @@
 import type { MigracionBaseLocal } from '../contratos/AdaptadorBaseLocal';
 import type { ContextoMigracionEsquema, DefinicionColumna, DefinicionTabla, NombreTabla } from './EsquemaBaseDatos';
+import { indicesV1 } from './indicesV1';
 
 /** Campos comunes: UUID como id y auditoría UTC, con borrado exclusivamente lógico. */
 const columnasAuditadas: readonly DefinicionColumna[] = [
@@ -131,10 +132,18 @@ const movimientosBilletera: DefinicionTabla = {
 };
 
 /** Orden de creación que resuelve las FK antes de crear tablas dependientes. */
-export const tablasV1: readonly DefinicionTabla[] = [
+const tablasSinIndices: readonly DefinicionTabla[] = [
   actividades, categoriasGasto, billeteras, mediosPago, ingresos, ingresosMediosPago,
   gastos, gastosMediosPago, transferenciasBilleteras, ajustesBilletera, movimientosBilletera,
 ];
+
+/** Adjunta solamente los índices justificados para cada tabla del esquema inicial. */
+function agregarIndices(tabla: DefinicionTabla): DefinicionTabla {
+  const indices = indicesV1[tabla.nombre];
+  return indices ? { ...tabla, indices } : tabla;
+}
+
+export const tablasV1: readonly DefinicionTabla[] = tablasSinIndices.map(agregarIndices);
 
 /** Entrega el esquema completo al motor para crearlo dentro de su migración atómica. */
 function aplicarEsquemaInicial(contexto: ContextoMigracionEsquema): void | Promise<void> {
@@ -148,5 +157,5 @@ export const migracionInicial: MigracionBaseLocal<ContextoMigracionEsquema> = {
   aplicar: aplicarEsquemaInicial,
 };
 
-/** Plan inicial para BaseLocal; los índices adicionales se incorporarán en la TAREA 011. */
+/** Plan inicial para BaseLocal, incluidas las tablas y los índices de V1. */
 export const migracionesBaseLocal: readonly MigracionBaseLocal<ContextoMigracionEsquema>[] = [migracionInicial];

@@ -23,12 +23,20 @@ export type RestriccionTabla =
   | { readonly tipo: 'distintos'; readonly columnas: readonly [string, string] }
   | { readonly tipo: 'diferencia'; readonly resultado: string; readonly minuendo: string; readonly sustraendo: string };
 
-/** Tabla sin índices adicionales; id es su identidad única en ambos motores. */
+/** Índice no único para consultas por igualdad o rango, con su motivo documentado. */
+export interface DefinicionIndice {
+  readonly nombre: string;
+  readonly columnas: readonly string[];
+  readonly motivo: string;
+}
+
+/** Tabla con identidad única id e índices declarativos compartidos por ambos motores. */
 export interface DefinicionTabla {
   readonly nombre: NombreTabla;
   readonly descripcion: string;
   readonly columnas: readonly DefinicionColumna[];
   readonly restricciones?: readonly RestriccionTabla[];
+  readonly indices?: readonly DefinicionIndice[];
 }
 
 /** Contexto que crea el esquema dentro de la transacción de migración del adaptador. */
