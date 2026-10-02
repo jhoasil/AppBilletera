@@ -12,7 +12,7 @@ export interface RepositorioGastos {
   /** Recupera los detalles vigentes del gasto; devuelve una lista vacía si no hay resultados. */
   obtenerDetalles(gastoId: Identificador): Promise<readonly DetalleGastoMedioPago[]>;
   /** Guarda o actualiza cabecera y reemplaza sus detalles vigentes atómicamente, conservando historia. */
-  guardar(gasto: Gasto, detalles: readonly DetalleGastoMedioPago[]): Promise<void>;
+  guardar(gasto: Gasto, detalles: readonly DetalleGastoMedioPago[], actualizadoEnEsperado?: FechaHora): Promise<void>;
   /** Marca cabecera y detalles como eliminados en el instante indicado, sin borrar historia. */
-  eliminarLogicamente(id: Identificador, eliminadoEn: FechaHora): Promise<void>;
+  eliminarLogicamente(id: Identificador, eliminadoEn: FechaHora, actualizadoEnEsperado?: FechaHora): Promise<void>;
 }

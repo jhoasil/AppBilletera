@@ -107,4 +107,3 @@ export class RepositorioIngresosWeb implements RepositorioIngresos {
     return baseWeb.ejecutarTransaccion({ recursos: ['ingresos', 'ingresos_medios_pago', 'movimientos_billetera', 'actividades', 'medios_pago', 'billeteras'], modo: 'escritura' }, eliminar);
   }
 }
-
