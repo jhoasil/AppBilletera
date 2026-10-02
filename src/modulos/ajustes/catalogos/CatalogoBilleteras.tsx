@@ -68,6 +68,7 @@ export function CatalogoBilleteras() {
   /** Comunica una escritura confirmada sin simular un saldo mutable. */
   function registrado() { establecerConfirmacion('Saldo inicial registrado como movimiento trazable.'); establecerBilleteraSaldo(null); }
   return <Stack spacing={2}>
+    <Button component="a" href="#/transferencias" variant="outlined">Transferir entre billeteras</Button>
     {confirmacion && <Alert severity="success">{confirmacion}</Alert>}
     <EditorCatalogo singular="billetera" servicio={servicioBilleteras} crearNuevo={crear} campos={camposConSaldo} detalle={detalle} guardarPersonalizado={guardar} accionAdicional={accion} />
     <DialogoSaldoInicial billetera={billeteraSaldo} alCerrar={cerrar} alRegistrar={registrado} />

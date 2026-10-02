@@ -14,12 +14,17 @@ async function cargarAjustes() {
 }
 const PaginaAjustes = lazy(cargarAjustes);
 
+/** Carga las transferencias cuando se abre su pantalla, sin agrandar el paquete inicial. */
+async function cargarTransferencia() { const modulo = await import('../modulos/billeteras/PaginaTransferencia'); return { default: modulo.PaginaTransferencia }; }
+const PaginaTransferencia = lazy(cargarTransferencia);
+
 const paginas = {
   inicio: <PaginaInicio />,
   ingresos: <PaginaIngresos />,
   gastos: <PaginaGastos />,
   reportes: <PaginaReportes />,
   ajustes: <PaginaAjustes />,
+  transferencias: <PaginaTransferencia />,
 };
 
 /** Muestra una única página dentro de la navegación compartida por todas las pantallas. */
