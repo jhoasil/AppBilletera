@@ -40,6 +40,7 @@ export class AdaptadorIndexedDB implements AdaptadorWeb<ContextoWeb, ContextoMig
         if (!migracion) return;
         /** Crea los almacenes y sus índices dentro de la actualización atómica. */
         function crearTablas(tablas: readonly DefinicionTabla[]) {
+          solicitud.result.createObjectStore('_metadatos', { keyPath: 'id' });
           for (const tabla of tablas) {
             const almacen = solicitud.result.createObjectStore(tabla.nombre, { keyPath: 'id' });
             for (const indice of tabla.indices ?? []) almacen.createIndex(indice.nombre, indice.columnas.length === 1 ? indice.columnas[0]! : [...indice.columnas]);

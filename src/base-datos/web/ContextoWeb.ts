@@ -41,6 +41,16 @@ export class ContextoWeb {
   /** Recibe la transacción creada por el adaptador; no abre conexiones adicionales. */
   constructor(private readonly transaccion: IDBTransaction) {}
 
+  /** Consulta una marca técnica sin mezclarla con registros de negocio. */
+  async obtenerMarca(id: string): Promise<boolean> {
+    return Boolean(await esperarSolicitud(this.transaccion.objectStore('_metadatos').get(id)));
+  }
+
+  /** Marca una preparación en la misma transacción que sus datos iniciales. */
+  async guardarMarca(id: string): Promise<void> {
+    await esperarSolicitud(this.transaccion.objectStore('_metadatos').put({ id }));
+  }
+
   /** Obtiene un registro físico o null si no existe. */
   async obtener(tabla: NombreTabla, id: string): Promise<RegistroWeb | null> {
     return (await esperarSolicitud(this.transaccion.objectStore(tabla).get(id))) as RegistroWeb | undefined ?? null;

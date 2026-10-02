@@ -46,3 +46,7 @@ Usar localStorage únicamente para preferencias de interfaz, como apariencia y �
 ## Persistencia Web
 
 El adaptador IndexedDB está en `src/base-datos/web/`. La versión física es la versión lógica más uno: IndexedDB 1 representa una base vacía y IndexedDB 2 el esquema V1. Las migraciones crean almacenes e índices dentro de versionchange y las transacciones resuelven después de oncomplete. Los errores abortan todas sus escrituras. Las referencias y restricciones se validan en la misma transacción; los componentes solo consumirán servicios. Los catálogos pequeños pueden ordenarse en la capa de persistencia; los movimientos financieros deberán recorrerse mediante sus índices, sin materializar toda la historia.
+
+## Datos iniciales
+
+Los datos sugeridos se insertan una sola vez, en una transacción común con la marca `datos_iniciales_v1` del almacén técnico `_metadatos`. Editar, desactivar o renombrar un catálogo no vuelve a crear sus valores sugeridos. `_metadatos` no es una entidad de negocio ni contiene datos financieros. Una instalación nueva crea DiDi, Uber, seis categorías, tres medios de pago y la billetera Efectivo; únicamente Efectivo recibe esa billetera predeterminada.
