@@ -1,10 +1,10 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import Calculate from '@mui/icons-material/Calculate';
 import Edit from '@mui/icons-material/Edit';
-import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import AddCircleOutline from '@mui/icons-material/Add';
 import Tune from '@mui/icons-material/Tune';
-import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
-import ErrorOutline from '@mui/icons-material/ErrorOutline';
+import CheckCircleOutline from '@mui/icons-material/Check';
+import ErrorOutline from '@mui/icons-material/WarningAmber';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
