@@ -1,6 +1,18 @@
 # AppBilletera — Reglas permanentes para Codex
 
-## 1. Objetivo
+Este archivo contiene reglas permanentes para trabajar sobre AppBilletera.
+
+Antes de realizar cualquier tarea, Codex debe leer este archivo y respetarlo durante toda la ejecución.
+
+Las instrucciones específicas de cada fase se encuentran en:
+
+```text
+docs/TAREAS_CODEX.md
+```
+
+---
+
+# 1. Objetivo
 
 AppBilletera es una aplicación personal multiplataforma para administrar:
 
@@ -18,11 +30,15 @@ AppBilletera es una aplicación personal multiplataforma para administrar:
 
 La aplicación debe priorizar:
 
+- integridad financiera;
+- preservación de datos;
+- trazabilidad;
 - rapidez de carga;
 - funcionamiento offline;
-- trazabilidad;
 - simplicidad;
 - uso desde celular;
+- rendimiento;
+- consistencia visual;
 - escalabilidad futura.
 
 ---
@@ -31,13 +47,15 @@ La aplicación debe priorizar:
 
 AppBilletera debe funcionar desde una única base de código en:
 
-- Web;
-- PWA;
-- Android;
-- iOS;
-- iPadOS.
+```text
+Web
+PWA
+Android
+iOS
+iPadOS
+```
 
-No crear aplicaciones separadas por plataforma.
+No crear aplicaciones funcionalmente separadas por plataforma.
 
 La lógica de negocio y las pantallas deben ser compartidas.
 
@@ -49,26 +67,30 @@ Las diferencias específicas de plataforma deben encapsularse detrás de adaptad
 
 Utilizar:
 
-- React;
-- TypeScript;
-- Vite;
-- Material UI;
-- Material Icons;
-- Capacitor;
-- pnpm.
+```text
+React
+TypeScript
+Vite
+Material UI
+Material Icons
+Capacitor
+pnpm
+```
 
 Persistencia:
 
-Web:
-- IndexedDB.
+```text
+Web / PWA
+→ IndexedDB
 
-Android:
-- SQLite.
+Android
+→ SQLite
 
-iOS/iPadOS:
-- SQLite.
+iOS / iPadOS
+→ SQLite
+```
 
-No implementar backend en la primera versión.
+No implementar backend obligatorio en la primera versión.
 
 ---
 
@@ -76,18 +98,26 @@ No implementar backend en la primera versión.
 
 Utilizar exclusivamente:
 
+```text
 pnpm
+```
 
 Mantener:
 
+```text
 pnpm-lock.yaml
+```
 
 No generar:
 
+```text
 package-lock.json
 yarn.lock
+```
 
-Agregar en package.json:
+`package.json` debe declarar el package manager seleccionado.
+
+Ejemplo:
 
 ```json
 {
@@ -95,24 +125,24 @@ Agregar en package.json:
 }
 ```
 
-usando la versión estable seleccionada para el proyecto.
+No utilizar `npm install` ni `yarn install` dentro del proyecto.
 
 ---
 
-# 5. Idioma obligatorio
+# 5. Idioma del proyecto
 
-Todo lo desarrollado específicamente para AppBilletera debe estar en español.
+Todo concepto propio de AppBilletera debe mantenerse en español.
 
 Esto incluye:
 
-- carpetas;
-- archivos;
-- componentes;
+- módulos funcionales;
+- archivos funcionales;
+- componentes propios;
 - interfaces;
 - tipos;
 - clases;
 - servicios;
-- repositorios;
+- repositorios propios;
 - funciones;
 - variables;
 - parámetros;
@@ -147,21 +177,80 @@ calcularRentabilidad()
 
 # 6. Excepciones de idioma
 
-Por decisión del usuario, los nombres de las carpetas de arquitectura técnica utilizan inglés convencional:
+Las carpetas de arquitectura técnica utilizan inglés convencional.
 
-- Raíz de `src`: `app`, `core`, `database`, `modules`, `shared`.
-- `app`: `data`, `navigation`, `preferences`, `theme`.
-- `core`: `entities`, `money`, `repositories`, `services`.
-- `database`: `adapters`, `contracts`, `data`, `migrations`, `web`, `repositories`.
-- `shared`: `components`, `dates`, `money`.
+Raíz de `src`:
 
-Los módulos del negocio y sus subdivisiones permanecen en español: `ajustes`, `billeteras`, `gastos`, `ingresos`, `inicio`, `reportes`, `catalogos`. Los archivos, clases, componentes, funciones, variables, entidades, textos, tablas y columnas propios también permanecen en español. Esta excepción afecta únicamente a nombres de carpetas arquitectónicas; no autoriza traducir el contenido ni renombrar funcionalidades del negocio.
+```text
+app
+core
+database
+modules
+shared
+```
 
-No traducir nombres que pertenecen a tecnologías externas.
+Dentro de `app`:
 
-Mantener:
+```text
+data
+navigation
+preferences
+theme
+```
 
-```ts
+Dentro de `core`:
+
+```text
+entities
+money
+repositories
+services
+```
+
+Dentro de `database`:
+
+```text
+adapters
+contracts
+data
+migrations
+repositories
+web
+```
+
+Dentro de `shared`:
+
+```text
+components
+dates
+money
+```
+
+Los módulos funcionales permanecen en español:
+
+```text
+ajustes
+billeteras
+gastos
+ingresos
+inicio
+reportes
+catalogos
+```
+
+Esta excepción afecta únicamente a estructura técnica.
+
+No autoriza traducir al inglés funcionalidades propias del proyecto.
+
+---
+
+# 7. APIs y convenciones externas
+
+No traducir nombres pertenecientes a tecnologías externas.
+
+Mantener cuando corresponda:
+
+```text
 React
 TypeScript
 Material UI
@@ -190,7 +279,7 @@ onSubmit
 aria-label
 ```
 
-También se pueden mantener términos técnicos cuando traducirlos reduzca claridad:
+También pueden mantenerse términos técnicos cuando traducirlos reduzca claridad:
 
 ```text
 hook
@@ -206,7 +295,7 @@ JSON
 
 ---
 
-# 7. Nomenclatura TypeScript
+# 8. Nomenclatura TypeScript
 
 Componentes React:
 
@@ -253,16 +342,18 @@ useBilleteras
 useActividades
 ```
 
-El prefijo `use` se mantiene porque pertenece a la convención de React.
+El prefijo `use` se conserva por ser una convención de React.
 
 ---
 
-# 8. Nomenclatura SQL
+# 9. Nomenclatura SQL
 
 Toda la base de datos propia utiliza:
 
-- español;
-- snake_case.
+```text
+español
+snake_case
+```
 
 Ejemplos:
 
@@ -282,7 +373,7 @@ ajustes_billetera
 
 ---
 
-# 9. Claves primarias
+# 10. Claves primarias
 
 Todas las tablas utilizan:
 
@@ -310,9 +401,11 @@ id_ingreso
 id_gasto
 ```
 
+como claves primarias.
+
 ---
 
-# 10. UUID
+# 11. UUID
 
 El campo:
 
@@ -320,7 +413,7 @@ El campo:
 id
 ```
 
-de las entidades principales contiene un UUID generado localmente.
+de las entidades principales contiene directamente un UUID generado localmente.
 
 No utilizar IDs autoincrementales como identidad principal.
 
@@ -331,7 +424,11 @@ id
 uuid
 ```
 
-El UUID es directamente el `id`.
+El UUID es directamente:
+
+```text
+id
+```
 
 Utilizar cuando sea compatible:
 
@@ -339,11 +436,18 @@ Utilizar cuando sea compatible:
 crypto.randomUUID()
 ```
 
-La finalidad es que un registro pueda crearse offline y conservar exactamente la misma identidad cuando posteriormente se sincronice con cloud.
+La identidad debe poder generarse completamente offline y conservarse posteriormente en:
+
+```text
+IndexedDB
+SQLite
+futuras APIs
+futura base cloud
+```
 
 ---
 
-# 11. Claves foráneas
+# 12. Claves foráneas
 
 Las FK utilizan:
 
@@ -365,17 +469,16 @@ billetera_origen_id
 billetera_destino_id
 ```
 
-Ejemplo:
+No utilizar convenciones como:
 
 ```text
-actividades.id
-      ↑
-ingresos.actividad_id
+id_actividad
+id_billetera
 ```
 
 ---
 
-# 12. Auditoría temporal
+# 13. Auditoría temporal
 
 Utilizar cuando corresponda:
 
@@ -385,11 +488,25 @@ actualizado_en
 eliminado_en
 ```
 
-Las fechas deben tener un formato consistente y documentado.
+Los instantes de auditoría deben manejarse consistentemente.
+
+Preferir:
+
+```text
+ISO 8601 UTC
+```
+
+cuando representan un instante.
+
+Las fechas de negocio sin hora pueden utilizar:
+
+```text
+AAAA-MM-DD
+```
 
 ---
 
-# 13. Borrado lógico
+# 14. Borrado lógico
 
 No eliminar físicamente registros utilizados históricamente.
 
@@ -407,31 +524,40 @@ activo
 
 según corresponda.
 
-Ejemplo:
+Una entidad desactivada no debe aparecer para nuevas operaciones cuando corresponda.
 
-una categoría eliminada no debe aparecer para crear nuevos gastos, pero debe seguir mostrándose correctamente en gastos históricos.
+Debe continuar resolviendo correctamente operaciones históricas.
+
+Aplica especialmente a:
+
+```text
+Actividades
+Categorías
+Medios de pago
+Billeteras
+```
 
 ---
 
-# 14. Dinero
+# 15. Dinero
 
-Nunca persistir dinero utilizando float.
+Nunca persistir dinero utilizando `float`.
 
 Guardar importes como enteros en unidades monetarias menores.
 
-Ejemplo:
+Campo habitual:
 
 ```text
 importe_centavos
 ```
 
-Para:
+Ejemplo:
 
 ```text
 $1.500,25
 ```
 
-guardar:
+se almacena como:
 
 ```text
 150025
@@ -443,11 +569,11 @@ Moneda inicial:
 ARS
 ```
 
-La arquitectura no debe impedir agregar otras monedas posteriormente.
+La arquitectura no debe impedir agregar nuevas monedas posteriormente.
 
 ---
 
-# 15. Arquitectura
+# 16. Arquitectura
 
 Mantener separación clara:
 
@@ -467,13 +593,23 @@ IndexedDB / SQLite
 
 La UI nunca debe:
 
-- ejecutar SQL;
-- acceder directamente a IndexedDB;
-- acceder directamente a SQLite.
+```text
+ejecutar SQL
+acceder directamente a IndexedDB
+acceder directamente a SQLite
+```
+
+La lógica financiera no debe implementarse dentro de componentes React.
+
+Consultar:
+
+```text
+docs/ARQUITECTURA.md
+```
 
 ---
 
-# 16. Persistencia multiplataforma
+# 17. Persistencia multiplataforma
 
 Las capas superiores no deben saber qué motor está utilizando la aplicación.
 
@@ -487,38 +623,44 @@ RepositorioIngresos
        └── Nativo → SQLite
 ```
 
-Lo mismo para:
+Lo mismo aplica a:
 
-- gastos;
-- actividades;
-- billeteras;
-- catálogos;
-- reportes.
+```text
+gastos
+actividades
+billeteras
+catálogos
+transferencias
+reportes
+```
 
 ---
 
-# 17. Local-first
+# 18. Local-first
 
-La primera versión funciona completamente offline.
+La aplicación debe funcionar completamente offline para sus funciones principales.
 
 El usuario debe poder:
 
-- crear;
-- editar;
-- consultar;
-- transferir;
-- conciliar;
-- generar reportes;
+```text
+crear
+editar
+consultar
+transferir
+conciliar
+generar reportes
+administrar catálogos
+```
 
 sin conexión.
 
-Preparar el modelo para futura sincronización cloud, pero no implementar sincronización todavía.
+La conectividad no debe ser requisito para registrar operaciones financieras.
 
 ---
 
-# 18. Futuro cloud
+# 19. Futuro cloud
 
-En el futuro la arquitectura podrá ser:
+La arquitectura puede evolucionar posteriormente hacia:
 
 ```text
 App
@@ -532,27 +674,31 @@ API
 Base cloud
 ```
 
-No sobreingenierizar V1.
+No implementar sincronización cloud en V1.
 
-Los UUID ya dejan preparado el modelo.
+No sobreingenierizar anticipadamente.
+
+Los UUID y las reglas de idempotencia deben facilitar esa evolución.
 
 ---
 
-# 19. Actividades
+# 20. Actividades
 
-Una actividad representa una fuente de generación de ingresos.
+Una actividad representa una fuente de generación de ingresos, trabajo, servicio o proyecto.
 
 Ejemplos:
 
-- DiDi;
-- Uber;
-- fotografía;
-- programación;
-- ventas;
-- pintura;
-- trabajo temporal;
-- trabajo fijo;
-- servicio.
+```text
+DiDi
+Uber
+Fotografía
+Programación
+Ventas
+Pintura
+Trabajo temporal
+Trabajo fijo
+Servicio
+```
 
 Campos principales:
 
@@ -574,7 +720,7 @@ eliminado_en
 
 ---
 
-# 20. Trabajos temporales
+# 21. Trabajos temporales
 
 Una actividad puede representar un trabajo temporal.
 
@@ -586,11 +732,13 @@ Pintura departamento
 
 Puede tener:
 
-- fecha_inicio;
-- fecha_fin;
-- múltiples ingresos;
-- múltiples gastos;
-- rentabilidad propia.
+```text
+fecha_inicio
+fecha_fin
+múltiples ingresos
+múltiples gastos
+rentabilidad propia
+```
 
 Estados iniciales:
 
@@ -600,54 +748,55 @@ finalizado
 archivado
 ```
 
+No crear otra entidad si `Actividad` resuelve correctamente el concepto.
+
 ---
 
-# 21. Iconos
+# 22. Iconos
 
-Cada actividad puede tener:
+Las entidades configurables pueden utilizar:
 
 ```text
 icono
 color
 ```
 
+cuando corresponda.
+
 Utilizar Material Icons.
 
 No guardar SVG completos en la base.
 
-Guardar solamente un identificador del icono.
+Guardar un identificador estable del icono.
 
-Debe existir un selector visual con:
-
-- búsqueda;
-- vista previa;
-- selección;
-- cambio de icono.
+Los selectores visuales deben reutilizar componentes compartidos.
 
 ---
 
-# 22. Catálogos
+# 23. Catálogos
 
-Los catálogos se administran exclusivamente desde:
+Los catálogos se administran desde:
 
 ```text
 Ajustes
 ```
 
-ABM requeridos:
+ABM principales:
 
-- Actividades.
-- Categorías de gastos.
-- Medios de pago.
-- Billeteras.
+```text
+Actividades
+Categorías de gastos
+Medios de pago
+Billeteras
+```
 
-Los formularios de ingreso/gasto no deben crear ni editar estos catálogos.
+Los formularios de ingreso y gasto consumen estos catálogos.
 
-Solamente deben consumirlos.
+No deben convertirse en pantallas de administración de catálogos.
 
 ---
 
-# 23. Medios de pago
+# 24. Medios de pago
 
 Ejemplos iniciales:
 
@@ -661,7 +810,7 @@ Son registros normales.
 
 No hardcodearlos como lógica de negocio.
 
-Cada medio podrá tener:
+Cada medio puede tener:
 
 ```text
 id
@@ -679,9 +828,107 @@ eliminado_en
 
 ---
 
-# 24. Carga rápida de ingresos y gastos
+# 25. Medio de pago y billetera
 
-La prioridad principal de UX es cargar movimientos con la menor cantidad posible de pasos.
+No confundir:
+
+```text
+Medio de pago
+```
+
+con:
+
+```text
+Billetera
+```
+
+Un medio de pago responde:
+
+```text
+¿Cómo se pagó o cobró?
+```
+
+Una billetera responde:
+
+```text
+¿Dónde está o de dónde salió el dinero?
+```
+
+Ejemplo:
+
+```text
+Medio:
+Transferencia
+
+Billetera:
+Banco Galicia
+```
+
+---
+
+# 26. Billetera predeterminada
+
+El campo:
+
+```text
+medios_pago.billetera_predeterminada_id
+```
+
+es exclusivamente una preferencia para agilizar nuevas operaciones.
+
+Puede utilizarse para precargar una billetera.
+
+No representa la billetera histórica de las operaciones.
+
+Modificar:
+
+```text
+billetera_predeterminada_id
+```
+
+no debe modificar ni reinterpretar registros anteriores.
+
+---
+
+# 27. Billetera histórica obligatoria
+
+Cada detalle monetario persistido debe conservar la billetera realmente utilizada.
+
+Ingresos:
+
+```text
+ingresos_medios_pago.billetera_id
+```
+
+Gastos:
+
+```text
+gastos_medios_pago.billetera_id
+```
+
+En el modelo financiero vigente:
+
+```text
+billetera_id
+```
+
+es obligatorio para todo detalle positivo persistido.
+
+Todo dinero que entra debe ingresar a una billetera.
+
+Todo dinero que sale debe salir de una billetera.
+
+Nunca reconstruir posteriormente la billetera histórica mediante:
+
+```text
+medios_pago.billetera_predeterminada_id
+```
+
+---
+
+# 28. Carga rápida
+
+La prioridad principal de UX es cargar operaciones habituales con la menor cantidad razonable de pasos.
 
 Los medios configurados como:
 
@@ -699,13 +946,23 @@ Transferencia   $ [        ]
 Tarjeta         $ [        ]
 ```
 
-No obligar al usuario a agregar cada medio manualmente.
+La billetera puede venir sugerida.
+
+Debe poder utilizarse la billetera real correspondiente.
 
 ---
 
-# 25. Campos vacíos
+# 29. Campos vacíos
 
-Si un campo rápido queda vacío:
+En formularios rápidos, un importe vacío se considera:
+
+```text
+0
+```
+
+para el cálculo visual.
+
+Ejemplo:
 
 ```text
 Efectivo        35000
@@ -713,15 +970,7 @@ Transferencia
 Tarjeta         15000
 ```
 
-la UI debe tratar el vacío como:
-
-```text
-0
-```
-
-para el cálculo.
-
-Sin embargo, no crear necesariamente un detalle persistido con importe 0.
+No crear un detalle persistido por una línea vacía.
 
 Persistir solamente detalles con:
 
@@ -729,15 +978,37 @@ Persistir solamente detalles con:
 importe_centavos > 0
 ```
 
-salvo que exista una razón funcional documentada.
-
-No permitir guardar un ingreso o gasto cuyo total final sea 0.
+No permitir guardar un ingreso o gasto cuyo total final sea cero.
 
 ---
 
-# 26. Recordar últimos valores utilizados
+# 30. Integridad de totales
 
-Para agilizar la carga, recordar localmente:
+Para ingresos:
+
+```text
+SUM(ingresos_medios_pago.importe_centavos)
+=
+ingresos.importe_total_centavos
+```
+
+Para gastos:
+
+```text
+SUM(gastos_medios_pago.importe_centavos)
+=
+gastos.importe_total_centavos
+```
+
+o su equivalente según los nombres definitivos del modelo.
+
+No permitir inconsistencias entre cabecera y detalles.
+
+---
+
+# 31. Recordar últimos valores
+
+Para agilizar la carga puede recordarse localmente:
 
 ```text
 ultima_actividad_ingreso
@@ -745,7 +1016,7 @@ ultima_actividad_gasto
 ultima_categoria_gasto
 ```
 
-y cualquier otra preferencia útil aprobada.
+y otras preferencias de interfaz aprobadas.
 
 Puede utilizarse:
 
@@ -753,13 +1024,13 @@ Puede utilizarse:
 localStorage
 ```
 
-para preferencias de interfaz.
+para preferencias de UI.
 
-No confundir estas preferencias con datos financieros.
+No guardar datos financieros reales en `localStorage`.
 
 ---
 
-# 27. Nuevo ingreso
+# 32. Nuevo ingreso
 
 Debe permitir:
 
@@ -768,27 +1039,30 @@ Actividad
 Fecha
 Descripción opcional
 Observaciones opcionales
+Medios de cobro
+Billetera real por detalle
 ```
-
-y medios de cobro visibles.
 
 Ejemplo:
 
 ```text
 Actividad: DiDi
 
-Efectivo       $35.000
-Transferencia  $20.000
-Tarjeta        $0
+Efectivo
+Billetera: Efectivo
+$35.000
 
-TOTAL          $55.000
+Transferencia
+Billetera: Banco Galicia
+$20.000
+
+TOTAL
+$55.000
 ```
-
-La última actividad utilizada debe venir precargada.
 
 ---
 
-# 28. Nuevo gasto
+# 33. Nuevo gasto
 
 Debe permitir:
 
@@ -798,9 +1072,9 @@ Actividad opcional
 Fecha
 Descripción
 Observaciones opcionales
+Medios de pago
+Billetera real por detalle
 ```
-
-y medios de pago visibles.
 
 Ejemplo:
 
@@ -808,21 +1082,21 @@ Ejemplo:
 Categoría: Combustible
 Actividad: DiDi
 
-Efectivo       $20.000
-Transferencia  $0
-Tarjeta        $30.000
+Efectivo
+Billetera: Efectivo
+$20.000
 
-TOTAL          $50.000
+Tarjeta
+Billetera: Ualá
+$30.000
+
+TOTAL
+$50.000
 ```
-
-Precargar:
-
-- última categoría utilizada;
-- última actividad utilizada.
 
 ---
 
-# 29. Ingresos
+# 34. Ingresos
 
 No crear columnas:
 
@@ -832,7 +1106,7 @@ transferencia
 tarjeta
 ```
 
-en la tabla ingresos.
+en la tabla principal de ingresos.
 
 Utilizar:
 
@@ -841,11 +1115,19 @@ ingresos
 ingresos_medios_pago
 ```
 
-Un ingreso puede tener múltiples detalles.
+Un ingreso puede contener múltiples detalles.
+
+Cada detalle positivo conserva:
+
+```text
+medio_pago_id
+billetera_id
+importe_centavos
+```
 
 ---
 
-# 30. Gastos
+# 35. Gastos
 
 Utilizar:
 
@@ -854,13 +1136,21 @@ gastos
 gastos_medios_pago
 ```
 
-Un gasto puede tener múltiples medios de pago.
+Un gasto puede contener múltiples detalles.
 
-Un gasto puede asociarse opcionalmente a una actividad.
+Puede asociarse opcionalmente a una actividad.
+
+Cada detalle positivo conserva:
+
+```text
+medio_pago_id
+billetera_id
+importe_centavos
+```
 
 ---
 
-# 31. Billeteras
+# 36. Billeteras
 
 Las billeteras representan dónde está el dinero.
 
@@ -873,29 +1163,6 @@ Banco Galicia
 Cuenta DNI
 Ualá
 ```
-
-No confundir:
-
-```text
-Medio de pago
-```
-
-con:
-
-```text
-Billetera
-```
-
-Ejemplo:
-
-```text
-Medio: Transferencia
-Billetera: Banco Galicia
-```
-
----
-
-# 32. Modelo de billetera
 
 Campos principales:
 
@@ -912,32 +1179,60 @@ actualizado_en
 eliminado_en
 ```
 
-El saldo no debe poder editarse directamente desde el ABM.
+El saldo no debe editarse directamente desde el ABM.
 
 ---
 
-# 33. Saldo inicial
+# 37. Compatibilidad de moneda
 
-Al crear una billetera debe poder definirse:
+Una operación financiera solo puede afectar billeteras compatibles con la moneda de la operación.
+
+Ejemplo válido:
+
+```text
+Ingreso ARS
+→ Billetera ARS
+```
+
+Una transferencia normal requiere billeteras de la misma moneda.
+
+Ejemplo no permitido como transferencia normal:
+
+```text
+Billetera ARS
+→ Billetera USD
+```
+
+Una futura conversión monetaria debe modelarse como una operación específica.
+
+---
+
+# 38. Saldo inicial
+
+Al crear una billetera puede definirse:
 
 ```text
 saldo inicial
-fecha del saldo inicial
+fecha
 ```
 
-No guardar simplemente el número como saldo histórico.
+No guardar el saldo solamente como atributo mutable.
 
-Crear un movimiento de tipo:
+Crear un movimiento:
 
 ```text
 SALDO_INICIAL
 ```
 
+El saldo inicial aumenta patrimonio.
+
+No representa ingreso ni rentabilidad.
+
 ---
 
-# 34. Movimientos de billetera
+# 39. Movimientos de billetera
 
-La fuente de verdad del saldo será:
+La fuente de verdad del saldo es:
 
 ```text
 movimientos_billetera
@@ -978,34 +1273,68 @@ AJUSTE_NEGATIVO
 
 ---
 
-# 35. Impacto de ingresos y gastos
+# 40. Referencias de movimientos de ingresos
 
-Un ingreso genera movimientos positivos sobre las billeteras correspondientes.
+Un movimiento derivado de un ingreso debe referenciar preferentemente el detalle específico que produjo el impacto.
 
-Un gasto genera movimientos negativos.
-
-Ejemplo:
+Utilizar:
 
 ```text
-Ingreso DiDi:
+referencia_tipo = INGRESO_MEDIO_PAGO
+referencia_id   = ingresos_medios_pago.id
+```
 
-Efectivo       +35000
-Galicia        +20000
+Esto permite conocer exactamente:
+
+```text
+medio de pago
+billetera
+importe
+```
+
+que originaron el movimiento.
+
+No utilizar solamente la cabecera de ingreso cuando existe un detalle individual identificable.
+
+---
+
+# 41. Referencias de movimientos de gastos
+
+Un movimiento derivado de un gasto debe referenciar el detalle que produjo el impacto.
+
+Utilizar:
+
+```text
+referencia_tipo = GASTO_MEDIO_PAGO
+referencia_id   = gastos_medios_pago.id
+```
+
+Esto debe preservar la relación histórica entre:
+
+```text
+Gasto
+Detalle
+Billetera
+Movimiento
 ```
 
 ---
 
-# 36. Transferencias entre billeteras
+# 42. Transferencias entre billeteras
 
 Una transferencia no es:
 
-- ingreso;
-- gasto.
+```text
+Ingreso
+Gasto
+```
 
 Ejemplo:
 
 ```text
-Efectivo → Banco Galicia
+Efectivo
+→ Banco Galicia
+
 $100.000
 ```
 
@@ -1016,11 +1345,25 @@ Efectivo       -100000
 Banco Galicia  +100000
 ```
 
+Tipos:
+
+```text
+TRANSFERENCIA_SALIDA
+TRANSFERENCIA_ENTRADA
+```
+
+Ambos movimientos referencian:
+
+```text
+referencia_tipo = TRANSFERENCIA
+referencia_id   = transferencia.id
+```
+
 El patrimonio total no cambia.
 
 ---
 
-# 37. Tabla de transferencias
+# 43. Tabla de transferencias
 
 Utilizar conceptualmente:
 
@@ -1042,9 +1385,118 @@ actualizado_en
 eliminado_en
 ```
 
+No permitir:
+
+```text
+billetera_origen_id = billetera_destino_id
+```
+
 ---
 
-# 38. Conciliación de billetera
+# 44. Atomicidad financiera
+
+Las estructuras relacionadas con una operación financiera forman una única operación lógica.
+
+Ingreso:
+
+```text
+ingreso
++
+detalles
++
+movimientos
+```
+
+Gasto:
+
+```text
+gasto
++
+detalles
++
+movimientos
+```
+
+Transferencia:
+
+```text
+transferencia
++
+movimiento salida
++
+movimiento entrada
+```
+
+Ajuste:
+
+```text
+ajuste
++
+movimiento
+```
+
+Cuando el motor lo permita deben escribirse dentro de una única transacción.
+
+Si una parte falla, no dejar una operación parcialmente confirmada.
+
+---
+
+# 45. Idempotencia
+
+Una operación repetida accidentalmente no debe generar un segundo impacto financiero.
+
+Especialmente:
+
+```text
+Ingreso
+Gasto
+Transferencia
+Ajuste
+Saldo inicial
+```
+
+deben contar con una estrategia para reconocer efectos ya persistidos.
+
+Para movimientos derivados, la identidad lógica debe considerar conceptualmente:
+
+```text
+referencia_tipo
+referencia_id
+tipo
+```
+
+o un mecanismo equivalente que proporcione la misma garantía.
+
+Ejemplo incorrecto:
+
+```text
+Movimiento +35000
+Movimiento +35000
+```
+
+por reintentar una misma línea de ingreso.
+
+---
+
+# 46. Edición de operaciones
+
+Editar un ingreso o gasto no debe dejar movimientos correspondientes a un estado anterior inválido.
+
+La operación debe mantener consistencia entre:
+
+```text
+cabecera
+detalles
+movimientos
+```
+
+Debe conservar trazabilidad.
+
+No duplicar efectos durante una edición.
+
+---
+
+# 47. Conciliación de billetera
 
 No permitir editar directamente:
 
@@ -1052,52 +1504,80 @@ No permitir editar directamente:
 saldo = ...
 ```
 
-Debe existir la acción:
+La conciliación compara:
 
 ```text
-Conciliar / Ajustar saldo
+Saldo calculado
+Saldo real
+Diferencia
 ```
 
-Ejemplo:
+Cálculo:
 
 ```text
-Saldo calculado: $65.000
-Saldo real:      $50.000
-Diferencia:     -$15.000
+Diferencia =
+Saldo real - Saldo calculado
 ```
 
-La aplicación debe ofrecer:
+Si:
 
 ```text
-Registrar gasto faltante
-Ajustar diferencia
+Diferencia = 0
 ```
+
+no generar ajuste financiero.
 
 ---
 
-# 39. Ajustes
+# 48. Movimiento faltante
 
-Si se confirma una diferencia, generar un movimiento:
+Si el usuario identifica la causa real de una diferencia, preferir registrar la operación real.
+
+Ejemplos:
+
+```text
+Ingreso faltante
+Gasto faltante
+```
+
+La operación debe pasar por el flujo normal de ingreso o gasto.
+
+No crear adicionalmente un ajuste para la misma diferencia.
+
+---
+
+# 49. Ajustes
+
+Cuando la diferencia no pueda atribuirse a una operación real, utilizar:
 
 ```text
 AJUSTE_POSITIVO
-```
-
-o:
-
-```text
 AJUSTE_NEGATIVO
 ```
 
-Los ajustes no se consideran automáticamente ingresos ni gastos.
+Los ajustes modifican patrimonio.
 
-Deben mostrarse por separado en reportes cuando corresponda.
+No se consideran automáticamente:
+
+```text
+Ingreso
+Gasto
+```
+
+Deben permanecer separados del resultado financiero.
+
+Referencia:
+
+```text
+referencia_tipo = AJUSTE
+referencia_id   = ajuste.id
+```
 
 ---
 
-# 40. Última conciliación
+# 50. Última conciliación
 
-Guardar cuando sea útil:
+Guardar cuando corresponda:
 
 ```text
 conciliado_en
@@ -1105,20 +1585,15 @@ conciliado_en
 
 o registro equivalente.
 
-Mostrar:
-
-```text
-Última conciliación
-02/10/2026 18:32
-```
+Mostrar la última conciliación cuando sea útil en la interfaz.
 
 ---
 
-# 41. Saldo de billeteras
+# 51. Saldo de billeteras
 
-No calcular saldos cargando todos los registros en JavaScript.
+No calcular saldos cargando todos los movimientos en JavaScript.
 
-Prohibido utilizar como estrategia principal:
+No utilizar como estrategia principal:
 
 ```ts
 obtenerTodosLosMovimientos()
@@ -1128,11 +1603,13 @@ obtenerTodosLosMovimientos()
 
 Las agregaciones deben resolverse en la capa de persistencia.
 
+Los filtros visuales de una lista de movimientos no modifican el saldo actual de la billetera.
+
 ---
 
-# 42. Índices mínimos
+# 52. Índices
 
-Crear índices apropiados.
+Crear índices apropiados para las consultas reales.
 
 Especialmente:
 
@@ -1152,49 +1629,70 @@ gastos(actividad_id, fecha)
 gastos(categoria_id, fecha)
 ```
 
-Agregar otros índices solamente si existe una necesidad comprobable.
+Agregar índices adicionales cuando exista una necesidad concreta.
+
+No crear índices arbitrariamente.
 
 ---
 
-# 43. Saldo actual
+# 53. Caché de saldo
 
-Se puede mantener:
-
-```text
-saldo_actual_centavos
-```
-
-como cache optimizada si la arquitectura lo justifica.
-
-La fuente de verdad debe continuar siendo:
+Actualmente:
 
 ```text
 movimientos_billetera
 ```
 
-Cualquier cache debe poder reconstruirse.
+es la única fuente de verdad del saldo.
+
+No agregar:
+
+```text
+saldo_actual_centavos
+```
+
+como estado persistido duplicado mientras no exista una medición que justifique hacerlo.
+
+Si en el futuro se incorpora un cache:
+
+- debe ser reconstruible;
+- nunca debe reemplazar los movimientos como fuente de verdad;
+- debe existir una estrategia completa de invalidación;
+- debe incorporarse mediante una migración.
+
+Consultar:
+
+```text
+docs/SALDOS_HISTORICOS.md
+```
 
 ---
 
-# 44. Saldos históricos
+# 54. Saldos históricos
 
-La arquitectura debe permitir consultar saldos históricos sin recorrer toda la historia innecesariamente.
+Para obtener un saldo histórico se deben considerar solamente movimientos hasta el corte solicitado.
 
-Diseñar la posibilidad de:
+Conceptualmente:
+
+```text
+fecha <= hasta
+```
+
+No materializar cierres periódicos en V1 sin una necesidad medida.
+
+Puede evaluarse en el futuro:
 
 ```text
 saldos_billetera_periodo
 ```
 
-para cierres periódicos.
+como proyección reconstruible.
 
-No sobreimplementar si todavía no es necesario.
-
-Documentar la estrategia desde V1.
+Nunca como nueva fuente de verdad.
 
 ---
 
-# 45. Reportes
+# 55. Reportes
 
 Separar conceptualmente:
 
@@ -1220,11 +1718,15 @@ Transferencias
 Ajustes
 ```
 
+No mezclar estos conceptos.
+
 Las transferencias internas no afectan ganancia.
+
+Los ajustes no se consideran automáticamente ingresos ni gastos.
 
 ---
 
-# 46. Rentabilidad por actividad
+# 56. Rentabilidad por actividad
 
 Para cada actividad calcular:
 
@@ -1244,9 +1746,11 @@ Gastos   $190.000
 Neto     $330.000
 ```
 
+No atribuir a una actividad gastos que no tengan una asociación válida.
+
 ---
 
-# 47. Pantalla Inicio
+# 57. Pantalla Inicio
 
 La pantalla principal debe priorizar:
 
@@ -1254,24 +1758,33 @@ La pantalla principal debe priorizar:
 Ganancia de hoy
 Ingresos
 Gastos
-Billeteras
+Mi dinero
 Últimos movimientos
 ```
 
-Ingresos y Gastos deben tener cada uno su botón:
+Ingresos y Gastos deben tener acceso directo a:
 
 ```text
 + Agregar ingreso
 + Agregar gasto
 ```
 
-No obligar al usuario a abrir un menú intermedio.
+No obligar al usuario a abrir un menú intermedio para operaciones frecuentes.
+
+Consultar:
+
+```text
+docs/PANTALLAS.md
+docs/GUIA_VISUAL.md
+```
 
 ---
 
-# 48. Inicio — Billeteras
+# 58. Inicio — Billeteras
 
-Mostrar resumen breve:
+Mostrar un resumen breve.
+
+Ejemplo:
 
 ```text
 Mi dinero
@@ -1281,7 +1794,7 @@ Mercado Pago   $120.000
 Galicia        $320.000
 ```
 
-Agregar acciones:
+Acciones:
 
 ```text
 Transferir
@@ -1290,22 +1803,31 @@ Ver todas
 
 ---
 
-# 49. Últimos movimientos
+# 59. Últimos movimientos
 
 La pantalla principal puede mostrar:
 
 ```text
 Ingreso DiDi           +$35.000
 Gasto Combustible      -$20.000
-Efectivo → Galicia    $100.000
+Efectivo → Galicia      $100.000
 Ajuste caja            -$15.000
 ```
 
-Diferenciar visualmente tipos de movimiento.
+Diferenciar visualmente los tipos mediante:
+
+```text
+texto
+signo
+icono
+color
+```
+
+No utilizar el color como única señal.
 
 ---
 
-# 50. Navegación móvil
+# 60. Navegación móvil
 
 Navegación inferior principal:
 
@@ -1316,58 +1838,128 @@ Gastos
 Reportes
 ```
 
-Ajustes desde:
+Ajustes mediante:
 
-- AppBar;
-- menú.
+```text
+AppBar
+menú
+icono de configuración
+```
 
-Billeteras pueden ser accesibles desde Inicio y/o Ajustes según UX final.
+Billeteras deben ser accesibles rápidamente desde Inicio.
 
 ---
 
-# 51. Navegación desktop
+# 61. Navegación desktop
 
-En pantallas amplias adaptar a:
+En pantallas amplias adaptar mediante:
 
-- Navigation Drawer;
-- sidebar;
-- navegación equivalente.
+```text
+NavigationRail
+Drawer
+Sidebar
+```
+
+o equivalente.
 
 No duplicar pantallas.
 
+No crear otra implementación funcional por plataforma.
+
 ---
 
-# 52. Material UI
+# 62. Material UI
 
 Utilizar Material UI como sistema visual principal.
 
-Buscar una estética moderna inspirada en Android.
+Utilizar cuando corresponda:
 
-Utilizar:
+```text
+Card
+AppBar
+BottomNavigation
+Dialog
+Drawer
+TextField
+Select
+Chip
+Snackbar
+Tabs
+Switch
+IconButton
+Skeleton
+```
 
-- cards;
-- AppBar;
-- BottomNavigation;
-- Dialog;
-- Drawer;
-- TextField;
-- Select;
-- Chip;
-- Snackbar;
-- Tabs;
-- Switch;
-- IconButton;
-- Skeleton;
-- botones grandes;
-- superficies diferenciadas.
+Antes de crear un nuevo componente revisar:
+
+```text
+src/shared/components/
+```
+
+Reutilizar componentes existentes cuando realmente resuelvan el mismo problema.
 
 ---
 
-# 53. Modo oscuro
+# 63. Sistema visual
+
+El sistema visual normativo está documentado en:
+
+```text
+docs/GUIA_VISUAL.md
+```
+
+No crear valores visuales arbitrarios por pantalla cuando ya existe una regla compartida.
+
+Centralizar:
+
+```text
+colores
+tipografía
+espaciado
+radios
+sombras
+breakpoints
+estados
+```
+
+en el theme o componentes compartidos.
+
+---
+
+# 64. Pantallas
+
+La estructura y comportamiento de cada pantalla se documentan en:
+
+```text
+docs/PANTALLAS.md
+```
+
+Este documento define:
+
+```text
+qué muestra
+qué acción permite
+qué navegación produce
+qué datos utiliza
+qué reglas financieras debe respetar
+```
+
+Antes de modificar una pantalla, consultar las secciones relacionadas de:
+
+```text
+docs/PANTALLAS.md
+docs/GUIA_VISUAL.md
+```
+
+No leer ambos documentos completos si la tarea solo necesita una pantalla concreta.
+
+---
+
+# 65. Modo oscuro
 
 REQUISITO OBLIGATORIO.
 
-AppBilletera debe soportar desde el inicio:
+AppBilletera debe soportar:
 
 ```text
 Sistema
@@ -1381,95 +1973,191 @@ Predeterminado:
 Sistema
 ```
 
-Guardar preferencia con:
+Guardar la preferencia mediante:
 
 ```text
 localStorage
 ```
 
-Utilizar ThemeProvider de Material UI.
+Utilizar el ThemeProvider.
 
 No hardcodear colores directamente en componentes.
 
-Todos los componentes deben funcionar correctamente tanto en claro como oscuro.
+Todos los componentes deben funcionar correctamente en modo claro y oscuro.
 
 ---
 
-# 54. Tema oscuro
+# 66. Tema oscuro
 
-No utilizar simplemente negro puro para todo.
+No utilizar negro puro como fondo general.
 
-Definir:
+Mantener:
 
-- fondo general oscuro;
-- superficies diferenciadas;
-- cards con elevación visual;
-- contraste apropiado;
-- estados positivos;
-- estados negativos;
-- color primario;
-- texto principal;
-- texto secundario.
+```text
+fondo general
+superficies diferenciadas
+contraste apropiado
+texto principal
+texto secundario
+estados positivos
+estados negativos
+color primario
+```
 
-Mantener accesibilidad.
+Consultar los tokens exactos en:
+
+```text
+docs/GUIA_VISUAL.md
+```
 
 ---
 
-# 55. Diseño mobile-first
+# 67. Diseño mobile-first
 
 Diseñar primero para celular.
 
-Priorizar:
+Referencia principal:
 
-- pocos toques;
-- botones grandes;
-- formularios rápidos;
-- inputs numéricos cómodos;
-- acciones claras;
-- información resumida.
+```text
+390 × 844 px
+```
+
+Debe funcionar correctamente aproximadamente desde:
+
+```text
+320 px
+```
+
+de ancho.
 
 Después adaptar a tablet y desktop.
 
+No sacrificar funcionalidad en pantallas pequeñas.
+
 ---
 
-# 56. Accesibilidad
+# 68. Accesibilidad
 
 Utilizar:
 
-- labels;
-- aria cuando corresponda;
-- buen contraste;
-- foco visible;
-- tamaños táctiles adecuados;
-- mensajes de error comprensibles.
+```text
+labels
+aria cuando corresponda
+contraste adecuado
+foco visible
+tamaños táctiles apropiados
+mensajes de error comprensibles
+```
+
+Las áreas táctiles deben respetar las reglas de `GUIA_VISUAL.md`.
+
+Los colores semánticos no deben ser la única forma de transmitir información.
 
 ---
 
-# 57. PWA
+# 69. PWA
 
-La versión Web debe funcionar también como PWA instalable.
+La Web debe funcionar también como PWA instalable.
 
 Debe existir:
 
-- manifest;
-- iconos;
-- metadatos;
-- soporte de instalación.
+```text
+manifest
+iconos
+metadatos
+service worker
+soporte de instalación
+```
 
-No impedir uso como Web tradicional.
+No impedir el uso como Web tradicional.
+
+El service worker no reemplaza la persistencia de información financiera.
 
 ---
 
-# 58. Respaldo
+# 70. Capacitor
+
+Capacitor utiliza el mismo frontend React.
+
+No duplicar:
+
+```text
+pantallas
+servicios
+dominio
+reglas financieras
+```
+
+por plataforma.
+
+Las diferencias nativas deben permanecer en infraestructura o adaptadores.
+
+Consultar:
+
+```text
+docs/CAPACITOR.md
+```
+
+---
+
+# 71. Android
+
+Android utiliza SQLite nativo.
+
+No commitear:
+
+```text
+local.properties
+keystores privados
+credenciales
+APK generados
+builds temporales
+```
+
+Consultar:
+
+```text
+docs/ANDROID.md
+```
+
+para requisitos y procedimiento de compilación.
+
+No asumir que una compilación histórica garantiza que el entorno actual esté correctamente configurado.
+
+---
+
+# 72. iOS / iPadOS
+
+iOS e iPadOS utilizan el mismo frontend y SQLite nativo.
+
+No crear una UI financiera separada.
+
+No asumir disponibilidad de macOS o Xcode.
+
+Consultar:
+
+```text
+docs/IOS.md
+```
+
+---
+
+# 73. Respaldo
 
 Implementar:
 
-- Exportar respaldo.
-- Importar respaldo.
+```text
+Exportar respaldo
+Importar respaldo
+```
 
-Formato JSON versionado.
+Formato:
 
-Campos mínimos:
+```text
+JSON versionado
+```
+
+Campos mínimos conceptuales:
 
 ```text
 version_formato
@@ -1480,13 +2168,16 @@ datos
 
 ---
 
-# 59. Importación
+# 74. Importación
 
 Antes de importar:
 
-- validar formato;
-- validar versión;
-- validar integridad.
+```text
+validar formato
+validar versión
+validar integridad
+validar referencias
+```
 
 La importación debe ser transaccional.
 
@@ -1496,13 +2187,17 @@ Si falla:
 ROLLBACK
 ```
 
-No dejar datos parcialmente importados.
+o mecanismo equivalente.
+
+No dejar información parcialmente importada.
+
+No sobrescribir silenciosamente historia incompatible.
 
 ---
 
-# 60. Migraciones
+# 75. Migraciones
 
-La base debe tener versionado de schema.
+La base debe tener versionado de esquema.
 
 Ejemplo:
 
@@ -1514,16 +2209,24 @@ v3
 
 Nunca depender de borrar la aplicación para actualizar la base.
 
+Una migración ya distribuida no debe modificarse de forma incompatible.
+
+Los cambios posteriores deben incorporarse mediante nuevas migraciones.
+
+Las migraciones deben proteger los datos existentes.
+
 ---
 
-# 61. Comentarios obligatorios
+# 76. Comentarios obligatorios
 
 Todas las funciones propias deben tener JSDoc en español.
 
 Debe explicar como mínimo:
 
-- qué hace;
-- para qué sirve.
+```text
+qué hace
+para qué sirve
+```
 
 Ejemplo:
 
@@ -1540,31 +2243,37 @@ async function crearIngreso(...) {
 
 ---
 
-# 62. Comentarios adicionales
+# 77. Comentarios adicionales
 
 Documentar especialmente:
 
-- reglas financieras;
-- transacciones;
-- conciliaciones;
-- saldos;
-- movimientos;
-- soft delete;
-- migraciones;
-- caches;
-- decisiones no evidentes.
+```text
+reglas financieras
+transacciones
+idempotencia
+conciliaciones
+saldos
+movimientos
+borrado lógico
+migraciones
+caches
+reglas históricas
+decisiones no evidentes
+```
 
 No llenar el código de comentarios redundantes línea por línea.
 
 ---
 
-# 63. Comentarios de tablas
+# 78. Comentarios de tablas
 
-Cada tabla debe tener un comentario en el archivo de migración explicando:
+Cada tabla debe tener documentación en el archivo de migración explicando:
 
-- qué almacena;
-- para qué sirve;
-- relaciones principales.
+```text
+qué almacena
+para qué sirve
+relaciones principales
+```
 
 Ejemplo:
 
@@ -1572,55 +2281,329 @@ Ejemplo:
 /**
  * Tabla: movimientos_billetera
  *
- * Registra todas las entradas y salidas que modifican el saldo
- * de una billetera y constituye la fuente de verdad para reconstruir saldos.
+ * Registra las entradas y salidas que afectan el saldo
+ * y constituye la fuente de verdad para reconstruirlo.
  */
 ```
 
 ---
 
-# 64. Comentarios de campos especiales
+# 79. Campos especiales
 
-Documentar campos como:
+Documentar cuando su función no sea evidente:
 
 ```text
 importe_centavos
 eliminado_en
-saldo_actual_centavos
 referencia_tipo
 referencia_id
+billetera_predeterminada_id
+billetera_id histórico
+conciliado_en
 ```
 
-cuando su función no sea evidente.
+No documentar:
+
+```text
+saldo_actual_centavos
+```
+
+como campo vigente si no existe en el modelo.
 
 ---
 
-# 65. Git
+# 80. Documentación y fuente de verdad
+
+Antes de implementar una funcionalidad consultar solamente la documentación relevante.
+
+Referencias principales:
+
+```text
+AGENTS.md
+→ reglas permanentes
+
+docs/PRODUCTO.md
+→ comportamiento del producto
+
+docs/ARQUITECTURA.md
+→ arquitectura y responsabilidades
+
+docs/MODELO_DATOS.md
+→ persistencia e integridad financiera
+
+docs/DECISIONES.md
+→ decisiones vigentes y motivos
+
+docs/GUIA_VISUAL.md
+→ sistema visual
+
+docs/PANTALLAS.md
+→ contenido y comportamiento de pantallas
+
+docs/TAREAS_CODEX.md
+→ orden de trabajo
+
+docs/VERSIONADO.md
+→ versiones y releases
+
+docs/SALDOS_HISTORICOS.md
+→ estrategia de saldos
+```
+
+No repetir reglas contradictorias entre documentos.
+
+Si se detecta una contradicción relevante:
+
+```text
+detener el cambio afectado
+informarla
+corregir la documentación correspondiente dentro de la tarea si está autorizado
+```
+
+No inventar silenciosamente una nueva regla.
+
+---
+
+# 81. Lectura eficiente de documentación
+
+Codex no debe leer todo el repositorio ni todos los documentos en cada tarea.
+
+Proceso:
+
+```text
+1. Leer AGENTS.md.
+2. Leer la tarea actual en TAREAS_CODEX.md.
+3. Leer únicamente los documentos relacionados.
+4. Inspeccionar únicamente archivos potencialmente afectados.
+5. Modificar lo estrictamente necesario.
+```
+
+Durante las tareas visuales:
+
+```text
+TAREAS 52–66
+```
+
+leer únicamente:
+
+```text
+principios generales relevantes
+tokens necesarios
+sección de la pantalla actual
+componentes compartidos relacionados
+```
+
+de:
+
+```text
+GUIA_VISUAL.md
+PANTALLAS.md
+```
+
+No cargar ambos documentos completos sin necesidad.
+
+---
+
+# 82. TAREA 51 — Alineación financiera
+
+La TAREA 51 existe para verificar que la implementación construida durante las tareas históricas 00–50 esté alineada con el modelo financiero vigente.
+
+Debe revisar especialmente:
+
+```text
+billetera histórica obligatoria por detalle
+
+INGRESO_MEDIO_PAGO
+GASTO_MEDIO_PAGO
+
+referencia_tipo
+referencia_id
+
+idempotencia
+
+atomicidad
+
+compatibilidad de moneda
+
+migraciones compatibles
+
+preservación de datos existentes
+```
+
+Si la implementación ya cumple:
+
+```text
+no modificar código innecesariamente
+```
+
+Si existe una diferencia real:
+
+```text
+corregirla dentro del alcance de la tarea
+```
+
+No convertir esta tarea en un refactor general.
+
+---
+
+# 83. Fase visual
+
+Las tareas:
+
+```text
+52–66
+```
+
+actualizan la interfaz siguiendo:
+
+```text
+docs/GUIA_VISUAL.md
+docs/PANTALLAS.md
+```
+
+Durante esta fase:
+
+```text
+NO crear tests
+NO ejecutar tests
+```
+
+salvo que el usuario modifique explícitamente el plan.
+
+No cambiar reglas financieras únicamente para facilitar un diseño visual.
+
+---
+
+# 84. Git
 
 Cada tarea debe comenzar en su propia rama antes de modificar archivos y terminar con su propio commit.
 
-Nombre obligatorio: `task_AA/NNN_descripcion_de_la_tarea`, donde `AA` son los dos últimos dígitos del año de inicio de la tarea (2026 → `26`) y `NNN` es el número de tarea con tres dígitos y ceros a la izquierda. La descripción resume el título de la tarea en español, en minúsculas, sin tildes ni espacios y con palabras separadas por guiones bajos. No agregar el prefijo `codex/`.
+Formato obligatorio:
 
-Ejemplos: TAREA 00 → `task_26/000_crear_repositorio_y_documentacion`; TAREA 01 (001) → `task_26/001_crear_react_typescript_y_vite`; TAREA 10 → `task_26/010_disenar_base_de_datos_v1`.
+```text
+task_AA/NNN_descripcion_de_la_tarea
+```
 
-Después de leer las reglas y la documentación relacionada, revisar `git status` y crear la rama con `git switch -c task_AA/NNN_descripcion_de_la_tarea`. Verificar la rama activa antes de modificar archivos. Si ya existe por una ejecución anterior de la misma tarea, comprobar su correspondencia y continuar en ella sin borrarla ni recrearla.
+Donde:
 
-No realizar tareas directamente en `main` o `master`. No mezclar cambios de otras tareas ni fusionar ramas automáticamente. Crear la rama de la tarea siguiente solamente cuando el usuario autorice esa tarea.
+```text
+AA
+```
 
-Cuando el usuario indique «continúa con la siguiente tarea» o una expresión equivalente, esa instrucción autoriza fusionar la tarea terminada en `main` y ejecutar únicamente la siguiente tarea del plan en su rama `task_AA/NNN_descripcion_de_la_tarea`. Revisar primero el estado de Git y confirmar que la tarea anterior esté completa y sus cambios estén commiteados. Preferir una fusión fast-forward cuando sea posible. Al finalizar la nueva tarea, realizar su commit, informar el resumen y detenerse. Esta instrucción no autoriza push ni generar o ejecutar tests fuera de las reglas del plan.
+son los dos últimos dígitos del año de inicio.
 
-Antes:
+Ejemplo:
+
+```text
+2026
+→ 26
+```
+
+`NNN` utiliza tres dígitos.
+
+Ejemplos:
+
+```text
+TAREA 00
+→ task_26/000_crear_repositorio_y_documentacion
+
+TAREA 10
+→ task_26/010_disenar_base_de_datos_v1
+
+TAREA 51
+→ task_26/051_verificar_alineacion_modelo_financiero
+
+TAREA 67
+→ task_26/067_generar_tests
+```
+
+Antes de modificar archivos:
 
 ```bash
 git status
-git diff
+git branch --show-current
+```
+
+Crear rama cuando corresponda:
+
+```bash
+git switch -c task_AA/NNN_descripcion_de_la_tarea
+```
+
+Si ya existe por una ejecución anterior de la misma tarea:
+
+```text
+verificar que corresponde
+continuar sobre ella
+no eliminarla
+no recrearla
+```
+
+No realizar tareas directamente en:
+
+```text
+main
+master
 ```
 
 No mezclar tareas diferentes.
 
 ---
 
-# 66. Conventional Commits
+# 85. Continúa con la siguiente tarea
+
+Cuando el usuario indique:
+
+```text
+continúa con la siguiente tarea
+```
+
+o una expresión equivalente, esa instrucción autoriza:
+
+```text
+1. comprobar la tarea anterior;
+2. verificar que sus cambios estén commiteados;
+3. fusionarla a main cuando corresponda;
+4. preferir fast-forward;
+5. crear la rama de la siguiente tarea;
+6. ejecutar únicamente esa tarea;
+7. realizar su commit;
+8. informar el resultado;
+9. detenerse.
+```
+
+Esta instrucción no autoriza:
+
+```text
+git push
+crear tests fuera de la tarea autorizada
+ejecutar tests
+crear tags
+preparar release
+realizar una segunda tarea adicional
+```
+
+---
+
+# 86. Revisión Git antes del commit
+
+Antes de cada commit revisar:
+
+```bash
+git status
+git diff
+git diff --check
+```
+
+No commitear cambios ajenos a la tarea.
+
+No descartar cambios preexistentes del usuario.
+
+No realizar `git reset --hard` sobre trabajo que no pertenece a la tarea.
+
+---
+
+# 87. Conventional Commits
 
 Formato:
 
@@ -1640,11 +2623,17 @@ fix(gastos): corrige calculo del total
 style(tema): mejora contraste oscuro
 
 docs(base-datos): documenta movimientos de billetera
+
+test(proyecto): agrega cobertura inicial
 ```
+
+El tipo y el alcance siguen la convención habitual.
+
+La descripción se escribe en español.
 
 ---
 
-# 67. Archivos que nunca deben incluirse
+# 88. Archivos que nunca deben incluirse
 
 No commitear:
 
@@ -1658,11 +2647,30 @@ tokens
 keystores
 builds temporales
 archivos privados
+APK
+IPA
 ```
+
+No exponer secretos en documentación, código, logs ni commits.
 
 ---
 
-# 68. Versionado
+# 89. Push
+
+No ejecutar automáticamente:
+
+```bash
+git push
+git push --tags
+```
+
+La publicación remota requiere autorización explícita del usuario.
+
+Completar una tarea o fusionarla localmente no implica autorización para publicar.
+
+---
+
+# 90. Versionado
 
 Utilizar Semantic Versioning:
 
@@ -1672,28 +2680,78 @@ MAJOR.MINOR.PATCH
 
 No incrementar versión después de cada commit.
 
-Consultar `docs/VERSIONADO.md`.
+Consultar:
+
+```text
+docs/VERSIONADO.md
+```
+
+No crear tags automáticamente.
 
 ---
 
-# 69. Tests
+# 91. Preparación de release
 
-IMPORTANTE.
+La preparación de release corresponde actualmente a:
 
-Durante el desarrollo funcional inicial:
+```text
+TAREA 69
+```
 
-- NO crear tests.
-- NO ejecutar tests.
+No realizarla automáticamente.
 
-Los tests se crearán solamente en la fase final indicada en el plan.
+Cuando el usuario solicite explícitamente preparar una versión, seguir:
 
-Incluso una vez generados:
+```text
+docs/TAREAS_CODEX.md
+docs/VERSIONADO.md
+```
 
-NO EJECUTARLOS sin autorización explícita del usuario.
+Antes de modificar la versión informar:
+
+```text
+Versión actual
+Versión propuesta
+Motivo
+```
+
+No crear tag ni hacer push sin autorización correspondiente.
 
 ---
 
-# 70. No ejecutar tests automáticamente
+# 92. Tests
+
+La primera tarea autorizada para crear tests es:
+
+```text
+TAREA 67
+```
+
+Antes de esa tarea:
+
+```text
+NO crear tests
+NO ejecutar tests
+```
+
+En la TAREA 67:
+
+```text
+SÍ crear tests
+NO ejecutarlos
+```
+
+La ejecución corresponde exclusivamente a:
+
+```text
+TAREA 68
+```
+
+y necesita autorización explícita.
+
+---
+
+# 93. No ejecutar tests automáticamente
 
 No ejecutar:
 
@@ -1704,36 +2762,287 @@ playwright
 npm test
 ```
 
-ni equivalentes.
+ni equivalentes solamente porque:
 
-Solo hacerlo cuando el usuario escriba explícitamente algo equivalente a:
+```text
+se creó código
+se creó un test
+se completó una tarea
+el usuario dijo "continúa"
+```
+
+Solo ejecutar tests cuando el usuario escriba explícitamente algo equivalente a:
 
 ```text
 Ejecuta los tests.
 ```
 
+y la ejecución esté dentro de la TAREA 68 o exista una autorización explícita que modifique el plan.
+
 ---
 
-# 71. Uso eficiente de tokens
+# 94. Tests — orden de ejecución
+
+Cuando la TAREA 68 esté autorizada, ejecutar progresivamente:
+
+```text
+1. unitarios
+2. componentes
+3. persistencia
+4. E2E
+```
+
+Si una etapa falla:
+
+```text
+detener progresión
+analizar causa
+corregir el problema real
+repetir solamente lo necesario
+```
+
+No desactivar tests válidos para conseguir artificialmente una suite verde.
+
+---
+
+# 95. Uso eficiente de contexto
 
 Codex debe:
 
+```text
 1. leer AGENTS.md;
-2. leer solamente documentación relacionada con la tarea;
+2. leer solamente la documentación relacionada;
 3. inspeccionar únicamente los archivos necesarios;
 4. evitar recorrer todo el repositorio;
 5. evitar mostrar archivos completos al finalizar;
 6. no repetir especificaciones conocidas;
 7. realizar una sola tarea;
-8. hacer el commit;
-9. entregar resumen corto;
-10. detenerse.
+8. revisar el diff;
+9. hacer el commit;
+10. entregar un resumen corto;
+11. detenerse.
+```
+
+No utilizar contexto innecesario.
 
 ---
 
-# 72. Final de cada tarea
+# 96. No sobreingeniería
 
-Informar:
+No incorporar anticipadamente:
+
+```text
+microservicios
+CQRS completo
+event sourcing completo
+colas cloud
+servicios distribuidos
+sincronización multiusuario
+caches financieros complejos
+```
+
+sin una necesidad real.
+
+`movimientos_billetera` funciona como libro de movimientos para trazabilidad financiera local.
+
+Esto no implica adoptar una arquitectura completa de event sourcing.
+
+---
+
+# 97. Principio de trazabilidad
+
+Toda variación patrimonial debe poder responder:
+
+```text
+¿Qué ocurrió?
+¿Cuándo?
+¿Cuánto?
+¿En qué billetera?
+¿Qué operación lo originó?
+¿Qué detalle lo originó?
+```
+
+Por eso:
+
+```text
+movimientos_billetera
+```
+
+mantiene:
+
+```text
+referencia_tipo
+referencia_id
+```
+
+Las relaciones históricas nunca deben reconstruirse mediante configuraciones actuales.
+
+---
+
+# 98. Principio de consistencia
+
+Una operación financiera puede modificar varias estructuras.
+
+Ejemplo:
+
+```text
+Ingreso
+   ↓
+ingresos
+   ↓
+ingresos_medios_pago
+   ↓
+movimientos_billetera
+```
+
+Todas esas escrituras forman una única operación lógica.
+
+El sistema debe evitar estados donde solo una parte haya sido confirmada.
+
+---
+
+# 99. Principio de preservación histórica
+
+Una modificación de configuración actual no debe cambiar el significado de una operación histórica.
+
+Ejemplos:
+
+```text
+cambiar billetera predeterminada
+renombrar categoría
+desactivar actividad
+desactivar medio
+desactivar billetera
+cambiar icono
+cambiar color
+```
+
+Los registros históricos deben continuar siendo interpretables.
+
+---
+
+# 100. Principio de simplicidad de UI
+
+Reducir pasos cuando no comprometa:
+
+```text
+integridad financiera
+trazabilidad
+selección de billetera real
+validaciones
+comprensión de la operación
+```
+
+No esconder una decisión financiera necesaria únicamente para conseguir menos toques.
+
+---
+
+# 101. Prioridad de reglas
+
+Cuando existan varias fuentes de documentación, utilizar este criterio:
+
+```text
+1. Instrucción explícita actual del usuario
+2. AGENTS.md
+3. DECISIONES.md
+4. MODELO_DATOS.md para reglas de persistencia
+5. ARQUITECTURA.md para responsabilidades técnicas
+6. PRODUCTO.md para comportamiento funcional
+7. PANTALLAS.md para estructura de vistas
+8. GUIA_VISUAL.md para reglas visuales
+9. TAREAS_CODEX.md para alcance y orden de trabajo
+10. documentos históricos de auditoría
+```
+
+Una tarea no debe utilizar un documento histórico para reemplazar una decisión vigente.
+
+Si una contradicción material impide actuar correctamente, informarla.
+
+---
+
+# 102. Documentos de auditoría
+
+Los documentos:
+
+```text
+AUDITORIA_ARQUITECTURA.md
+NOMENCLATURA.md
+DOCUMENTACION_CODIGO.md
+REVISION_VISUAL.md
+```
+
+registran auditorías realizadas.
+
+No deben considerarse automáticamente especificaciones superiores a los documentos normativos.
+
+`REVISION_VISUAL.md` puede conservar información histórica de la TAREA 045 hasta que una revisión posterior lo actualice.
+
+---
+
+# 103. Alcance de una tarea
+
+No aprovechar una tarea para corregir asuntos no relacionados.
+
+Ejemplo:
+
+una tarea visual no debe convertirse en:
+
+```text
+refactor de arquitectura
+rediseño de base de datos
+cambio general de nomenclatura
+implementación de funcionalidades nuevas
+```
+
+salvo que el alcance de la tarea lo autorice expresamente.
+
+Si aparece un problema fuera del alcance:
+
+```text
+informarlo
+no mezclarlo silenciosamente
+```
+
+---
+
+# 104. No modificar comportamiento innecesariamente
+
+Durante:
+
+```text
+auditorías
+documentación
+ajustes visuales
+refactors
+```
+
+preservar el comportamiento existente salvo que:
+
+```text
+el objetivo de la tarea requiera cambiarlo
+o exista un defecto claro dentro del alcance
+```
+
+---
+
+# 105. Validación estática
+
+Cuando una tarea no autorice ejecutar tests, todavía pueden realizarse comprobaciones estáticas permitidas por su alcance.
+
+Siempre revisar:
+
+```bash
+git diff
+git diff --check
+```
+
+No interpretar una validación estática como autorización para ejecutar una suite de tests.
+
+---
+
+# 106. Final de cada tarea
+
+Al finalizar informar:
 
 ```text
 Tarea completada:
@@ -1745,6 +3054,46 @@ Hash:
 Tests: no ejecutados.
 ```
 
+Si los tests fueron ejecutados explícitamente en la TAREA 68, informar el resultado real en lugar de:
+
+```text
+Tests: no ejecutados.
+```
+
 Después detenerse.
 
 No ejecutar automáticamente la siguiente tarea.
+
+---
+
+# 107. Estado actual del plan
+
+El estado vigente del proyecto es:
+
+```text
+TAREAS 00–50
+→ completadas
+
+TAREA 51
+→ verificar alineación del modelo financiero
+
+TAREAS 52–66
+→ actualización visual de pantallas
+
+TAREA 67
+→ generar tests sin ejecutarlos
+
+TAREA 68
+→ ejecutar tests solamente con autorización explícita
+
+TAREA 69
+→ preparar release solamente cuando sea solicitado
+```
+
+El detalle de cada tarea se encuentra en:
+
+```text
+docs/TAREAS_CODEX.md
+```
+
+No asumir que una tarea futura está autorizada solamente porque la tarea anterior terminó.
