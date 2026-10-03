@@ -34,7 +34,7 @@ export function TarjetaResumen({ titulo, valor, detalle, icono, tono = 'neutro',
       <CardContent>
         <Stack spacing={1}>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            {icono && <Box aria-hidden="true" sx={{ display: 'flex', color: coloresTono[tono] }}>{icono}</Box>}
+            {icono && <Box aria-hidden="true" sx={{ display: 'flex', color: principal ? 'inherit' : coloresTono[tono] }}>{icono}</Box>}
             <Typography variant="subtitle2" sx={{ color: 'inherit' }}>{titulo}</Typography>
           </Stack>
           <Typography variant="h2" component="p" sx={{ color: principal || tono === 'positivo' || tono === 'negativo' ? 'inherit' : coloresTono[tono], fontSize: principal ? 34 : 24, fontVariantNumeric: 'tabular-nums', overflowWrap: 'anywhere' }}>{valor}</Typography>

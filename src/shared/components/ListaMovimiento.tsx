@@ -32,12 +32,12 @@ export function ListaMovimiento({ elementos, etiqueta = 'Movimientos' }: Propied
   function mostrarMovimiento(elemento: ElementoListaMovimiento) {
     return (
       <ListItem key={elemento.id} divider sx={{ minHeight: 72, py: 1.5, gap: 1.5, alignItems: 'flex-start' }}>
-        {elemento.icono && <Box aria-hidden="true" sx={{ display: 'flex', color: coloresMovimiento[elemento.tono] }}>{elemento.icono}</Box>}
+        {elemento.icono && <Box aria-hidden="true" sx={{ display: 'grid', placeItems: 'center', width: 40, height: 40, flexShrink: 0, borderRadius: 1.5, bgcolor: 'action.hover', color: coloresMovimiento[elemento.tono] }}>{elemento.icono}</Box>}
         <Stack spacing={0.5} sx={{ minWidth: 0, flex: 1 }}>
           <Typography sx={{ overflowWrap: 'anywhere' }}>{elemento.titulo}</Typography>
           <Typography variant="body2" color="text.secondary">{elemento.detalle}</Typography>
         </Stack>
-        <Typography sx={{ color: coloresMovimiento[elemento.tono], fontWeight: 600, maxWidth: '40%', overflowWrap: 'anywhere' }}>{elemento.importe}</Typography>
+        <Typography sx={{ color: coloresMovimiento[elemento.tono], fontSize: 20, fontWeight: 700, fontVariantNumeric: 'tabular-nums', maxWidth: '40%', overflowWrap: 'anywhere' }}>{elemento.importe}</Typography>
       </ListItem>
     );
   }
