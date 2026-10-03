@@ -23,7 +23,7 @@ interface PropiedadesListaMovimiento {
 }
 
 const coloresMovimiento = {
-  entrada: 'success.main', salida: 'error.main', interno: 'info.main', ajuste: 'text.secondary',
+  entrada: 'success.main', salida: 'error.main', interno: 'info.main', ajuste: 'secondary.main',
 };
 
 /** Presenta movimientos recibidos sin consultarlos, calcularlos ni clasificarlos automáticamente. */
@@ -31,7 +31,7 @@ export function ListaMovimiento({ elementos, etiqueta = 'Movimientos' }: Propied
   /** Distribuye el texto y el importe de una fila sin ocultar su información en pantallas pequeñas. */
   function mostrarMovimiento(elemento: ElementoListaMovimiento) {
     return (
-      <ListItem key={elemento.id} divider sx={{ py: 2, gap: 1.5, alignItems: 'flex-start' }}>
+      <ListItem key={elemento.id} divider sx={{ minHeight: 72, py: 1.5, gap: 1.5, alignItems: 'flex-start' }}>
         {elemento.icono && <Box aria-hidden="true" sx={{ display: 'flex', color: coloresMovimiento[elemento.tono] }}>{elemento.icono}</Box>}
         <Stack spacing={0.5} sx={{ minWidth: 0, flex: 1 }}>
           <Typography sx={{ overflowWrap: 'anywhere' }}>{elemento.titulo}</Typography>

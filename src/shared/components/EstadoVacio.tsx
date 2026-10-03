@@ -15,7 +15,7 @@ interface PropiedadesEstadoVacio {
 /** Presenta un estado vacío legible sin inventar registros ni resultados financieros. */
 export function EstadoVacio({ titulo, descripcion, icono, accion }: PropiedadesEstadoVacio) {
   return (
-    <Paper variant="outlined" sx={{ p: { xs: 3, sm: 4 }, textAlign: 'center' }}>
+    <Paper variant="outlined" sx={{ p: { xs: 3, sm: 4 }, textAlign: 'center', minHeight: 200, display: 'grid', placeItems: 'center' }}>
       <Stack spacing={2} sx={{ alignItems: 'center' }}>
         {icono && <Box aria-hidden="true" sx={{ display: 'flex', color: 'primary.main' }}>{icono}</Box>}
         <Typography component="h2" variant="h3">{titulo}</Typography>

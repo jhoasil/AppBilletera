@@ -28,7 +28,7 @@ export function CampoImporte({
 
   return (
     <TextField id={identificador} label={etiqueta} value={valor} onChange={cambiarTexto}
-      type="text" disabled={deshabilitado} required={obligatorio}
+      sx={{ '& input': { fontSize: 18, fontWeight: 600, fontVariantNumeric: 'tabular-nums' } }} type="text" disabled={deshabilitado} required={obligatorio}
       error={Boolean(error)} helperText={error || ayuda || ' '}
       slotProps={{
         htmlInput: { inputMode: 'decimal' },
