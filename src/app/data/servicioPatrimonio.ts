@@ -1,4 +1,4 @@
 import { ServicioPatrimonio } from '../../core/services/ServicioPatrimonio';
-import { RepositorioPatrimonioWeb } from '../../database/web/RepositorioPatrimonioWeb';
+import { RepositorioPatrimonioLocal } from '../../database/repositories/RepositorioPatrimonioLocal';
 
-export const servicioPatrimonio = new ServicioPatrimonio(new RepositorioPatrimonioWeb());
+export const servicioPatrimonio = new ServicioPatrimonio(new RepositorioPatrimonioLocal());

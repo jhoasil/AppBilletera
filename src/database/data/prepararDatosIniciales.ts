@@ -1,12 +1,13 @@
-import { baseWeb, prepararBaseWeb } from '../web/baseWeb';
-import { convertirRegistro, type ContextoWeb } from '../web/ContextoWeb';
+import { baseLocal, prepararBaseLocal } from '../componerBaseLocal';
+import { convertirRegistro } from '../contracts/convertirRegistros';
+import type { ContextoDatos } from '../contracts/ContextoDatos';
 import { datosIniciales } from './datosIniciales';
 
 /** Inserta una sola vez los catálogos sugeridos y conserva cambios y desactivaciones posteriores. */
 export async function prepararDatosIniciales(): Promise<void> {
-  await prepararBaseWeb();
+  await prepararBaseLocal();
   /** Inserta todos los datos y su marca de preparación como una sola operación atómica. */
-  async function insertar(contexto: ContextoWeb) {
+  async function insertar(contexto: ContextoDatos) {
     if (await contexto.obtenerMarca('datos_iniciales_v1')) return;
     const instante = new Date().toISOString();
     /** Crea una identidad local y la auditoría del registro sugerido. */
@@ -18,5 +19,5 @@ export async function prepararDatosIniciales(): Promise<void> {
     for (const [orden, medio] of datosIniciales.medios.entries()) await contexto.guardar('medios_pago', convertirRegistro({ ...auditoria(), ...medio, orden, mostrarEnCargaRapida: true, billeteraPredeterminadaId: orden === 0 ? billetera.id : null }), true);
     await contexto.guardarMarca('datos_iniciales_v1');
   }
-  await baseWeb.ejecutarTransaccion({ recursos: ['actividades', 'categorias_gasto', 'medios_pago', 'billeteras', '_metadatos'], modo: 'escritura' }, insertar);
+  await baseLocal.ejecutarTransaccion({ recursos: ['actividades', 'categorias_gasto', 'medios_pago', 'billeteras', '_metadatos'], modo: 'escritura' }, insertar);
 }

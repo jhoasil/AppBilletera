@@ -1,4 +1,4 @@
 import { ServicioDetalleBilletera } from '../../core/services/ServicioDetalleBilletera';
-import { RepositorioDetalleBilleteraWeb } from '../../database/web/RepositorioDetalleBilleteraWeb';
+import { RepositorioDetalleBilleteraLocal } from '../../database/repositories/RepositorioDetalleBilleteraLocal';
 
-export const servicioDetalleBilletera = new ServicioDetalleBilletera(new RepositorioDetalleBilleteraWeb());
+export const servicioDetalleBilletera = new ServicioDetalleBilletera(new RepositorioDetalleBilleteraLocal());

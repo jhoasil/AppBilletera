@@ -35,7 +35,7 @@ export class AdaptadorSQLite implements AdaptadorBaseLocal<ContextoDatos, Contex
   /** Ejecuta sobre una conexión y confirma únicamente al terminar; los métodos internos usan transaction=false. */
   async ejecutarTransaccion<Resultado>(opciones: OpcionesTransaccion, operacion: (contexto: ContextoDatos) => Promise<Resultado>): Promise<Resultado> {
     const conexion = this.exigirConexion(); await conexion.beginTransaction();
-    try { const resultado = await operacion(new ContextoSQLite(conexion, opciones.recursos)); await conexion.commitTransaction(); return resultado; }
+    try { const resultado = await operacion(new ContextoSQLite(conexion, opciones.recursos, opciones.modo === 'escritura')); await conexion.commitTransaction(); return resultado; }
     catch (error) { await conexion.rollbackTransaction(); throw error; }
   }
   /** Libera la conexión conservando el archivo de datos. */

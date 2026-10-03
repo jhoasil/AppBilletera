@@ -1,9 +1,9 @@
 import type { Billetera } from '../../core/entities/Billetera';
 import { ServicioSaldoInicial } from '../../core/services/ServicioSaldoInicial';
-import { RepositorioSaldoInicialWeb } from '../../database/web/RepositorioSaldoInicialWeb';
+import { RepositorioSaldoInicialLocal } from '../../database/repositories/RepositorioSaldoInicialLocal';
 import { servicioBilleteras } from './serviciosCatalogos';
 
-export const servicioSaldoInicial = new ServicioSaldoInicial(new RepositorioSaldoInicialWeb());
+export const servicioSaldoInicial = new ServicioSaldoInicial(new RepositorioSaldoInicialLocal());
 
 /** Crea la billetera y su saldo juntos cuando hay importe; una edición nunca modifica el saldo. */
 export async function guardarBilletera(borrador: Billetera, importe: string, fecha: string): Promise<void> {

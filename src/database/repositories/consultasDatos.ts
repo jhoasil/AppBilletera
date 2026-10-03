@@ -1,5 +1,5 @@
 import { RangoConsulta } from '../contracts/RangoConsulta';
-import type { ContextoWeb, RegistroWeb } from './ContextoWeb';
+import type { ContextoDatos, RegistroDatos } from '../contracts/ContextoDatos';
 
 /** Valida paginación acotada antes de abrir una transacción de consulta. */
 export function validarPagina(consulta: { limite: number; desplazamiento: number }): void {
@@ -16,7 +16,7 @@ export function rangoFechas(desde?: string, hasta?: string): RangoConsulta | und
 }
 
 /** Comprueba disponibilidad dentro de la escritura para impedir referencias obsoletas desde otra pestaña. */
-export async function exigirCatalogoActivo(contexto: ContextoWeb, tabla: 'actividades' | 'medios_pago' | 'billeteras' | 'categorias_gasto', id: string, permitirHistorico = false): Promise<RegistroWeb> {
+export async function exigirCatalogoActivo(contexto: ContextoDatos, tabla: 'actividades' | 'medios_pago' | 'billeteras' | 'categorias_gasto', id: string, permitirHistorico = false): Promise<RegistroDatos> {
   const registro = await contexto.obtener(tabla, id);
   if (!registro || (!permitirHistorico && (registro.eliminado_en !== null || !registro.activo))) throw new Error('Una selección ya no está activa; actualizá los catálogos antes de guardar.');
   return registro;

@@ -3,18 +3,19 @@ import type { ConfirmacionConciliacion } from '../../core/services/calcularConci
 import type { AjusteBilletera } from '../../core/entities/AjusteBilletera';
 import type { MovimientoBilletera } from '../../core/entities/MovimientoBilletera';
 import { crearImporte, restarImportes } from '../../core/money/Importe';
-import { baseWeb, prepararBaseWeb } from './baseWeb';
-import { convertirRegistro, type ContextoWeb } from './ContextoWeb';
-import { exigirCatalogoActivo } from './consultasWeb';
-import { sumarSaldo } from './consultasSaldoWeb';
+import { baseLocal, prepararBaseLocal } from '../componerBaseLocal';
+import { convertirRegistro } from '../contracts/convertirRegistros';
+import type { ContextoDatos } from '../contracts/ContextoDatos';
+import { exigirCatalogoActivo } from './consultasDatos';
+import { sumarSaldo } from './consultasSaldo';
 
 /** Registra ajustes separados del resultado y marca también las coincidencias sin movimiento. */
-export class RepositorioConciliacionWeb implements RepositorioConciliacion {
+export class RepositorioConciliacionLocal implements RepositorioConciliacion {
   /** Relee el saldo dentro de la transacción para proteger la confirmación de modificaciones concurrentes. */
   async confirmar(datos: ConfirmacionConciliacion): Promise<void> {
-    await prepararBaseWeb();
+    await prepararBaseLocal();
     /** Guarda billetera, diferencia y movimiento juntos; cualquier error revierte toda la conciliación. */
-    async function escribir(contexto: ContextoWeb) {
+    async function escribir(contexto: ContextoDatos) {
       const billetera = await exigirCatalogoActivo(contexto, 'billeteras', datos.billeteraId);
       const saldo = await sumarSaldo(contexto, datos.billeteraId);
       if (saldo !== datos.saldoEsperadoCentavos) throw new Error('El saldo cambió. Actualizalo antes de confirmar la conciliación.');
@@ -30,6 +31,6 @@ export class RepositorioConciliacionWeb implements RepositorioConciliacion {
       }
       await contexto.guardar('billeteras', { ...billetera, conciliado_en: instante, actualizado_en: instante });
     }
-    return baseWeb.ejecutarTransaccion({ recursos: ['billeteras', 'ajustes_billetera', 'movimientos_billetera'], modo: 'escritura' }, escribir);
+    return baseLocal.ejecutarTransaccion({ recursos: ['billeteras', 'ajustes_billetera', 'movimientos_billetera'], modo: 'escritura' }, escribir);
   }
 }

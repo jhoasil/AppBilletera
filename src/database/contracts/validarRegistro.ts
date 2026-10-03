@@ -1,9 +1,9 @@
-import type { ContextoDatos, RegistroDatos } from '../contracts/ContextoDatos';
+import type { ContextoDatos, RegistroDatos } from './ContextoDatos';
 import type { NombreTabla } from '../migrations/EsquemaBaseDatos';
 import { tablasV1 } from '../migrations/v1';
 
 /** Valida el esquema y las FK en el contexto actual para compartir integridad entre motores. */
-export async function validarRegistro(contexto: ContextoDatos, tabla: NombreTabla, registro: RegistroDatos): Promise<void> {
+export async function validarRegistro(contexto: Pick<ContextoDatos, 'obtener'>, tabla: NombreTabla, registro: RegistroDatos): Promise<void> {
     const definicion = tablasV1.find(buscarTabla);
     /** Localiza la definición física de la tabla solicitada. */
     function buscarTabla(candidata: (typeof tablasV1)[number]) { return candidata.nombre === tabla; }

@@ -1,10 +1,11 @@
 import type { AdaptadorWeb } from '../adapters/Web';
 import type { MigracionBaseLocal, OpcionesTransaccion } from '../contracts/AdaptadorBaseLocal';
 import type { ContextoMigracionEsquema, DefinicionTabla } from '../migrations/EsquemaBaseDatos';
-import { ContextoIndexedDB, type ContextoWeb } from './ContextoWeb';
+import type { ContextoDatos } from '../contracts/ContextoDatos';
+import { ContextoIndexedDB } from './ContextoIndexedDB';
 
 /** Implementa el puerto Web con eventos nativos y confirmación efectiva de transacciones. */
-export class AdaptadorIndexedDB implements AdaptadorWeb<ContextoWeb, ContextoMigracionEsquema> {
+export class AdaptadorIndexedDB implements AdaptadorWeb<ContextoDatos, ContextoMigracionEsquema> {
   readonly plataforma = 'web' as const;
   private conexion: IDBDatabase | undefined;
 
@@ -79,7 +80,7 @@ export class AdaptadorIndexedDB implements AdaptadorWeb<ContextoWeb, ContextoMig
   }
 
   /** Resuelve tras oncomplete y aborta si falla la operación recibida. */
-  ejecutarTransaccion<Resultado>(opciones: OpcionesTransaccion, operacion: (contexto: ContextoWeb) => Promise<Resultado>): Promise<Resultado> {
+  ejecutarTransaccion<Resultado>(opciones: OpcionesTransaccion, operacion: (contexto: ContextoDatos) => Promise<Resultado>): Promise<Resultado> {
     const transaccion = this.obtenerConexion().transaction([...opciones.recursos], opciones.modo === 'lectura' ? 'readonly' : 'readwrite');
     /** Conecta el resultado de la operación con la confirmación efectiva del motor. */
     function ejecutar(resolver: (valor: Resultado) => void, rechazar: (error: unknown) => void) {

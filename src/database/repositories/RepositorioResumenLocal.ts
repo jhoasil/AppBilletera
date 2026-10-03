@@ -1,18 +1,19 @@
 import { RangoConsulta } from '../contracts/RangoConsulta';
 import type { RepositorioResumen, ResumenPeriodo, ResumenMoneda, DesgloseResumen } from '../../core/repositories/RepositorioResumen';
 import type { MovimientoBilletera } from '../../core/entities/MovimientoBilletera';
-import { baseWeb, prepararBaseWeb } from './baseWeb';
-import { convertirEntidad, type ContextoWeb, type RegistroWeb } from './ContextoWeb';
-import { convertirSaldo } from './consultasSaldoWeb';
-import { rangoFechas } from './consultasWeb';
+import { baseLocal, prepararBaseLocal } from '../componerBaseLocal';
+import { convertirEntidad } from '../contracts/convertirRegistros';
+import type { ContextoDatos, RegistroDatos } from '../contracts/ContextoDatos';
+import { convertirSaldo } from './consultasSaldo';
+import { rangoFechas } from './consultasDatos';
 
 /** Agrega en persistencia los resultados por moneda y conserva solo cinco movimientos recientes. */
-export class RepositorioResumenWeb implements RepositorioResumen {
+export class RepositorioResumenLocal implements RepositorioResumen {
   /** Consulta ingresos y gastos con sus índices de fecha dentro de una instantánea única. */
   async consultar(desde: string, hasta: string): Promise<ResumenPeriodo> {
-    await prepararBaseWeb();
+    await prepararBaseLocal();
     /** Suma centavos mediante BigInt y limita la memoria de los movimientos al tamaño solicitado. */
-    async function leer(contexto: ContextoWeb) {
+    async function leer(contexto: ContextoDatos) {
       const importes = new Map<string, { ingresos: bigint; gastos: bigint }>();
       const grupos = new Map<string, { id: string; nombre: string; tipo: DesgloseResumen['tipo']; moneda: string; ingresos: bigint; gastos: bigint }>();
       /** Acumula un grupo con importes exactos sin almacenar las operaciones individuales. */
@@ -27,14 +28,14 @@ export class RepositorioResumenWeb implements RepositorioResumen {
       }
       for (const tabla of ['ingresos', 'gastos'] as const) {
         /** Acumula exclusivamente operaciones vigentes, separando monedas. */
-        function agregar(registro: RegistroWeb) {
+        async function agregar(registro: RegistroDatos) {
           if (registro.eliminado_en !== null) return;
           const moneda = String(registro.moneda); const total = importes.get(moneda) ?? { ingresos: 0n, gastos: 0n };
           total[tabla] += BigInt(Number(registro.total_centavos)); importes.set(moneda, total);
+          await desglosar(registro);
         }
-        await contexto.recorrer(tabla, agregar, 'por_fecha', rangoFechas(desde, hasta));
         /** Lee cada operación del índice y agrega sus grupos sin acumular el historial en memoria. */
-        async function desglosar(registro: RegistroWeb) {
+        async function desglosar(registro: RegistroDatos) {
           if (registro.eliminado_en !== null) return;
           const id = String(registro.id);
           const moneda = String(registro.moneda); const total = BigInt(Number(registro.total_centavos));
@@ -42,11 +43,11 @@ export class RepositorioResumenWeb implements RepositorioResumen {
           if (tabla === 'gastos') await agrupar('categoria', String(registro.categoria_id), moneda, total, tabla);
           const medios = new Map<string, bigint>();
           /** Agrupa los detalles del padre consultado mediante su índice de referencia. */
-          function agregarMedio(detalle: RegistroWeb) { if (detalle.eliminado_en === null) { const medio = String(detalle.medio_pago_id); medios.set(medio, (medios.get(medio) ?? 0n) + BigInt(Number(detalle.importe_centavos))); } }
+          function agregarMedio(detalle: RegistroDatos) { if (detalle.eliminado_en === null) { const medio = String(detalle.medio_pago_id); medios.set(medio, (medios.get(medio) ?? 0n) + BigInt(Number(detalle.importe_centavos))); } }
           await contexto.recorrer(tabla === 'ingresos' ? 'ingresos_medios_pago' : 'gastos_medios_pago', agregarMedio, tabla === 'ingresos' ? 'por_ingreso' : 'por_gasto', RangoConsulta.unico(id));
           for (const [medio, importe] of medios) await agrupar('medio', medio, moneda, importe, tabla);
         }
-        await contexto.recorrerAsincrono(tabla, desglosar, 'por_fecha', rangoFechas(desde, hasta));
+        await contexto.recorrerAsincrono(tabla, agregar, 'por_fecha', rangoFechas(desde, hasta));
       }
       const totales: ResumenMoneda[] = [];
       for (const [moneda, total] of importes) totales.push({ moneda, ingresosCentavos: convertirSaldo(total.ingresos), gastosCentavos: convertirSaldo(total.gastos), gananciaCentavos: convertirSaldo(total.ingresos - total.gastos) });
@@ -55,14 +56,14 @@ export class RepositorioResumenWeb implements RepositorioResumen {
       /** Ordena movimientos por fecha descendente y UUID para resolver empates de forma estable. */
       function ordenar(a: MovimientoBilletera, b: MovimientoBilletera) { return b.fecha.localeCompare(a.fecha) || a.id.localeCompare(b.id); }
       /** Conserva solo los cinco candidatos más recientes, sin cargar el historial completo. */
-      function reciente(registro: RegistroWeb) {
+      function reciente(registro: RegistroDatos) {
         if (registro.eliminado_en !== null) return;
         movimientos.push(convertirEntidad<MovimientoBilletera>(registro)); movimientos.sort(ordenar); if (movimientos.length > 5) movimientos.pop();
       }
       await contexto.recorrer('movimientos_billetera', reciente);
       const desgloses: DesgloseResumen[] = [];
       /** Incluye actividades sin operaciones en el período para que su rentabilidad también sea visible. */
-      function incluirActividad(registro: RegistroWeb) {
+      function incluirActividad(registro: RegistroDatos) {
         if (registro.eliminado_en !== null) return;
         const id = String(registro.id);
         for (const grupo of grupos.values()) if (grupo.tipo === 'actividad' && grupo.id === id) return;
@@ -72,6 +73,6 @@ export class RepositorioResumenWeb implements RepositorioResumen {
       for (const grupo of grupos.values()) desgloses.push({ id: grupo.id, nombre: grupo.nombre, tipo: grupo.tipo, moneda: grupo.moneda, ingresosCentavos: convertirSaldo(grupo.ingresos), gastosCentavos: convertirSaldo(grupo.gastos), gananciaCentavos: convertirSaldo(grupo.ingresos - grupo.gastos) });
       return { totales, movimientos, desgloses };
     }
-    return baseWeb.ejecutarTransaccion({ recursos: ['ingresos', 'gastos', 'movimientos_billetera', 'ingresos_medios_pago', 'gastos_medios_pago', 'actividades', 'categorias_gasto', 'medios_pago'], modo: 'lectura' }, leer);
+    return baseLocal.ejecutarTransaccion({ recursos: ['ingresos', 'gastos', 'movimientos_billetera', 'ingresos_medios_pago', 'gastos_medios_pago', 'actividades', 'categorias_gasto', 'medios_pago'], modo: 'lectura' }, leer);
   }
 }

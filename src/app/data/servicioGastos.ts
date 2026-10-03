@@ -1,4 +1,4 @@
 import { ServicioGastos } from '../../core/services/ServicioGastos';
-import { RepositorioGastosWeb } from '../../database/web/RepositorioGastosWeb';
+import { RepositorioGastosLocal } from '../../database/repositories/RepositorioGastosLocal';
 
-export const servicioGastos = new ServicioGastos(new RepositorioGastosWeb());
+export const servicioGastos = new ServicioGastos(new RepositorioGastosLocal());

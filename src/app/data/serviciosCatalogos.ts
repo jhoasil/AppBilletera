@@ -8,10 +8,10 @@ import type { RepositorioMediosPago } from '../../core/repositories/RepositorioM
 import type { RepositorioBilleteras } from '../../core/repositories/RepositorioBilleteras';
 import { ServicioCatalogo } from '../../core/services/ServicioCatalogo';
 import { validarActividad } from '../../core/services/validarActividad';
-import { RepositorioCatalogoWeb } from '../../database/web/RepositorioCatalogoWeb';
+import { RepositorioCatalogoLocal } from '../../database/repositories/RepositorioCatalogoLocal';
 
-const repositorioMedios: RepositorioMediosPago = new RepositorioCatalogoWeb<MedioPago>('medios_pago');
-const repositorioBilleteras: RepositorioBilleteras = new RepositorioCatalogoWeb<Billetera>('billeteras');
+const repositorioMedios: RepositorioMediosPago = new RepositorioCatalogoLocal<MedioPago>('medios_pago');
+const repositorioBilleteras: RepositorioBilleteras = new RepositorioCatalogoLocal<Billetera>('billeteras');
 
 /** Valida clasificación y código monetario sin almacenar un saldo en la billetera. */
 function validarBilletera(billetera: Billetera) {
@@ -32,10 +32,10 @@ export const servicioMedios = new ServicioCatalogo(repositorioMedios, validarMed
 /** Las categorías no necesitan reglas específicas adicionales al nombre y color comunes. */
 function validarCategoria(_categoria: CategoriaGasto): void {}
 
-const repositorioCategorias: RepositorioCategoriasGasto = new RepositorioCatalogoWeb<CategoriaGasto>('categorias_gasto');
+const repositorioCategorias: RepositorioCategoriasGasto = new RepositorioCatalogoLocal<CategoriaGasto>('categorias_gasto');
 export const servicioCategorias = new ServicioCatalogo(repositorioCategorias, validarCategoria);
 
-const repositorioActividades: RepositorioActividades = new RepositorioCatalogoWeb<Actividad>('actividades');
+const repositorioActividades: RepositorioActividades = new RepositorioCatalogoLocal<Actividad>('actividades');
 export const servicioActividades = new ServicioCatalogo(repositorioActividades, validarActividad);
 
 /** Obtiene todas las billeteras activas recorriendo páginas acotadas, para ofrecer destinos editables. */

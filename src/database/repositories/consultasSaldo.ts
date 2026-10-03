@@ -1,5 +1,5 @@
 import { RangoConsulta } from '../contracts/RangoConsulta';
-import type { ContextoWeb, RegistroWeb } from './ContextoWeb';
+import type { ContextoDatos, RegistroDatos } from '../contracts/ContextoDatos';
 
 /** Rechaza instantes no canónicos para mantener las comparaciones y rangos de índices consistentes. */
 export function validarInstante(instante: string): void {
@@ -23,10 +23,10 @@ export function convertirSaldo(saldo: bigint): number {
 }
 
 /** Suma en persistencia sobre un cursor de la billetera; nunca entrega ni acumula sus movimientos. */
-export async function sumarSaldo(contexto: ContextoWeb, billeteraId: string, hasta?: string): Promise<number> {
+export async function sumarSaldo(contexto: ContextoDatos, billeteraId: string, hasta?: string): Promise<number> {
   let saldo = 0n;
   /** Agrega exclusivamente los importes vigentes, en centavos exactos. */
-  function agregar(registro: RegistroWeb) {
+  function agregar(registro: RegistroDatos) {
     if (registro.eliminado_en !== null) return;
     if (typeof registro.importe_centavos !== 'number' || !Number.isSafeInteger(registro.importe_centavos)) throw new Error('Un movimiento contiene un importe inválido.');
     saldo += BigInt(registro.importe_centavos);

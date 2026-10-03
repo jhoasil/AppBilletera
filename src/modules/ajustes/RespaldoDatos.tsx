@@ -4,12 +4,13 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import { servicioRespaldo } from '../../app/data/servicioRespaldo';
+import { exportarArchivoRespaldo } from '../../app/data/exportarArchivoRespaldo';
 
 /** Permite descargar un respaldo y confirmar la incorporación transaccional de un archivo elegido. */
 export function RespaldoDatos() {
   const [texto, establecerTexto] = useState(''); const [nombre, establecerNombre] = useState(''); const [pendiente, establecerPendiente] = useState(false); const [error, establecerError] = useState(''); const [mensaje, establecerMensaje] = useState('');
   /** Descarga JSON por solicitud explícita y libera su URL temporal. */
-  async function exportar() { establecerPendiente(true); establecerError(''); try { const datos = await servicioRespaldo.exportar(); const enlace = document.createElement('a'); const url = URL.createObjectURL(new Blob([datos], { type: 'application/json' })); enlace.href = url; enlace.download = `AppBilletera_${new Date().toISOString().slice(0, 10)}.json`; enlace.click(); /** Libera el archivo temporal después de iniciar la descarga. */ function liberar() { URL.revokeObjectURL(url); } window.setTimeout(liberar, 1000); } catch (causa) { establecerError(causa instanceof Error ? causa.message : 'No se pudo exportar.'); } finally { establecerPendiente(false); } }
+  async function exportar() { establecerPendiente(true); establecerError(''); try { await exportarArchivoRespaldo(await servicioRespaldo.exportar()); } catch (causa) { establecerError(causa instanceof Error ? causa.message : 'No se pudo exportar.'); } finally { establecerPendiente(false); } }
   /** Lee un archivo seleccionado sin escribir todavía en la base. */
   async function elegir(evento: ChangeEvent<HTMLInputElement>) { const archivo = evento.target.files?.[0]; establecerTexto(''); establecerMensaje(''); establecerError(''); if (!archivo) return; if (archivo.size > 50 * 1024 * 1024) { establecerError('El respaldo supera el límite de 50 MB.'); return; } try { establecerNombre(archivo.name); establecerTexto(await archivo.text()); } catch { establecerError('No se pudo leer el archivo.'); } }
   /** Confirma la importación elegida; los conflictos no sobrescriben registros existentes. */

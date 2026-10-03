@@ -4,33 +4,34 @@ import type { TransferenciaBilletera } from '../../core/entities/TransferenciaBi
 import type { MovimientoBilletera } from '../../core/entities/MovimientoBilletera';
 import type { ConsultaTransferencias, PaginaResultado } from '../../core/repositories/ConsultasRepositorio';
 import { instanteDeFecha } from '../../core/services/validarCarga';
-import { baseWeb, prepararBaseWeb } from './baseWeb';
-import { convertirEntidad, convertirRegistro, type ContextoWeb, type RegistroWeb } from './ContextoWeb';
-import { exigirCatalogoActivo, validarPagina } from './consultasWeb';
+import { baseLocal, prepararBaseLocal } from '../componerBaseLocal';
+import { convertirEntidad, convertirRegistro } from '../contracts/convertirRegistros';
+import type { ContextoDatos, RegistroDatos } from '../contracts/ContextoDatos';
+import { exigirCatalogoActivo, validarPagina } from './consultasDatos';
 import { invalidarRegistros } from './invalidarRegistros';
 
 /** Guarda transferencias y sus dos efectos financieros, sin escribir ingresos ni gastos. */
-export class RepositorioTransferenciasWeb implements RepositorioTransferencias {
+export class RepositorioTransferenciasLocal implements RepositorioTransferencias {
   /** Consulta una transferencia vigente por identidad. */
   async obtenerPorId(id: string): Promise<TransferenciaBilletera | null> {
-    await prepararBaseWeb();
+    await prepararBaseLocal();
     /** Adapta el registro solicitado sin exponer almacenamiento a la aplicación. */
-    async function leer(contexto: ContextoWeb) { const registro = await contexto.obtener('transferencias_billeteras', id); return registro?.eliminado_en === null ? convertirEntidad<TransferenciaBilletera>(registro) : null; }
-    return baseWeb.ejecutarTransaccion({ recursos: ['transferencias_billeteras'], modo: 'lectura' }, leer);
+    async function leer(contexto: ContextoDatos) { const registro = await contexto.obtener('transferencias_billeteras', id); return registro?.eliminado_en === null ? convertirEntidad<TransferenciaBilletera>(registro) : null; }
+    return baseLocal.ejecutarTransaccion({ recursos: ['transferencias_billeteras'], modo: 'lectura' }, leer);
   }
 
   /** Retiene un conjunto acotado de candidatos ordenados y cuenta coincidencias desde persistencia. */
   async listar(consulta: ConsultaTransferencias): Promise<PaginaResultado<TransferenciaBilletera>> {
     validarPagina(consulta);
     if (consulta.desde && consulta.hasta && consulta.desde > consulta.hasta) throw new Error('El período no es válido.');
-    await prepararBaseWeb();
+    await prepararBaseLocal();
     /** Consulta solo transferencias; los movimientos y saldos utilizan sus propios índices. */
-    async function leer(contexto: ContextoWeb) {
+    async function leer(contexto: ContextoDatos) {
       const candidatos: TransferenciaBilletera[] = []; let total = 0;
       /** Ordena por fecha descendente e identidad ascendente. */
       function comparar(a: TransferenciaBilletera, b: TransferenciaBilletera) { return b.fecha.localeCompare(a.fecha) || a.id.localeCompare(b.id); }
       /** Aplica filtros y mantiene únicamente las posiciones necesarias para la página. */
-      function seleccionar(registro: RegistroWeb) {
+      function seleccionar(registro: RegistroDatos) {
         if ((!consulta.incluirEliminados && registro.eliminado_en !== null) || (consulta.desde && String(registro.fecha) < consulta.desde) || (consulta.hasta && String(registro.fecha) > consulta.hasta) || (consulta.billeteraId && registro.billetera_origen_id !== consulta.billeteraId && registro.billetera_destino_id !== consulta.billeteraId)) return;
         total++; candidatos.push(convertirEntidad<TransferenciaBilletera>(registro)); candidatos.sort(comparar);
         if (candidatos.length > consulta.desplazamiento + consulta.limite) candidatos.pop();
@@ -38,16 +39,16 @@ export class RepositorioTransferenciasWeb implements RepositorioTransferencias {
       await contexto.recorrer('transferencias_billeteras', seleccionar);
       return { total, elementos: candidatos.slice(consulta.desplazamiento) };
     }
-    return baseWeb.ejecutarTransaccion({ recursos: ['transferencias_billeteras'], modo: 'lectura' }, leer);
+    return baseLocal.ejecutarTransaccion({ recursos: ['transferencias_billeteras'], modo: 'lectura' }, leer);
   }
 
   /** Crea o reemplaza ambos movimientos atómicamente y exige la versión esperada para editar. */
   async guardar(transferencia: TransferenciaBilletera, actualizadoEnEsperado?: string): Promise<void> {
     if (transferencia.billeteraOrigenId === transferencia.billeteraDestinoId || !Number.isSafeInteger(transferencia.importeCentavos) || transferencia.importeCentavos <= 0 || transferencia.eliminadoEn !== null) throw new Error('La transferencia no es válida.');
     const fecha = instanteDeFecha(transferencia.fecha);
-    await prepararBaseWeb();
+    await prepararBaseLocal();
     /** Conserva patrimonio mediante una entrada y una salida de igual magnitud. */
-    async function escribir(contexto: ContextoWeb) {
+    async function escribir(contexto: ContextoDatos) {
       const anterior = await contexto.obtener('transferencias_billeteras', transferencia.id);
       if (anterior && (anterior.eliminado_en !== null || !actualizadoEnEsperado || anterior.actualizado_en !== actualizadoEnEsperado)) throw new Error('La transferencia cambió; volvé a consultarla.');
       if (!anterior && actualizadoEnEsperado) throw new Error('La transferencia ya no existe.');
@@ -63,19 +64,19 @@ export class RepositorioTransferenciasWeb implements RepositorioTransferencias {
       await contexto.guardar('movimientos_billetera', convertirRegistro(salida), true);
       await contexto.guardar('movimientos_billetera', convertirRegistro(entrada), true);
     }
-    return baseWeb.ejecutarTransaccion({ recursos: ['transferencias_billeteras', 'billeteras', 'movimientos_billetera'], modo: 'escritura' }, escribir);
+    return baseLocal.ejecutarTransaccion({ recursos: ['transferencias_billeteras', 'billeteras', 'movimientos_billetera'], modo: 'escritura' }, escribir);
   }
 
   /** Invalida una transferencia y ambos efectos, sin tocar ingresos, gastos ni rentabilidad. */
   async eliminarLogicamente(id: string, eliminadoEn: string): Promise<void> {
-    await prepararBaseWeb();
+    await prepararBaseLocal();
     /** Conserva registros auditados y elimina únicamente su efecto vigente. */
-    async function eliminar(contexto: ContextoWeb) {
+    async function eliminar(contexto: ContextoDatos) {
       const registro = await contexto.obtener('transferencias_billeteras', id);
       if (!registro || registro.eliminado_en !== null) return;
       await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', RangoConsulta.unico(['transferencia', id]), eliminadoEn);
       await contexto.guardar('transferencias_billeteras', { ...registro, actualizado_en: eliminadoEn, eliminado_en: eliminadoEn });
     }
-    return baseWeb.ejecutarTransaccion({ recursos: ['transferencias_billeteras', 'billeteras', 'movimientos_billetera'], modo: 'escritura' }, eliminar);
+    return baseLocal.ejecutarTransaccion({ recursos: ['transferencias_billeteras', 'billeteras', 'movimientos_billetera'], modo: 'escritura' }, eliminar);
   }
 }

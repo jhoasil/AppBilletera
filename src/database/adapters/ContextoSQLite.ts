@@ -8,7 +8,7 @@ import { tablasV1 } from '../migrations/v1';
 /** Traduce consultas comunes a SQL parametrizado dentro de la conexión y transacción recibidas. */
 export class ContextoSQLite implements ContextoDatos {
   /** Conserva una conexión y los recursos autorizados por el coordinador. */
-  constructor(private readonly conexion: SQLiteDBConnection, private readonly recursos: readonly string[]) {}
+  constructor(private readonly conexion: SQLiteDBConnection, private readonly recursos: readonly string[], private readonly escritura = false) {}
   /** Rechaza tablas fuera del ámbito transaccional antes de ejecutar SQL. */
   private definicion(tabla: NombreTabla) { const definicion = tablasV1.find(function buscar(valor) { return valor.nombre === tabla; }); if (!definicion || !this.recursos.includes(tabla)) throw new Error('La tabla no pertenece a esta transacción.'); return definicion; }
   /** Reconstruye booleanos del motor sin modificar dinero ni fechas. */
@@ -16,7 +16,7 @@ export class ContextoSQLite implements ContextoDatos {
   /** Consulta una marca técnica sin introducir preferencias financieras. */
   async obtenerMarca(id: string) { if (!this.recursos.includes('_metadatos')) throw new Error('Metadatos fuera de la transacción.'); return Boolean((await this.conexion.query('SELECT id FROM _metadatos WHERE id = ?', [id])).values?.length); }
   /** Inserta una marca en la transacción existente, sin confirmación propia. */
-  async guardarMarca(id: string) { if (!this.recursos.includes('_metadatos')) throw new Error('Metadatos fuera de la transacción.'); await this.conexion.run('INSERT OR IGNORE INTO _metadatos (id) VALUES (?)', [id], false); }
+  async guardarMarca(id: string) { if (!this.escritura || !this.recursos.includes('_metadatos')) throw new Error('Escritura fuera de la transacción.'); await this.conexion.run('INSERT OR IGNORE INTO _metadatos (id) VALUES (?)', [id], false); }
   /** Obtiene un registro por UUID mediante una consulta parametrizada. */
   async obtener(tabla: NombreTabla, id: string): Promise<RegistroDatos | null> { this.definicion(tabla); const registro = (await this.conexion.query(`SELECT * FROM ${tabla} WHERE id = ?`, [id])).values?.[0] as RegistroDatos | undefined; return registro ? this.convertir(tabla, registro) : null; }
   /** Recorre bloques acotados sin materializar el historial financiero completo. */
@@ -50,6 +50,7 @@ export class ContextoSQLite implements ContextoDatos {
   }
   /** Comparte la validación declarativa y escribe con parámetros, preservando identidad y FK históricas. */
   async guardar(tabla: NombreTabla, registro: RegistroDatos, insertar = false) {
+    if (!this.escritura) throw new Error('Esta transacción es de solo lectura.');
     const definicion = this.definicion(tabla); await validarRegistro(this, tabla, registro);
     const columnas = definicion.columnas.map(function nombre(columna) { return columna.nombre; }); const valores = columnas.map(function valor(nombre) { const valor = registro[nombre]; return typeof valor === 'boolean' ? Number(valor) : valor; });
     const actualizacion = columnas.filter(function excluir(nombre) { return nombre !== 'id'; }).map(function asignar(nombre) { return `${nombre}=excluded.${nombre}`; }).join(',');

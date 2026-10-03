@@ -1,4 +1,4 @@
 import { ServicioIngresos } from '../../core/services/ServicioIngresos';
-import { RepositorioIngresosWeb } from '../../database/web/RepositorioIngresosWeb';
+import { RepositorioIngresosLocal } from '../../database/repositories/RepositorioIngresosLocal';
 
-export const servicioIngresos = new ServicioIngresos(new RepositorioIngresosWeb());
+export const servicioIngresos = new ServicioIngresos(new RepositorioIngresosLocal());
