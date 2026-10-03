@@ -27,6 +27,10 @@ const PaginaDetalleBilletera = lazy(cargarDetalleBilletera);
 async function cargarConciliacion() { const modulo = await import('../modules/billeteras/PaginaConciliacion'); return { default: modulo.PaginaConciliacion }; }
 const PaginaConciliacion = lazy(cargarConciliacion);
 
+/** Carga el registro contextual de una operación omitida al abrirlo desde una conciliación. */
+async function cargarMovimientoFaltante() { const modulo = await import('../modules/billeteras/PaginaMovimientoFaltante'); return { default: modulo.PaginaMovimientoFaltante }; }
+const PaginaMovimientoFaltante = lazy(cargarMovimientoFaltante);
+
 const paginas = {
   inicio: <PaginaInicio />,
   ingresos: <PaginaIngresos />,
@@ -37,6 +41,7 @@ const paginas = {
   billeteras: <PaginaBilleteras />,
   billetera: <PaginaDetalleBilletera />,
   conciliacion: <PaginaConciliacion />,
+  'movimiento-faltante': <PaginaMovimientoFaltante />,
 };
 
 /** Muestra una única página dentro de la navegación compartida por todas las pantallas. */

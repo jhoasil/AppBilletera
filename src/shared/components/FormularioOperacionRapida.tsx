@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -24,12 +24,12 @@ import type { MedioPago } from '../../core/entities/MedioPago';
 /** Edición textual de una distribución; su dinero se convierte únicamente mediante dominio. */
 interface LineaFormulario { medioPagoId: string; billeteraId: string; importe: string }
 /** Formulario conectado mediante una acción de aplicación, sin acceso a IndexedDB. */
-export interface PropiedadesFormularioOperacion { tipo: 'ingreso' | 'gasto'; alGuardar?: (carga: CargaOperacion) => Promise<void>; inicial?: CargaIngreso & { categoriaId?: string }; alCompletar?: () => void }
+export interface PropiedadesFormularioOperacion { tipo: 'ingreso' | 'gasto'; alGuardar?: (carga: CargaOperacion) => Promise<void>; inicial?: CargaIngreso & { categoriaId?: string }; alCompletar?: () => void; resumenImpacto?: (moneda: string, lineas: readonly LineaCobro[]) => ReactNode }
 /** Datos comunes de pantalla; la actividad vacía se convierte en null para un gasto. */
 export interface CargaOperacion extends CargaIngreso { categoriaId: string }
 
 /** Precarga la actividad y muestra los cobros rápidos con suma exacta y ceros sin persistir. */
-export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompletar }: PropiedadesFormularioOperacion) {
+export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompletar, resumenImpacto }: PropiedadesFormularioOperacion) {
   const [datos, establecerDatos] = useState<Awaited<ReturnType<typeof cargarDatosIngreso>> | null>(null);
   const [actividad, establecerActividad] = useState(inicial?.actividadId ?? '');
   const [categoria, establecerCategoria] = useState(inicial?.categoriaId ?? '');
@@ -153,6 +153,7 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
       <Stack direction="row" sx={{ flexWrap: 'wrap' }}>{datos.medios.map(mostrarMedio)}</Stack>
       {errorImportes ? <Alert severity="error">{errorImportes}</Alert> : <Paper aria-live="polite" sx={/** Usa la misma superficie financiera para ingresos y gastos en ambos temas. */ function apariencia(tema) { const estado = estadosFinancieros[tema.palette.mode === 'dark' ? 'oscuro' : 'claro'][tipo]; return { minHeight: 68, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1, bgcolor: estado.fondo, color: estado.texto }; }}><Typography sx={{ fontWeight: 600 }}>TOTAL</Typography><Typography sx={{ fontSize: 24, fontWeight: 700, overflowWrap: 'anywhere', fontVariantNumeric: 'tabular-nums' }}>{formatearImporte(crearImporte(total, moneda))}</Typography></Paper>}
     </Stack>
+    {resumenImpacto && !errorImportes && resumenImpacto(moneda, lineas.map(/** Prepara distribuciones positivas para la vista previa delegada al dominio. */ function convertir(linea) { return { medioPagoId: linea.medioPagoId, billeteraId: linea.billeteraId || null, importeCentavos: interpretarCampoRapido(linea.importe) }; }).filter(/** Excluye líneas vacías de la vista previa, igual que en el guardado. */ function positiva(linea) { return linea.importeCentavos > 0; }))}
     {!alGuardar && <Alert severity="info">La persistencia se conectará en la siguiente tarea.</Alert>}
     <Button fullWidth type="submit" variant="contained" color={tipo === 'ingreso' ? 'success' : 'error'} loading={pendiente} disabled={!alGuardar || Boolean(errorImportes) || total === 0}>Guardar {tipo}</Button>
   </Stack>;

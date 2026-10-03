@@ -25,8 +25,9 @@ interface PropiedadesConciliacion { alConfirmar?: (datos: ConfirmacionConciliaci
 /** Muestra saldo calculado, real y diferencia, ofreciendo registrar faltantes o ajustar explícitamente. */
 export function PaginaConciliacion({ alConfirmar = confirmarConciliacion }: PropiedadesConciliacion) {
   const id = useParametroRuta('id');
+  const realInicial = useParametroRuta('real');
   const [datos, establecerDatos] = useState<DetalleBilletera | null>(null);
-  const [real, establecerReal] = useState(''); const [motivo, establecerMotivo] = useState(''); const [observaciones, establecerObservaciones] = useState('');
+  const [real, establecerReal] = useState(realInicial); const [motivo, establecerMotivo] = useState(''); const [observaciones, establecerObservaciones] = useState('');
   const [error, establecerError] = useState(''); const [pendiente, establecerPendiente] = useState(false); const [revision, establecerRevision] = useState(0);
   /** Carga una instantánea y descarta lecturas de otra billetera. */
   function cargar() {
@@ -41,6 +42,9 @@ export function PaginaConciliacion({ alConfirmar = confirmarConciliacion }: Prop
     return cancelar;
   }
   useEffect(cargar, [id, revision]);
+  /** Restaura el saldo declarado al volver de una operación real y al cambiar de billetera. */
+  function restaurarSaldoReal() { establecerReal(realInicial); }
+  useEffect(restaurarSaldoReal, [id, realInicial]);
   let comparacion: ReturnType<typeof calcularConciliacion> | undefined; let errorReal = '';
   try { if (datos && real.trim()) comparacion = calcularConciliacion(datos.saldoCentavos, real, datos.billetera.moneda); }
   catch (causa) { errorReal = causa instanceof Error ? causa.message : 'Saldo real inválido.'; }
@@ -71,7 +75,7 @@ export function PaginaConciliacion({ alConfirmar = confirmarConciliacion }: Prop
       </Stack>
       {!alConfirmar && <Alert severity="info">La confirmación del ajuste se conectará en el siguiente paso de implementación.</Alert>}
       <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', '@media (min-width:360px)': { gridTemplateColumns: comparacion?.diferenciaCentavos ? '1fr 1fr' : '1fr' }, gap: 1.5 }}>
-        {comparacion && comparacion.diferenciaCentavos !== 0 && <Button component="a" href={`#/${comparacion.diferenciaCentavos < 0 ? 'gastos' : 'ingresos'}?nuevo=1`} variant="outlined" disabled={pendiente || !datos.billetera.activo} sx={{ minHeight: 112 }}><Stack spacing={1}><span>Registrar movimiento faltante</span><Typography variant="body2">{comparacion.diferenciaCentavos < 0 ? 'Gasto' : 'Ingreso'} real omitido</Typography></Stack></Button>}
+        {comparacion && comparacion.diferenciaCentavos !== 0 && <Button component="a" href={`#/movimiento-faltante?id=${encodeURIComponent(id)}&real=${encodeURIComponent(real)}`} variant="outlined" disabled={pendiente || !datos.billetera.activo} sx={{ minHeight: 112 }}><Stack spacing={1}><span>Registrar movimiento faltante</span><Typography variant="body2">{comparacion.diferenciaCentavos < 0 ? 'Gasto' : 'Ingreso'} real omitido</Typography></Stack></Button>}
         <Button fullWidth type="submit" variant="contained" loading={pendiente} sx={{ minHeight: comparacion?.diferenciaCentavos ? 112 : 48 }} disabled={!alConfirmar || !comparacion || !datos.billetera.activo}>{comparacion?.diferenciaCentavos === 0 ? 'Confirmar coincidencia' : 'Ajustar diferencia'}</Button>
       </Box>
     </Stack>}
