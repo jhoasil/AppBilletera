@@ -1,4 +1,12 @@
 import { useEffect, useState, type ReactNode } from 'react';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import MoreVert from '@mui/icons-material/MoreVert';
+import ArrowDownward from '@mui/icons-material/ArrowDownward';
+import ArrowUpward from '@mui/icons-material/ArrowUpward';
+import Add from '@mui/icons-material/Add';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -36,6 +44,7 @@ interface PropiedadesPantallaOperaciones<Entidad extends RegistroOperacion, Carg
 
 /** Presenta listado paginado, detalle editable y confirmación de borrado lógico con filtros de período. */
 export function PantallaOperaciones<Entidad extends RegistroOperacion, Carga>({ titulo, singular, servicio, formulario, detalle, tono }: PropiedadesPantallaOperaciones<Entidad, Carga>) {
+  const [menu, establecerMenu] = useState<{ ancla: HTMLElement; entidad: Entidad } | null>(null);
   const cargaDirecta = useParametroRuta('nuevo');
   const [pagina, establecerPagina] = useState(0);
   const [revision, establecerRevision] = useState(0);
@@ -104,21 +113,24 @@ export function PantallaOperaciones<Entidad extends RegistroOperacion, Carga>({ 
       catch (causa) { establecerError(mensaje(causa)); }
       finally { establecerPendiente(false); }
     }
-    /** Solicita confirmación visual para invalidar la operación completa. */
-    function pedirEliminar() { establecerAEliminar(entidad); }
-    return <Card key={entidad.id} sx={{ minHeight: 88 }}><CardContent><Stack spacing={1}>
-      <Typography variant="h6">{detalle ? detalle(entidad) : entidad.descripcion || singular}</Typography>{detalle && entidad.descripcion && <Typography>{entidad.descripcion}</Typography>}<Typography color="text.secondary">{new Date(`${entidad.fecha}T12:00:00`).toLocaleDateString('es-AR')}</Typography>
-      <Typography variant="h6" sx={{ fontSize: 20, fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: tono === 'ingreso' ? 'success.main' : tono === 'gasto' ? 'error.main' : 'text.primary' }}>{tono === 'ingreso' ? '+' : tono === 'gasto' ? '-' : ''}{formatearImporte(crearImporte(entidad.importeCentavos, entidad.moneda))}</Typography>
-      <Stack direction="row" useFlexGap spacing={1} sx={{ flexWrap: 'wrap' }}><Button disabled={pendiente} onClick={abrir}>Ver detalle / Editar</Button><Button color="error" disabled={pendiente} onClick={pedirEliminar}>Eliminar</Button></Stack>
-    </Stack></CardContent></Card>;
+    // Una sola fila reserva el menú para acciones; eliminar siempre requiere confirmación.
+    return <Card key={entidad.id}><CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 } }}>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+        <Box sx={{ color: tono === 'ingreso' ? 'success.main' : 'error.main', bgcolor: 'action.hover', borderRadius: '50%', p: 1, display: 'flex' }}>{tono === 'ingreso' ? <ArrowDownward /> : <ArrowUpward />}</Box>
+        <Box sx={{ flex: 1, minWidth: 0 }}><Button onClick={abrir} disabled={pendiente} sx={{ p: 0, minWidth: 0, justifyContent: 'flex-start', textAlign: 'left', color: 'text.primary', overflowWrap: 'anywhere' }}>{detalle ? detalle(entidad) : entidad.descripcion || singular}</Button>{detalle && entidad.descripcion && <Typography variant="body2">{entidad.descripcion}</Typography>}<Typography variant="caption" color="text.secondary">{new Date(`${entidad.fecha}T12:00:00`).toLocaleDateString('es-AR')}</Typography>
+        <Typography sx={{ fontSize: 18, fontWeight: 700, fontVariantNumeric: 'tabular-nums', overflowWrap: 'anywhere', color: tono === 'ingreso' ? 'success.main' : tono === 'gasto' ? 'error.main' : 'text.primary' }}>{tono === 'ingreso' ? '+' : tono === 'gasto' ? '-' : ''}{formatearImporte(crearImporte(entidad.importeCentavos, entidad.moneda))}</Typography></Box>
+        <IconButton aria-label={`Acciones de ${singular} del ${entidad.fecha}`} disabled={pendiente} onClick={function abrirMenu(evento) { establecerMenu({ ancla: evento.currentTarget, entidad }); }}><MoreVert /></IconButton>
+      </Stack>
+    </CardContent></Card>;
   }
   if (nuevo || seleccion) return <Stack spacing={2}><CabeceraPagina titulo={`${seleccion ? 'Detalle de' : 'Nuevo'} ${singular}`} regreso={{ alPulsar: volver, etiqueta: "Volver al listado", deshabilitado: pendiente }} />{formulario(seleccion?.carga, guardar, completado)}</Stack>;
   return <Stack spacing={2}>
-    <CabeceraPagina titulo={titulo} acciones={<Button variant="contained" onClick={crear} disabled={pendiente}>Agregar {singular}</Button>} />
+    <CabeceraPagina titulo={titulo} acciones={<Button startIcon={<Add />} variant="contained" onClick={crear} disabled={pendiente}>Agregar {singular}</Button>} />
     {confirmacion && <Alert severity="success">{confirmacion}</Alert>}{error && <Alert severity="error" action={<Button onClick={reintentar}>Reintentar</Button>}>{error}</Alert>}
-    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}><CampoTextoCatalogo etiqueta="Desde" valor={desde} alCambiar={establecerDesde} tipo="date" /><CampoTextoCatalogo etiqueta="Hasta" valor={hasta} alCambiar={establecerHasta} tipo="date" /><Button onClick={filtrar} disabled={pendiente}>Aplicar período</Button></Stack>
+    <details><summary>Período: {filtros.desde || 'inicio'} — {filtros.hasta || 'hoy y futuros'}</summary><Stack sx={{ pt: 2 }} direction={{ xs: 'column', sm: 'row' }} spacing={1}><CampoTextoCatalogo etiqueta="Desde" valor={desde} alCambiar={establecerDesde} tipo="date" /><CampoTextoCatalogo etiqueta="Hasta" valor={hasta} alCambiar={establecerHasta} tipo="date" /><Button onClick={filtrar} disabled={pendiente}>Aplicar período</Button></Stack></details>
     {cargando ? <CircularProgress aria-label="Cargando operaciones" /> : resultado.elementos.length ? resultado.elementos.map(mostrar) : !error && <EstadoVacio titulo="Sin operaciones" descripcion="Agregá una operación o cambiá el período." />}
     <Stack direction="row" useFlexGap spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}><Button disabled={cargando || pendiente || pagina === 0} onClick={anterior}>Anterior</Button><Typography>Página {pagina + 1} · {resultado.total}</Typography><Button disabled={cargando || pendiente || (pagina + 1) * 20 >= resultado.total} onClick={siguiente}>Siguiente</Button></Stack>
+    <Menu anchorEl={menu?.ancla ?? null} open={Boolean(menu)} onClose={function cerrarMenu() { establecerMenu(null); }}><MenuItem onClick={function solicitarBorrado() { establecerAEliminar(menu?.entidad ?? null); establecerMenu(null); }}>Eliminar {singular}</MenuItem></Menu>
     <Dialog open={Boolean(aEliminar)} onClose={cancelarEliminacion} aria-labelledby="confirmar-borrado-operacion"><DialogTitle id="confirmar-borrado-operacion">Eliminar {singular}</DialogTitle><DialogContent>Se invalidarán la operación, sus detalles y sus movimientos de billetera. El historial se conservará.</DialogContent><DialogActions><Button onClick={cancelarEliminacion} disabled={pendiente}>Cancelar</Button><Button color="error" onClick={eliminar} loading={pendiente}>Eliminar</Button></DialogActions></Dialog>
   </Stack>;
 }
