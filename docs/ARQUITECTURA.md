@@ -1,106 +1,76 @@
 # Arquitectura
 
-## Separación de responsabilidades
+## Responsabilidades y estructura
 
-Presentación → aplicación y servicios → dominio → contratos de repositorios → infraestructura → IndexedDB o SQLite.
+Presentación → composición de aplicación → servicios y dominio → contratos de repositorios → infraestructura → IndexedDB o SQLite.
 
-La presentación consume servicios y nunca accede directamente a los motores de persistencia. El dominio contiene las entidades y reglas financieras. Los contratos permiten intercambiar adaptadores sin exponer diferencias de plataforma a las capas superiores.
-
-## Tecnologías previstas
-
-React, TypeScript estricto y Vite para la aplicación; Material UI y Material Icons para la interfaz; Capacitor para plataformas nativas; pnpm para dependencias. IndexedDB en Web y SQLite en Android, iOS e iPadOS.
-
-Las carpetas de arquitectura técnica utilizan nombres convencionales en inglés por decisión del usuario. Los módulos del negocio, los archivos y el contenido propio permanecen en español:
+Las pantallas consumen servicios y no ejecutan SQL ni solicitudes IndexedDB. Las carpetas de arquitectura técnica usan inglés convencional por decisión del usuario; módulos del negocio, archivos, entidades y contenido propio permanecen en español.
 
 ```text
 src/
-    app/
-        data/
-        navigation/
-        preferences/
-        theme/
-    core/
-        entities/
-        money/
-        repositories/
-        services/
-    database/
-        adapters/
-        contracts/
-        data/
-        migrations/
-        web/
-    modules/
-        ajustes/catalogos/
-        billeteras/
-        gastos/
-        ingresos/
-        inicio/
-        reportes/
-    shared/
-        components/
-        dates/
-        money/
+  app/{data,navigation,preferences,theme}/
+  core/{entities,money,repositories,services}/
+  database/
+    adapters/
+    contracts/
+    data/
+    migrations/
+    repositories/
+    web/
+    BaseLocal.ts
+    componerBaseLocal.ts
+  modules/
+    ajustes/catalogos/
+    billeteras/
+    gastos/
+    ingresos/
+    inicio/
+    reportes/
+  shared/{components,dates,money}/
 ```
 
-`app` compone la aplicación; `core` contiene el dominio; `database`, la persistencia; `modules`, las pantallas por funcionalidad; y `shared`, los recursos reutilizables.
+`app/data` compone servicios y repositorios. `core` define entidades, centavos exactos, reglas y puertos. `database/repositories` implementa operaciones locales portables. `database/web` contiene exclusivamente el adaptador y contexto IndexedDB; `database/adapters` contiene el motor SQLite y puntos de integración de plataforma. `ContextoDatos` y `RangoConsulta` impiden que los repositorios dependan de APIs de un motor.
 
-La excepción se aplica únicamente a nombres de carpetas técnicas. Por ejemplo, `src/shared/money/formatearImporte.ts` mantiene el archivo y su función en español; `src/modules/ingresos/PaginaIngresos.tsx` conserva en español tanto la funcionalidad del negocio como el componente. No existe un único nombre de carpeta obligatorio para todo proyecto: esta estructura establece la convención elegida para AppBilletera.
+## Persistencia y migraciones
 
-## Componentes visuales compartidos
+`BaseLocal` encola apertura, migraciones, transacciones y cierre. `componerBaseLocal.ts` selecciona SQLite en Capacitor nativo e IndexedDB en Web/PWA. Las migraciones son consecutivas, comienzan en uno y se aplican después de leer la versión persistida; se rechaza una base más reciente. Un fallo conserva migraciones anteriores confirmadas.
 
-Los componentes visuales reutilizables están en `src/shared/components/`: `CabeceraPagina`, `TarjetaResumen`, `CampoImporte`, `EstadoVacio`, `SelectorCatalogo`, `BotonAccion` y `ListaMovimiento`. Reciben propiedades y eventos desde los módulos, usan el tema y no acceden a persistencia. Los importes de entrada permanecen como texto y los resúmenes y movimientos reciben valores ya preparados; el cálculo y la conversión monetaria corresponden a tareas de dominio posteriores.
+IndexedDB usa versión física igual a la lógica más uno: física 1 es una base vacía y física 2 corresponde a V1. El esquema se crea de forma síncrona en `versionchange`. Las transacciones resuelven tras `oncomplete`; un error aborta todas las escrituras. No se esperan operaciones externas, temporizadores, archivos o red dentro de una transacción IndexedDB.
 
-## Persistencia e integridad
+SQLite usa una conexión privada, FK activas y una versión lógica en `_metadatos`, independiente de la versión de archivo del plugin. La creación del esquema y su versión se confirman juntas. El adaptador abre una transacción y las escrituras internas usan `transaction=false` para evitar anidamiento. Los contextos de lectura rechazan escrituras. Los recorridos procesan bloques de 256 registros.
 
-Los ocho contratos están en `src/core/repositories/`. Son interfaces asíncronas sin dependencias de React, IndexedDB o SQLite. Las consultas requieren límite positivo y desplazamiento no negativo, que los adaptadores deberán validar. Los catálogos se ordenan por nombre e id ascendentes; los medios de pago, por orden, nombre e id. Las operaciones y movimientos se ordenan por fecha descendente e id ascendente. Las consultas excluyen registros eliminados salvo petición explícita; obtener por id devuelve `null` para registros inexistentes o eliminados. Los errores de escritura se comunican rechazando la promesa; eliminar un registro inexistente no tiene efecto.
+Ambos motores validan las mismas columnas, formatos, enteros, restricciones y FK mediante `validarRegistro`. SQL utiliza valores parametrizados y nombres del esquema conocido. Nunca se eliminan físicamente referencias históricas para actualizar una operación.
 
-Guardar ingresos o gastos incluye sus detalles: una edición reemplaza el conjunto vigente y conserva los anteriores mediante borrado lógico. Las operaciones con movimientos se coordinarán en una misma transacción desde la infraestructura de la TAREA 009; los contratos no abren transacciones independientes que impidan esa coordinación. El repositorio de movimientos devuelve saldos enteros seguros en centavos, calcula en persistencia y rechaza desbordamientos. No se implementan motores ni servicios financieros en la TAREA 008.
+## Escrituras financieras
 
-La infraestructura administra inicialización, migraciones versionadas, transacciones y cierre. Guardar cada operación financiera y sus movimientos de billetera de forma atómica. Mantener identidades UUID locales y borrado lógico para conservar la historia.
+Los ingresos y gastos guardan cabecera, detalles positivos y movimientos en una transacción. Los detalles sin billetera afectan el resultado pero no el patrimonio. Las monedas de cada billetera deben coincidir con la operación.
 
-La coordinación está en `src/database/BaseLocal.ts`, con el puerto `AdaptadorBaseLocal` y puntos de integración Web y Nativo. El motor físico se inyecta explícitamente; todavía no hay implementación de IndexedDB ni SQLite. Las migraciones comienzan en uno, son consecutivas y se aplican después de leer la versión persistida. Una base más reciente se rechaza para evitar degradaciones. Cada cambio y su versión deben confirmarse atómicamente por el adaptador; si uno falla, se cierra la conexión y se conservan las migraciones anteriores confirmadas.
+Una edición conserva el UUID de cabecera, invalida lógicamente detalles y movimientos anteriores y crea nuevas distribuciones auditadas. `actualizado_en` esperado protege contra ediciones obsoletas; la nueva revisión avanza al menos un milisegundo. El borrado lógico invalida todos los efectos juntos. Una referencia histórica inactiva puede conservarse en una edición; las selecciones nuevas deben estar activas.
 
-Las operaciones se encolan para proteger apertura, transacciones y cierre. Cada transacción declara recursos y modo de acceso y entrega un contexto común a futuros repositorios; el adaptador confirma o revierte antes de resolver la promesa. El cierre espera las operaciones previas, es repetible y permite reinicializar. No llamar a `BaseLocal` desde su propia transacción o migración: los repositorios deben utilizar el contexto recibido, sin transacciones anidadas. En IndexedDB, ese contexto deberá respetar la vida útil de la transacción y evitar esperas externas; las migraciones se ejecutarán en el contexto de actualización de esquema. La coordinación no se conecta todavía a la interfaz ni crea repositorios físicos.
+Las transferencias crean dos movimientos de igual magnitud y signo opuesto en billeteras distintas de la misma moneda, sin escribir ingresos ni gastos. Se permiten saldos negativos; no existe una regla de fondos suficientes.
 
-Los movimientos de billetera son la fuente de verdad del saldo. Resolver consultas y agregaciones en persistencia, evitando cargar toda la historia en la interfaz. Una caché futura debe ser reconstruible; los cierres por período se evaluarán cuando sean necesarios.
+Un saldo inicial es único por billetera, incluso si se hubiera eliminado lógicamente; puede ser cero o negativo y sus referencias son nulas. Dejarlo vacío al crear una billetera no produce movimiento. Una billetera con historial conserva su moneda.
 
-## Preferencias y evolución
+La conciliación relee el saldo dentro de su transacción y exige que coincida con la instantánea esperada. Si el saldo real coincide, solo marca `conciliado_en`. Una diferencia exige motivo y registra `AjusteBilletera` más un movimiento positivo o negativo, separado de ingresos y gastos. La pantalla permite registrar primero una operación faltante.
 
-Usar localStorage únicamente para preferencias de interfaz, como apariencia y últimos valores utilizados. Los datos financieros permanecen en la base local. Preparar identidades para futura sincronización sin implementar servicios cloud en esta etapa.
+## Consultas y saldos
 
-## Persistencia Web
+Los movimientos vigentes constituyen la fuente de verdad. Los saldos se agregan con BigInt y se convierten solo si caben en enteros seguros. Los índices delimitan billetera/fecha y operaciones/fecha; la interfaz recibe páginas o grupos agregados, nunca todo el historial para sumar.
 
-El adaptador IndexedDB está en `src/database/web/`. La versión física es la versión lógica más uno: IndexedDB 1 representa una base vacía y IndexedDB 2 el esquema V1. Las migraciones crean almacenes e índices dentro de versionchange y las transacciones resuelven después de oncomplete. Los errores abortan todas sus escrituras. Las referencias y restricciones se validan en la misma transacción; los componentes solo consumirán servicios. Los catálogos pequeños pueden ordenarse en la capa de persistencia; los movimientos financieros deberán recorrerse mediante sus índices, sin materializar toda la historia.
+El saldo actual incluye todos los movimientos registrados, incluso futuros. Filtrar el detalle por período solo filtra sus movimientos; no cambia ese saldo. Los totales patrimoniales incluyen billeteras inactivas y se separan por moneda. No se implementa conversión de divisas.
 
-## Datos iniciales
+Los reportes consultan operaciones del período y sus detalles por índices de referencia; suman resultado y desgloses en un recorrido. La rentabilidad de una actividad descuenta únicamente sus gastos asociados; los gastos sin actividad se muestran separados. Transferencias y ajustes tienen un reporte patrimonial independiente. Inicio conserva únicamente cinco candidatos recientes y cinco billeteras activas.
 
-Los datos sugeridos se insertan una sola vez, en una transacción común con la marca `datos_iniciales_v1` del almacén técnico `_metadatos`. Editar, desactivar o renombrar un catálogo no vuelve a crear sus valores sugeridos. `_metadatos` no es una entidad de negocio ni contiene datos financieros. Una instalación nueva crea DiDi, Uber, seis categorías, tres medios de pago y la billetera Efectivo; únicamente Efectivo recibe esa billetera predeterminada.
+No hay caché de saldo mutable ni tabla de cierres. La estrategia futura y sus condiciones de invalidación están en `SALDOS_HISTORICOS.md`.
 
-## Catálogos y saldo inicial
+## Interfaz y preferencias
 
-Los cuatro catálogos se administran desde Ajustes mediante servicios, con paginación de veinte registros, auditoría y activación sin borrar referencias históricas. Los trabajos temporales utilizan la misma entidad Actividad: `tipo = trabajo_temporal`, fechas opcionales y estados activo, finalizado o archivado. El estado del trabajo y su disponibilidad en catálogos son propiedades independientes. Se rechaza una fecha de fin anterior al inicio.
+Material UI utiliza tema, tipografía, paletas y foco centrales. La navegación es inferior en móvil y lateral en escritorio; las áreas seguras se respetan en contenedores nativos. Los formularios muestran medios rápidos directamente y mantienen destino sugerido y opciones adicionales accesibles sin crear catálogos fuera de Ajustes.
 
-El saldo inicial es un movimiento `SALDO_INICIAL` con referencias nulas, UUID y centavos enteros firmados. El importe acepta coma o punto decimal, hasta dos decimales y ningún separador de miles; se convierte mediante BigInt antes de comprobar el rango seguro. Cero representa una apertura explícita sin importe; un valor negativo permite iniciar con deuda. Dejar el campo vacío al crear una billetera no genera movimiento y permite configurarlo después.
+localStorage contiene modo de apariencia y UUID de últimas selecciones, nunca importes ni operaciones. Las preferencias se recuerdan tras confirmar el guardado; un fallo del almacenamiento no revierte una operación financiera. El esquema sugerido se inserta una sola vez con la marca `datos_iniciales_v1`.
 
-Crear una billetera con saldo inicial guarda ambos registros en una transacción. Configurar una existente comprueba que esté activa y que no exista ningún saldo inicial previo, incluso eliminado lógicamente. La comprobación recorre solamente el índice de esa billetera y queda en la misma transacción de escritura, evitando duplicados entre pestañas. No se modifica el movimiento inicial desde el ABM: las correcciones corresponderán a las tareas de conciliación. Una billetera con cualquier historial conserva su moneda.
+## Respaldo y plataformas
 
-La fecha elegida se interpreta como medianoche en la zona horaria del dispositivo y se persiste como instante ISO UTC; la validación del día calendario es independiente de la zona horaria. Las fechas de auditoría también son UTC. El modelo no guarda un atributo de saldo mutable ni cuenta el saldo inicial como ingreso o rentabilidad.
+El respaldo JSON versionado exporta una instantánea completa, incluidos registros borrados lógicamente. La importación valida esquema, referencias y efectos financieros antes de escribir; incorpora registros nuevos, conserva idénticos y aborta conflictos. El adaptador de archivo usa descarga Web o Filesystem/Share nativo, con destino elegido por el usuario.
 
-## Operaciones financieras y carga rápida
-
-Los formularios consumen servicios de aplicación y comparten controles, conversión a centavos y cálculo del total. Los campos vacíos equivalen a cero; no se permiten importes negativos en detalles ni un total cero. Las distribuciones persistidas son estrictamente positivas. Cada medio puede utilizar una billetera de la misma moneda o ninguna: un detalle sin billetera forma parte del ingreso o gasto, pero no modifica patrimonio. Los catálogos se administran exclusivamente desde Ajustes.
-
-El servicio de preferencias UI conserva únicamente los UUID `ultima_actividad_ingreso`, `ultima_actividad_gasto` y `ultima_categoria_gasto`. Solo precarga identidades disponibles y recuerda las selecciones después de confirmar la operación. Si localStorage está bloqueado o contiene datos inválidos, la operación financiera continúa normalmente. Los importes y operaciones permanecen en IndexedDB.
-
-Los repositorios de ingresos y gastos escriben cabecera, detalles y movimientos en una transacción común. La creación vuelve a comprobar catálogos activos y monedas dentro de la escritura. Una edición puede mantener referencias históricas inactivas; invalida detalles y movimientos anteriores mediante borrado lógico y crea nuevas distribuciones con UUID distintos. La cabecera conserva su UUID y fecha de creación. El borrado lógico invalida todos los efectos juntos. La versión `actualizado_en` esperada se comprueba dentro de la transacción para rechazar ediciones obsoletas de otra pestaña; la fecha de actualización avanza al menos un milisegundo respecto de la versión anterior.
-
-Una transferencia registra una cabecera y dos movimientos de igual magnitud y signos opuestos, en billeteras distintas de la misma moneda. No escribe ingresos ni gastos y no genera conversiones monetarias. Se permiten saldos negativos; no existe una regla de fondos suficientes en V1.
-
-## Consultas de patrimonio y movimientos
-
-Las consultas de billeteras agregan centavos con BigInt en persistencia mediante `movimientos_billetera(billetera_id, fecha)`. No materializan los movimientos ni los entregan al componente para sumar. El resultado debe caber en un entero seguro. Los totales se agrupan por moneda e incluyen billeteras inactivas para no ocultar patrimonio conservado.
-
-La página de billeteras obtiene catálogo, saldos y totales en una única transacción de lectura. El detalle obtiene billetera, saldo actual y página de movimientos también en una única instantánea, evitando mezclar valores durante transferencias o ediciones concurrentes. Cada consulta de operaciones o movimientos conserva solamente la página solicitada, ordenada por fecha descendente y UUID ascendente. El cursor procesa grupos de una fecha sin acumular toda la historia.
-
-Los filtros del detalle incluyen desde la medianoche local del primer día hasta el último milisegundo del día final, respetando cambios de horario del dispositivo. Filtrar movimientos no cambia el saldo actual mostrado. Los cierres periódicos y cachés reconstruibles continúan siendo una posibilidad futura; no se agregan en esta etapa. La acción de conciliación se presenta como pendiente hasta su implementación en la TAREA 031.
+Vite genera Web/PWA con precache del frontend y contenedores nativos sin service worker mediante `compilar:nativo`. Capacitor comparte el mismo frontend con Android e iOS/iPadOS; sus proyectos y plugins se sincronizan desde la raíz. No hay backend, sincronización cloud ni dependencias de plataforma en el dominio.

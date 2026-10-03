@@ -16,6 +16,12 @@ Ejemplo:
 
 # Desarrollo inicial
 
+Estado después de la tarea 050: `package.json` conserva **0.1.0**. Los cambios funcionales permanecen en «Sin publicar» de `CHANGELOG.md`; el lote no cierra una versión, crea tags ni autoriza push.
+
+La información de pantalla proviene de `app/informacionAplicacion.ts`. Vite lee la versión de `package.json` e incorpora la compilación desde `APP_BUILD`, o muestra `desarrollo` si no se define. En PowerShell puede usarse `$env:APP_BUILD = '1'` antes de compilar; no cambia la versión ni publica artefactos.
+
+Android lee `versionName` directamente de `package.json` desde Gradle y mantiene `versionCode = 1`. iOS mantiene `MARKETING_VERSION = 0.1.0` y `CURRENT_PROJECT_VERSION = 1`, usados por Info.plist. Al preparar una publicación se coordinan números de compilación, `APP_BUILD` y metadatos nativos según el procedimiento de cierre; no se incrementan durante tareas ordinarias.
+
 Mientras la aplicación no sea estable utilizar:
 
 ```text

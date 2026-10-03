@@ -4,6 +4,16 @@
 
 ### Agregado
 
+- Conciliación con detección de saldo obsoleto, coincidencias sin movimiento y ajustes positivos o negativos atómicos.
+- Inicio con resultado diario, accesos de carga, principales billeteras y últimos movimientos.
+- Reportes por Hoy, Semana, Mes, Año y Personalizado; desgloses por actividad, medio y categoría, rentabilidad y patrimonio por moneda.
+- Respaldo JSON versionado con importación incorporativa, validación de integridad financiera y rechazo transaccional de conflictos.
+- PWA con manifest, iconos, precache de recursos y actualización diferida.
+- Capacitor, proyectos Android/iOS/iPadOS y adaptador SQLite con migraciones y transacciones compartidas.
+- Exportación de respaldo mediante descarga Web o selector nativo de archivos.
+- Información central de versión/build, apariencia completa, áreas seguras y foco visible.
+- Documentación operativa de plataformas, saldos, auditorías y estado funcional hasta la tarea 050.
+
 - Preferencias de las últimas selecciones, formularios rápidos de ingreso y gasto con conversión exacta a centavos y detalles positivos.
 - Persistencia transaccional y ABM de ingresos y gastos con filtros, edición, borrado lógico y reemplazo auditado de movimientos.
 - Transferencias entre billeteras de la misma moneda, con entrada y salida atómicas sin modificar el resultado.
@@ -17,13 +27,18 @@
 
 ### Modificado
 
+- Repositorios locales separados del adaptador Web, rangos portables y validación común de ambos motores.
+- Consultas de reportes agregadas sin acumular historia; estrategia de saldos documentada sin introducir una caché mutable.
+- Flujos compactos de ingresos, gastos, transferencia y conciliación, preservando validaciones.
+- Nomenclatura propia española y JSDoc completado en callbacks y contratos.
+
 - Nomenclatura arquitectónica de `app` y `shared` completada en inglés; módulos del negocio y contenido propio conservados en español.
 - Subcarpetas técnicas de `core` y `database` con nombres convencionales en inglés; sus archivos y contenido permanecen en español.
 - Carpetas principales de `src` en inglés (`app`, `database`, `shared`, `modules`, `core`), con importaciones y documentación actualizadas; su contenido propio permanece en español.
 - Carga de Ajustes bajo demanda para reducir el paquete inicial.
 - Protección de la moneda de billeteras con historial de movimientos.
 
-Las tareas 011 a 030 no cierran una versión ni crean un tag. La conciliación, los reportes y los resúmenes de Inicio siguen pendientes de sus tareas respectivas.
+Las tareas 011 a 050 no cierran una versión ni crean tags. Web/PWA y frontend nativo compilan; Android generó APK debug con JDK 21. iOS/iPadOS se preparó y sincronizó desde Windows, sin compilación Xcode. No se ejecutaron tests ni se verificó funcionamiento en dispositivos físicos. La tarea 051 queda pendiente de autorización.
 
 ## [0.1.0]
 

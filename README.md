@@ -1,41 +1,53 @@
 # AppBilletera
 
-Aplicación personal para administrar actividades, ingresos, gastos y billeteras, con prioridad en la carga rápida, el funcionamiento offline y la trazabilidad.
+Aplicación personal para administrar actividades, ingresos, gastos y billeteras, con carga rápida, persistencia local y trazabilidad.
 
-Versión inicial: **0.1.0**. Estado: aplicación base React + TypeScript + Vite con Material UI, todavía sin módulos funcionales ni persistencia.
+Versión de desarrollo: **0.1.0**, sin publicación ni tag. Implementación funcional completada hasta la tarea **050**. Web/PWA usa IndexedDB; Android e iOS/iPadOS comparten el mismo frontend mediante Capacitor y usan SQLite.
 
-## Plataformas y tecnologías previstas
+## Funciones disponibles
 
-Una base compartida para Web, PWA, Android, iOS e iPadOS mediante React, TypeScript, Vite, Material UI y Capacitor. Gestor de paquetes: pnpm. Persistencia local: IndexedDB en Web y SQLite en plataformas nativas.
-
-## Documentación
-
-- [Reglas de trabajo](AGENTS.md).
-- [Producto](docs/PRODUCTO.md).
-- [Arquitectura](docs/ARQUITECTURA.md).
-- [Modelo de datos](docs/MODELO_DATOS.md).
-- [Decisiones](docs/DECISIONES.md).
-- [Versionado](docs/VERSIONADO.md).
-- [Plan de tareas](docs/TAREAS_CODEX.md).
-- [Historial de cambios](CHANGELOG.md).
+- Catálogos de actividades, categorías, medios de pago y billeteras desde Ajustes.
+- Ingresos y gastos con distribuciones por medio, edición y borrado lógico.
+- Saldos iniciales, transferencias, conciliación y ajustes positivos o negativos.
+- Inicio con resultado diario, billeteras y últimos movimientos.
+- Reportes por período, rentabilidad por actividad y patrimonio por moneda.
+- Apariencia Sistema/Claro/Oscuro e información central de versión y build.
+- Respaldo JSON versionado con validación de integridad e importación transaccional.
+- PWA instalable y proyectos nativos Android/iOS.
 
 ## Desarrollo
 
-Navegación inicial: Inicio, Ingresos, Gastos y Reportes en la barra inferior móvil y en el panel lateral de escritorio. Ajustes está disponible desde la barra superior. Las páginas son provisionales y usan rutas por fragmento (`#/inicio`, `#/ingresos`, `#/gastos`, `#/reportes`, `#/ajustes`) que admiten recarga y atrás/adelante del navegador.
-
-La apariencia permite elegir Sistema (predeterminado), Claro u Oscuro. Sistema sigue los cambios del dispositivo; la selección se recuerda localmente. Los colores se centralizan en `src/app/theme/colores.ts`.
-
-Requisitos: Node.js 20.19+ o 22.12+ y pnpm 11.19.0, fijado en `package.json`. Se recomienda Node.js 24 LTS.
+Requisitos: Node.js 22.12 o posterior y pnpm 11.19.0, fijado en `package.json`. Sin backend ni servicios cloud.
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm desarrollo
 ```
 
-Comandos disponibles:
+| Comando | Finalidad |
+| --- | --- |
+| `pnpm verificar-tipos` | Comprobar TypeScript sin emitir archivos. |
+| `pnpm compilar` | Verificar tipos y generar Web/PWA en `dist`. |
+| `pnpm previsualizar` | Servir la compilación Web localmente. |
+| `pnpm compilar:nativo` | Generar el frontend sin service worker para Capacitor. |
+| `pnpm capacitor sync android` | Sincronizar frontend y plugins Android. |
+| `pnpm capacitor sync ios` | Sincronizar frontend y paquetes iOS. |
 
-- `pnpm verificar-tipos`: comprueba TypeScript estricto sin emitir archivos.
-- `pnpm compilar`: verifica tipos y genera la aplicación en `dist/`.
-- `pnpm previsualizar`: sirve localmente la compilación generada.
+Las rutas usan fragmentos, por ejemplo `#/inicio`, `#/ingresos?nuevo=1` y `#/billetera?id=UUID`. Los datos financieros permanecen en la base local; localStorage contiene solo preferencias de interfaz.
 
-Ejecutar solamente la tarea solicitada en su rama `task_AA/NNN_descripcion_de_la_tarea` y finalizar con su commit. No generar ni ejecutar tests durante la preparación y el desarrollo inicial.
+## Estado de verificación
+
+Compilación Web/PWA y nativa, TypeScript y sincronización de ambas plataformas verificados. El APK debug Android se compiló con JDK 21; sus archivos quedan fuera de Git. iOS/iPadOS requiere macOS y Xcode y no se compiló en este equipo Windows. La revisión visual cubrió anchos móvil, tablet y escritorio, con apariencia clara y oscura. No se ejecutaron tests ni se verificó funcionamiento en dispositivos físicos.
+
+La importación incorpora registros faltantes y acepta registros idénticos; rechaza conflictos sobre el mismo UUID sin sobrescribir historia. El respaldo contiene información financiera: el usuario elige dónde conservarlo. No hay conversiones de moneda ni sincronización entre dispositivos.
+
+## Documentación
+
+- [Reglas de trabajo](AGENTS.md) y [plan de tareas](docs/TAREAS_CODEX.md).
+- [Producto](docs/PRODUCTO.md), [arquitectura](docs/ARQUITECTURA.md) y [modelo de datos](docs/MODELO_DATOS.md).
+- [Decisiones](docs/DECISIONES.md), [versionado](docs/VERSIONADO.md) e [historial](CHANGELOG.md).
+- [Saldos históricos](docs/SALDOS_HISTORICOS.md) y [auditoría de arquitectura](docs/AUDITORIA_ARQUITECTURA.md).
+- [PWA](docs/PWA.md), [Capacitor](docs/CAPACITOR.md), [Android](docs/ANDROID.md) e [iOS/iPadOS](docs/IOS.md).
+- [Revisión visual](docs/REVISION_VISUAL.md), [nomenclatura](docs/NOMENCLATURA.md) y [documentación interna](docs/DOCUMENTACION_CODIGO.md).
+
+Cada tarea se desarrolla en `task_AA/NNN_descripcion_de_la_tarea` y tiene su commit. La autorización de este lote termina en 050. No se generan ni ejecutan tests durante el desarrollo inicial; la tarea 051 requiere una nueva instrucción.

@@ -1,22 +1,27 @@
-# Decisiones iniciales
+# Decisiones
 
-Estas decisiones documentan las reglas del proyecto; su implementación se realizará en las tareas correspondientes.
-
-| Decisión | Motivo |
+| Decisión vigente | Motivo |
 | --- | --- |
-| Una base de código para todas las plataformas | Compartir pantallas y reglas, encapsulando diferencias en adaptadores. |
-| React, TypeScript, Vite, Material UI y Capacitor | Utilizar el stack definido para el proyecto. |
-| pnpm como único gestor | Mantener un único archivo de bloqueo y evitar gestores mezclados. |
-| Persistencia local y funcionamiento offline | Permitir registrar y consultar sin conexión ni backend inicial. |
-| IndexedDB en Web y SQLite en nativo | Separar los motores mediante contratos de repositorios. |
-| Nomenclatura y documentación en español | Mantener coherencia; conservar nombres de APIs y tecnologías externas. |
+| Un frontend para Web/PWA, Android e iOS/iPadOS | Compartir pantallas y reglas sin duplicar aplicaciones. |
+| React, TypeScript, Vite, Material UI y Capacitor | Mantener el stack definido y una interfaz adaptable. |
+| pnpm con archivo de bloqueo único | Instalar dependencias reproducibles sin mezclar gestores. |
+| IndexedDB en Web y SQLite en nativo | Persistencia local tras contratos comunes y selección central. |
+| Repositorios portables en `database/repositories` | Separar operaciones de negocio del contexto físico del motor. |
+| Validación declarativa compartida | Aplicar los mismos tipos, FK y restricciones en ambos motores. |
+| Carpetas técnicas en inglés, contenido propio en español | Respetar la excepción solicitada por el usuario y conservar coherencia del negocio. |
 | UUID directamente en `id` | Crear identidades offline preparadas para futura sincronización. |
-| Dinero en enteros de centavos, inicialmente ARS | Evitar errores de precisión de punto flotante. |
-| Movimientos como fuente de verdad del saldo | Conservar trazabilidad y reconstruir cualquier caché futura. |
-| Transferencias y ajustes separados del resultado | Distinguir ingresos y gastos de movimientos patrimoniales. |
-| Borrado lógico y operaciones transaccionales | Conservar historia e impedir registros financieros parciales. |
-| Versión inicial 0.1.0 sin tag | Registrar el inicio sin cerrar ni publicar una versión automáticamente. |
-| Una tarea y un commit por ejecución | Mantener cambios acotados y revisables. |
-| Tests reservados para las tareas específicas | Respetar la generación en TAREA 51 y ejecución solo con autorización. |
+| Dinero en centavos seguros y agregación BigInt | Evitar precisión flotante y detectar desbordamientos. |
+| Movimientos como fuente de verdad, sin saldo mutable | Conservar trazabilidad y evitar una caché sin medición. |
+| Transferencias y ajustes separados del resultado | Distinguir ganancia, patrimonio y movimientos internos. |
+| Edición con borrado lógico y revisión esperada | Preservar historia y rechazar escrituras obsoletas. |
+| Conciliación con relectura transaccional | Evitar ajustar sobre un saldo que cambió desde la pantalla. |
+| Importación incorporativa con rechazo de conflictos | Recuperar registros sin borrar ni sobrescribir historia existente. |
+| Exportación nativa con selector del sistema | Permitir guardar el respaldo sin enviar datos automáticamente. |
+| PWA con actualización diferida | Evitar recargar mientras se completa un formulario. |
+| Compilación nativa sin service worker | Compartir frontend sin introducir caché PWA en el contenedor. |
+| SQLite con versión lógica propia en `_metadatos` | Separar migraciones de negocio de la versión de archivo del plugin. |
+| Una rama y commit por tarea; lotes solo por autorización | Mantener trazabilidad de auditoría y alcance controlado. |
+| Mantener 0.1.0 y cambios sin publicar | No cerrar versiones ni crear tags automáticamente. |
+| No generar ni ejecutar tests hasta nueva autorización | La fase siguiente comienza en tarea 051 y queda fuera del lote actual. |
 
-La selección de versiones de dependencias y la creación de package.json corresponden a la preparación de la aplicación en la TAREA 01.
+La compilación Android utiliza JDK 21. La preparación de iOS se generó y sincronizó en Windows, pero su compilación requiere macOS/Xcode. La revisión visual por tamaño no sustituye la validación en dispositivos físicos.

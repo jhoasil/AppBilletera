@@ -1,14 +1,14 @@
 # Modelo de datos
 
-Esquema V1 definido en `src/database/migrations/v1.ts` mediante una migración declarativa común a Web y Nativo. Los adaptadores traducirán las definiciones y sus restricciones a IndexedDB y SQLite en las tareas de implementación de cada motor. Todavía no se ejecutó sobre una base física.
+Esquema V1 definido en `src/database/migrations/v1.ts` mediante una migración declarativa común. IndexedDB crea almacenes e índices; SQLite crea tablas, FK e índices. Ambos motores aplican la validación compartida de `database/contracts/validarRegistro.ts` antes de escribir.
 
-Las once entidades TypeScript están definidas en `src/core/entities/`, con una base `EntidadAuditada`. Las propiedades del dominio usan camelCase en español (`actividadId`, `importeCentavos`, `creadoEn`); las columnas de persistencia usarán snake_case (`actividad_id`, `importe_centavos`, `creado_en`) mediante los adaptadores.
+Las once entidades TypeScript están definidas en `src/core/entities/`, con una base `EntidadAuditada`. Las propiedades del dominio usan camelCase en español (`actividadId`, `importeCentavos`, `creadoEn`); las columnas físicas usan snake_case (`actividad_id`, `importe_centavos`, `creado_en`) mediante conversiones compartidas.
 
-Los instantes de auditoría, conciliación y movimientos se representan como cadenas ISO 8601 en UTC. Las fechas de ingresos, gastos, transferencias y períodos de actividad usan `AAAA-MM-DD` sin zona horaria. La ausencia de datos opcionales se representa con `null` explícito. Estos tipos describen los datos y no validan UUID, formatos de fechas, enteros, signos, referencias ni consistencia financiera en ejecución; esa responsabilidad corresponde a servicios posteriores.
+Los instantes de auditoría, conciliación y movimientos son cadenas ISO 8601 canónicas en UTC. Las fechas de ingresos, gastos, transferencias y períodos de actividad usan `AAAA-MM-DD`. La ausencia de datos opcionales es `null` explícito. Los tipos describen datos; servicios y validación de persistencia verifican en ejecución UUID, fechas, enteros, signos, FK y restricciones financieras.
 
 Los detalles heredan la moneda de su ingreso o gasto. Las transferencias se limitan a billeteras de la misma moneda; no se implementa conversión de divisas. Los movimientos usan la moneda de su billetera. Sus referencias apuntan a la operación de origen; en saldos iniciales, tipo e identidad de referencia son nulos. `AjusteBilletera.diferenciaCentavos` expresa saldo real menos saldo calculado y determina el signo del movimiento asociado.
 
-## Entidades previstas
+## Entidades implementadas
 
 | Entidad | Propósito y relaciones |
 | --- | --- |
@@ -140,12 +140,24 @@ El diagrama muestra relaciones físicas. La asociación polimórfica de movimien
 
 Las operaciones de dinero se centralizan en `src/core/money/Importe.ts`: `crearImporte` recibe centavos enteros seguros, `sumarImportes` suma una lista de la misma moneda y `restarImportes` calcula una diferencia con signo. La moneda predeterminada es ARS; una suma sin argumentos devuelve cero ARS. Se rechazan fracciones, valores no finitos, monedas de formato inválido, mezclas de monedas y resultados fuera de ±`Number.MAX_SAFE_INTEGER`. Los cálculos usan BigInt internamente y devuelven enteros number para persistencia; nunca se persiste BigInt.
 
-El formateo se separa en `src/shared/money/formatearImporte.ts`, con idioma predeterminado `es-AR` y dos decimales. Conserva los centavos exactos, incluidos los negativos menores a un peso. El modelo actual representa monedas de dos decimales; monedas con otra cantidad de unidades menores requerirán ampliar el modelo. La interpretación de texto de formularios no se implementa en esta tarea.
+El formateo se separa en `src/shared/money/formatearImporte.ts`, con idioma predeterminado `es-AR` y dos decimales. Conserva los centavos exactos, incluidos los negativos menores a un peso. El modelo representa monedas de dos decimales; monedas con otras unidades menores requerirán ampliarlo. `interpretarImporte` convierte texto con coma o punto decimal a centavos mediante BigInt, sin separadores de miles ni redondeo.
 
-Ingresos y gastos tienen detalles por medio de pago, sin columnas fijas para efectivo o tarjeta. Los movimientos usan importes positivos para entradas y negativos para salidas. Tipos previstos: `SALDO_INICIAL`, `INGRESO`, `GASTO`, `TRANSFERENCIA_ENTRADA`, `TRANSFERENCIA_SALIDA`, `AJUSTE_POSITIVO` y `AJUSTE_NEGATIVO`.
+Ingresos y gastos tienen detalles por medio de pago, sin columnas fijas para efectivo o tarjeta. Los movimientos usan importes positivos para entradas y negativos para salidas. Tipos implementados: `SALDO_INICIAL`, `INGRESO`, `GASTO`, `TRANSFERENCIA_ENTRADA`, `TRANSFERENCIA_SALIDA`, `AJUSTE_POSITIVO` y `AJUSTE_NEGATIVO`.
 
 Una transferencia genera salida y entrada por el mismo importe sin modificar el resultado. El saldo inicial y las diferencias de conciliación se registran como movimientos; el saldo no se edita directamente. Una diferencia cero no genera ajuste.
 
 ## Índices V1
 
-Los siete índices financieros exigidos y dos índices por cabecera de detalles están en src/database/migrations/indicesV1.ts, cada uno con su motivo. Se incluyen en V1 antes de su primera implementación física. Los adaptadores deben crearlos en la misma actualización de esquema; no se agregan índices de catálogo sin una necesidad medida.
+Los siete índices financieros y dos índices por cabecera de detalles están en `src/database/migrations/indicesV1.ts`, cada uno con su motivo. Ambos motores los crean en la misma actualización de esquema; no se agregan índices de catálogo sin una necesidad medida.
+
+## Conciliación y saldos
+
+`conciliado_en` marca la última conciliación confirmada. Si real y calculado coinciden, solo se actualiza esa marca y la auditoría de billetera. Una diferencia no nula crea `ajustes_billetera` y un movimiento referenciado con el mismo efecto monetario; `motivo` es obligatorio y `observaciones` admite null. El saldo esperado se verifica dentro de la transacción para detectar concurrencia.
+
+El saldo actual suma movimientos con `eliminado_en = null`, incluidos los futuros. Un corte histórico usa el índice por billetera y un instante final inclusivo. No existe `saldo_actual_centavos` ni `saldos_billetera_periodo` persistidos; el diseño futuro está en `SALDOS_HISTORICOS.md`.
+
+## Metadatos y respaldo
+
+`_metadatos` es técnico y no pertenece a las once tablas de negocio. Guarda `datos_iniciales_v1`; SQLite conserva también `version_esquema` y su entero lógico en `valor`. IndexedDB usa su versión física para el esquema. Ningún metadato contiene saldos ni operaciones.
+
+El respaldo formato 1 tiene `version_formato`, `version_aplicacion`, `exportado_en` y `datos` con las once tablas completas y columnas snake_case. No exporta la marca técnica ni preferencias UI. Antes de importar se comprueban tipos, UUID únicos, referencias, moneda de billeteras, totales de detalles y correspondencia con movimientos vigentes. La escritura es atómica y no borra historia existente; identidades con contenidos diferentes abortan. La interfaz limita el archivo seleccionado a 50 MB.
