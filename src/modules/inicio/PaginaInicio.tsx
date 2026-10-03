@@ -5,6 +5,12 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import { IconoCatalogo } from '../../shared/components/IconoCatalogo';
+import { presentacionMovimiento } from '../../shared/components/presentacionMovimiento';
+import { listarCatalogo } from '../../app/data/datosCargaRapida';
+import { servicioBilleteras } from '../../app/data/serviciosCatalogos';
+import type { Billetera } from '../../core/entities/Billetera';
 import { CabeceraPagina } from '../../shared/components/CabeceraPagina';
 import { TarjetaResumen } from '../../shared/components/TarjetaResumen';
 import { servicioResumen } from '../../app/data/servicioResumen';
@@ -18,16 +24,17 @@ import { formatearImporte } from '../../shared/money/formatearImporte';
 export function PaginaInicio() {
   const [resumen, establecerResumen] = useState<ResumenPeriodo | null>(null);
   const [billeteras, establecerBilleteras] = useState<ConsultaBilleterasConSaldo | null>(null);
+  const [catalogoBilleteras, establecerCatalogoBilleteras] = useState<readonly Billetera[]>([]);
   const [error, establecerError] = useState(''); const [revision, establecerRevision] = useState(0);
   /** Consulta los resultados del día local y las primeras billeteras activas. */
   function cargar() {
     let vigente = true; establecerError('');
     const ahora = new Date(); const hoy = `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, '0')}-${String(ahora.getDate()).padStart(2, '0')}`;
     /** Publica lecturas acotadas cuando la pantalla sigue vigente. */
-    function completar([resultado, saldos]: [ResumenPeriodo, ConsultaBilleterasConSaldo]) { if (vigente) { establecerResumen(resultado); establecerBilleteras(saldos); } }
+    function completar([resultado, saldos, catalogo]: [ResumenPeriodo, ConsultaBilleterasConSaldo, readonly Billetera[]]) { if (vigente) { establecerResumen(resultado); establecerBilleteras(saldos); establecerCatalogoBilleteras(catalogo); } }
     /** Muestra fallas de persistencia sin inventar importes. */
     function fallar(causa: unknown) { if (vigente) establecerError(causa instanceof Error ? causa.message : 'No se pudo consultar el inicio.'); }
-    void Promise.all([servicioResumen.consultar(hoy, hoy), servicioConsultaBilleteras.listarPrincipales()]).then(completar, fallar);
+    void Promise.all([servicioResumen.consultar(hoy, hoy), servicioConsultaBilleteras.listarPrincipales(), listarCatalogo(servicioBilleteras)]).then(completar, fallar);
     /** Descarta lecturas de una pantalla abandonada. */
     function cancelar() { vigente = false; } return cancelar;
   }
@@ -41,18 +48,25 @@ export function PaginaInicio() {
     {error && <Alert severity="error">{error}</Alert>}
     {!resumen || !billeteras ? !error && <CircularProgress aria-label="Cargando resumen" /> : <>
       {resumen.totales.map(/** Presenta un resumen, billetera o movimiento ya preparado, sin agregar importes financieros. */ function presentar(total) { return <Stack key={total.moneda} spacing={2}>
-        <TarjetaResumen titulo="Ganancia de hoy" valor={importe(total.gananciaCentavos, total.moneda)} tono="destacado" />
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-          <Stack sx={{ flex: 1 }}><TarjetaResumen titulo="Ingresos de hoy" valor={importe(total.ingresosCentavos, total.moneda)} tono="positivo" /><Button component="a" href="#/ingresos?nuevo=1">+ Agregar ingreso</Button></Stack>
-          <Stack sx={{ flex: 1 }}><TarjetaResumen titulo="Gastos de hoy" valor={importe(total.gastosCentavos, total.moneda)} tono="negativo" /><Button component="a" href="#/gastos?nuevo=1">+ Agregar gasto</Button></Stack>
-        </Stack>
+        <TarjetaResumen titulo="Ganancia de hoy" valor={importe(total.gananciaCentavos, total.moneda)} tono="destacado" principal pie={<Stack direction="row" spacing={2}><Typography variant="body2">Ingresos {importe(total.ingresosCentavos, total.moneda)}</Typography><Typography variant="body2">Gastos {importe(total.gastosCentavos, total.moneda)}</Typography></Stack>} />
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, '@media (min-width:360px)': { gridTemplateColumns: '1fr 1fr' }, gap: 1.5 }}>
+          <TarjetaResumen titulo="Ingresos" valor={importe(total.ingresosCentavos, total.moneda)} tono="positivo" accion={<Button component="a" href="#/ingresos?nuevo=1" color="inherit">+ Agregar ingreso</Button>} />
+          <TarjetaResumen titulo="Gastos" valor={importe(total.gastosCentavos, total.moneda)} tono="negativo" accion={<Button component="a" href="#/gastos?nuevo=1" color="inherit">+ Agregar gasto</Button>} />
+        </Box>
       </Stack>; })}
       <Typography variant="h6">Mi dinero</Typography>
-      {billeteras.elementos.map(/** Presenta un resumen, billetera o movimiento ya preparado, sin agregar importes financieros. */ function presentar({ billetera, saldoCentavos }) { return <Button key={billetera.id} component="a" href={`#/billetera?id=${billetera.id}`} sx={{ justifyContent: 'space-between' }}><span>{billetera.nombre}</span><span>{importe(saldoCentavos, billetera.moneda)}</span></Button>; })}
+      {billeteras.elementos.slice(0, 3).map(/** Presenta un resumen, billetera o movimiento ya preparado, sin agregar importes financieros. */ function presentar({ billetera, saldoCentavos }) { return <Button key={billetera.id} component="a" href={`#/billetera?id=${billetera.id}`} sx={{ justifyContent: 'space-between', gap: 1, minHeight: 64, p: 2, bgcolor: 'background.paper' }}><IconoCatalogo identificador={billetera.icono} /><span>{billetera.nombre}</span><span>{importe(saldoCentavos, billetera.moneda)}</span></Button>; })}
       {!billeteras.total && <Typography color="text.secondary">Creá tu primera billetera desde Ajustes.</Typography>}
       <Stack direction="row" spacing={1}><Button component="a" href="#/transferencias" variant="contained">Transferir</Button><Button component="a" href="#/billeteras">Ver todas</Button></Stack>
       <Typography variant="h6">Últimos movimientos</Typography>
-      {resumen.movimientos.map(/** Presenta un resumen, billetera o movimiento ya preparado, sin agregar importes financieros. */ function presentar(movimiento) { const billetera = billeteras.elementos.find(/** Encuentra la etiqueta de una billetera del resumen para mostrar un movimiento reciente. */ function identificar(elemento) { return elemento.billetera.id === movimiento.billeteraId; }); return <Paper key={movimiento.id} variant="outlined" sx={{ p: 1.5 }}><Button component="a" href={`#/billetera?id=${movimiento.billeteraId}`}>{movimiento.descripcion || movimiento.tipo.replaceAll('_', ' ')} · {billetera?.billetera.nombre ?? 'Ver billetera'}</Button></Paper>; })}
+      {resumen.movimientos.map(/** Muestra signo, tipo, fecha e importe con la moneda histórica de la billetera. */ function presentar(movimiento) {
+        const billetera = catalogoBilleteras.find(/** Resuelve solamente metadatos para formatear el movimiento. */ function identificar(registro) { return registro.id === movimiento.billeteraId; });
+        const visual = presentacionMovimiento(movimiento.tipo);
+        return <Paper key={movimiento.id} variant="outlined"><Button component="a" href={`#/billetera?id=${movimiento.billeteraId}`} color="inherit" sx={{ width: '100%', minHeight: 72, p: 1.5, gap: 1.5, justifyContent: 'flex-start' }}>
+          <Box sx={{ display: 'flex', color: visual.color }}>{visual.icono}</Box><Box sx={{ flex: 1, minWidth: 0, textAlign: 'left' }}><Typography sx={{ overflowWrap: 'anywhere' }}>{visual.nombre} · {movimiento.descripcion || billetera?.nombre || 'Ver billetera'}</Typography><Typography variant="body2" color="text.secondary">{new Date(movimiento.fecha).toLocaleString('es-AR')}</Typography></Box>
+          <Typography sx={{ fontWeight: 700, maxWidth: '40%', overflowWrap: 'anywhere', color: visual.color }}>{billetera ? `${movimiento.importeCentavos > 0 ? '+' : ''}${importe(movimiento.importeCentavos, billetera.moneda)}` : 'Ver importe'}</Typography>
+        </Button></Paper>;
+      })}
       {!resumen.movimientos.length && <Typography color="text.secondary">Todavía no hay movimientos de billetera.</Typography>}
     </>}
   </Stack>;
