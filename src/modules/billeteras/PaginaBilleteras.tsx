@@ -3,6 +3,9 @@ import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardActions from '@mui/material/CardActions';
+import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -39,16 +42,16 @@ export function PaginaBilleteras() {
   /** Avanza en el catálogo. */
   function siguiente() { establecerPagina(pagina + 1); }
   /** Muestra cada moneda por separado evitando sumas de unidades incompatibles. */
-  function mostrarTotal(total: { moneda: string; centavos: number }) { return <TarjetaResumen key={total.moneda} titulo={`Total en billeteras · ${total.moneda}`} valor={formatearImporte(crearImporte(total.centavos, total.moneda))} tono="destacado" detalle="Incluye billeteras activas e inactivas; las transferencias internas conservan este total." />; }
+  function mostrarTotal(total: { moneda: string; centavos: number }) { return <TarjetaResumen key={total.moneda} titulo={`Mi dinero · ${total.moneda}`} principal alturaMinima={128} valor={formatearImporte(crearImporte(total.centavos, total.moneda))} tono="destacado" detalle="Incluye billeteras activas e inactivas; las transferencias internas conservan este total." />; }
   /** Presenta la ubicación del dinero, su disponibilidad y una acción de transferencia. */
   function mostrar({ billetera, saldoCentavos }: BilleteraConSaldo) {
-    return <Card key={billetera.id}><CardContent><Stack spacing={1}>
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}><IconoCatalogo identificador={billetera.icono} /><Typography variant="h6">{billetera.nombre}</Typography></Stack>
-      <Typography variant="h5" color={saldoCentavos < 0 ? 'error.main' : 'success.main'}>{formatearImporte(crearImporte(saldoCentavos, billetera.moneda))}</Typography>
-      <Typography color="text.secondary">{billetera.tipo} · {billetera.activo ? 'Activa' : 'Inactiva'}</Typography>
-      <Button component="a" href={`#/billetera?id=${billetera.id}`}>Ver detalle y movimientos</Button>
-      <Button component="a" href={`#/transferencias?origen=${billetera.id}`} disabled={!billetera.activo}>Transferir</Button>
-    </Stack></CardContent></Card>;
+    return <Card key={billetera.id}><CardActionArea component="a" href={`#/billetera?id=${billetera.id}`} aria-label={`Ver detalle de ${billetera.nombre}`}><CardContent><Stack direction="row" spacing={2} sx={{ minHeight: 96, alignItems: 'center' }}>
+      <Box sx={{ width: 48, height: 48, display: 'grid', placeItems: 'center', borderRadius: 1.5, bgcolor: 'action.hover', flexShrink: 0, '& svg': { fontSize: 32 } }}><IconoCatalogo identificador={billetera.icono} /></Box>
+      <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}><Typography variant="h6" sx={{ overflowWrap: 'anywhere' }}>{billetera.nombre}</Typography><Typography sx={{ fontSize: 20, fontWeight: 700, fontVariantNumeric: 'tabular-nums', overflowWrap: 'anywhere' }} color={saldoCentavos < 0 ? 'error.main' : 'success.main'}>{formatearImporte(crearImporte(saldoCentavos, billetera.moneda))}</Typography>
+        <Typography variant="body2" color="text.secondary">{billetera.moneda} · {billetera.tipo} · {billetera.activo ? 'Activa' : 'Inactiva'}</Typography><Typography variant="caption" color="text.secondary">Última conciliación: {billetera.conciliadoEn ? new Date(billetera.conciliadoEn).toLocaleString('es-AR') : 'Sin conciliaciones'}</Typography>
+      </Stack>
+    </Stack></CardContent></CardActionArea><CardActions><Button component="a" href={`#/transferencias?origen=${billetera.id}`} disabled={!billetera.activo}>Transferir desde esta billetera</Button></CardActions></Card>;
+
   }
   return <Stack spacing={2}>
     <CabeceraPagina titulo="Billeteras" acciones={<Stack direction="row" spacing={1}><Button component="a" href="#/transferencias">Transferir</Button><Button component="a" href="#/ajustes">Administrar</Button></Stack>} />

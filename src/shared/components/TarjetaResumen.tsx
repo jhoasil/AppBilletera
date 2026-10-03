@@ -14,6 +14,7 @@ interface PropiedadesTarjetaResumen {
   icono?: ReactNode;
   tono?: 'neutro' | 'positivo' | 'negativo' | 'destacado';
   principal?: boolean;
+  alturaMinima?: number;
   pie?: ReactNode;
   accion?: ReactNode;
 }
@@ -23,12 +24,12 @@ const coloresTono = {
 };
 
 /** Destaca un valor ya formateado usando los colores semánticos del tema. */
-export function TarjetaResumen({ titulo, valor, detalle, icono, tono = 'neutro', principal = false, pie, accion }: PropiedadesTarjetaResumen) {
+export function TarjetaResumen({ titulo, valor, detalle, icono, tono = 'neutro', principal = false, alturaMinima, pie, accion }: PropiedadesTarjetaResumen) {
   return (
     <Card sx={/** Aplica superficies semánticas y adapta la jerarquía del importe sin alterar sus datos. */ function apariencia(tema) {
       const estado = estadosFinancieros[tema.palette.mode === 'dark' ? 'oscuro' : 'claro'];
       const financiero = tono === 'positivo' ? estado.ingreso : tono === 'negativo' ? estado.gasto : null;
-      return { height: '100%', minWidth: 0, flex: 1, minHeight: principal ? 152 : 112, bgcolor: principal ? 'primary.main' : financiero?.fondo ?? 'background.paper', color: principal ? 'primary.contrastText' : financiero?.texto ?? 'text.primary' };
+      return { height: '100%', minWidth: 0, flex: 1, minHeight: alturaMinima ?? (principal ? 152 : 112), bgcolor: principal ? 'primary.main' : financiero?.fondo ?? 'background.paper', color: principal ? 'primary.contrastText' : financiero?.texto ?? 'text.primary' };
     }}>
       <CardContent>
         <Stack spacing={1}>
@@ -37,7 +38,7 @@ export function TarjetaResumen({ titulo, valor, detalle, icono, tono = 'neutro',
             <Typography variant="subtitle2" sx={{ color: 'inherit' }}>{titulo}</Typography>
           </Stack>
           <Typography variant="h2" component="p" sx={{ color: principal || tono === 'positivo' || tono === 'negativo' ? 'inherit' : coloresTono[tono], fontSize: principal ? 34 : 24, fontVariantNumeric: 'tabular-nums', overflowWrap: 'anywhere' }}>{valor}</Typography>
-          {detalle && <Typography variant="body2" color="text.secondary">{detalle}</Typography>}
+          {detalle && <Typography variant="body2" sx={{ color: principal ? 'inherit' : 'text.secondary' }}>{detalle}</Typography>}
           {pie}{accion}
         </Stack>
       </CardContent>
