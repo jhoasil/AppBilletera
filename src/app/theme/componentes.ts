@@ -13,6 +13,8 @@ export const componentes: Components<Theme> = {
   MuiToolbar: { styleOverrides: { root: { minHeight: `${tokens.alturaAppBar}px !important` } } },
   MuiBottomNavigation: { styleOverrides: { root: { height: tokens.alturaNavegacion } } },
   MuiToggleButton: { styleOverrides: { root: { minHeight: 44, textTransform: 'none' } } },
+  // Los chips describen estados; su tamaño no se utiliza como área táctil de acción.
+  MuiChip: { styleOverrides: { root: { borderRadius: 8, fontSize: 12 }, sizeSmall: { minHeight: 24 } } },
   MuiPaper: { styleOverrides: { rounded: { borderRadius: tokens.radioTarjeta } } },
   MuiCardContent: { styleOverrides: { root: { padding: 16, '&:last-child': { paddingBottom: 16 } } } },
   MuiButton: {

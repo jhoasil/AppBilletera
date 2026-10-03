@@ -1,3 +1,5 @@
+import Box from '@mui/material/Box';
+import { alpha, getContrastRatio, useTheme } from '@mui/material/styles';
 import DirectionsCar from '@mui/icons-material/DirectionsCar';
 import CameraAlt from '@mui/icons-material/CameraAlt';
 import Code from '@mui/icons-material/Code';
@@ -37,10 +39,18 @@ export const iconosCatalogo = [
   { id: 'account_balance_wallet', nombre: 'Billetera', componente: AccountBalanceWallet },
 ] as const;
 
-/** Presenta un identificador de icono sin guardar su SVG en los datos. */
-export function IconoCatalogo({ identificador }: { identificador: string | null }) {
-  /** Localiza un icono conocido y mantiene una alternativa visual para datos importados. */
+/**
+ * Resuelve el icono del catálogo y su color como metadatos visuales.
+ * El color importado solo se usa si es válido y legible sobre la superficie;
+ * nunca modifica entidades ni reemplaza los colores semánticos del dinero.
+ */
+export function IconoCatalogo({ identificador, color, tamano = 40, contenedor = false }: { identificador: string | null; color?: string | null; tamano?: number; contenedor?: boolean }) {
+  const tema = useTheme();
+  /** Mantiene una alternativa visual para identificadores desconocidos o legados. */
   function buscar(icono: (typeof iconosCatalogo)[number]) { return icono.id === identificador; }
   const Componente = iconosCatalogo.find(buscar)?.componente ?? Category;
-  return <Componente color="primary" aria-hidden="true" />;
+  const configurado = color && /^#[0-9a-f]{6}$/i.test(color) ? color : tema.palette.primary.main;
+  const legible = getContrastRatio(configurado, tema.palette.background.paper) >= 3 ? configurado : tema.palette.primary.main;
+  const icono = <Componente aria-hidden="true" sx={{ color: legible, fontSize: contenedor ? 28 : 24 }} />;
+  return contenedor ? <Box component="span" sx={{ width: tamano, height: tamano, flexShrink: 0, display: 'inline-grid', placeItems: 'center', bgcolor: alpha(configurado, 0.14), borderRadius: '12px' }}>{icono}</Box> : icono;
 }
