@@ -1,3 +1,7 @@
+import ArrowDownward from '@mui/icons-material/ArrowDownward';
+import ArrowUpward from '@mui/icons-material/ArrowUpward';
+import BarChart from '@mui/icons-material/BarChart';
+import { cargarDatosIngreso } from '../../app/data/datosCargaRapida';
 import Box from '@mui/material/Box';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -24,6 +28,15 @@ import { formatearImporte } from '../../shared/money/formatearImporte';
 
 /** Consulta resúmenes agregados por período y conserva separados los resultados de distintas monedas. */
 export function PaginaReportes() {
+  const [desglose, establecerDesglose] = useState<'actividad' | 'categoria' | 'medio'>('actividad');
+  const [catalogos, establecerCatalogos] = useState<Awaited<ReturnType<typeof cargarDatosIngreso>> | null>(null);
+  /** Los iconos se resuelven por identidad; los nombres e importes históricos provienen del reporte. */
+  function cargarIconos() {
+    let vigente = true;
+    void cargarDatosIngreso().then(function recibir(resultado) { if (vigente) establecerCatalogos(resultado); }).catch(function ignorar() { /* El reporte sigue disponible con iconos genéricos si falla este enriquecimiento visual. */ });
+    return function cancelar() { vigente = false; };
+  }
+  useEffect(cargarIconos, []);
   const [tipo, establecerTipo] = useState<TipoPeriodoReporte>('Mes'); const [desde, establecerDesde] = useState(''); const [hasta, establecerHasta] = useState('');
   const [periodo, establecerPeriodo] = useState(periodoReporte('Mes', '', ''));
   const [datos, establecerDatos] = useState<ResumenPeriodo | null>(null); const [error, establecerError] = useState('');
@@ -48,23 +61,26 @@ export function PaginaReportes() {
     <CabeceraPagina titulo="Reportes" />
     <Stack direction="row" useFlexGap spacing={1} sx={{ flexWrap: 'wrap' }}><ToggleButtonGroup exclusive value={tipo === 'Personalizado' ? null : tipo} aria-label="Período del reporte" onChange={/** Aplica una selección válida sin cambiar cálculos financieros. */ function elegir(_evento, valor: TipoPeriodoReporte | null) { if (valor && valor !== 'Personalizado') { establecerTipo(valor); establecerPeriodo(periodoReporte(valor, '', '')); } }} sx={{ flexWrap: 'wrap' }}>{(['Hoy', 'Semana', 'Mes', 'Año'] as const).map(/** Identifica cada período con texto y selección visible. */ function opcion(valor) { return <ToggleButton key={valor} value={valor}>{valor}</ToggleButton>; })}</ToggleButtonGroup><Button sx={{ minHeight: 44 }} variant={tipo === 'Personalizado' ? 'contained' : 'text'} onClick={/** Abre el rango libre sin consultar hasta confirmarlo. */ function personalizar() { establecerTipo('Personalizado'); }}>Personalizado</Button></Stack>
     {tipo === 'Personalizado' && <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}><CampoTextoCatalogo etiqueta="Desde" valor={desde} alCambiar={establecerDesde} tipo="date" /><CampoTextoCatalogo etiqueta="Hasta" valor={hasta} alCambiar={establecerHasta} tipo="date" /><Button onClick={aplicar}>Consultar</Button></Stack>}
-    <Typography color="text.secondary">{periodo.desde} — {periodo.hasta}</Typography>
+    <Typography color="text.secondary">{new Date(`${periodo.desde}T12:00:00`).toLocaleDateString('es-AR')} — {new Date(`${periodo.hasta}T12:00:00`).toLocaleDateString('es-AR')}</Typography>
     {error && <Alert severity="error">{error}</Alert>}
     {!datos ? !error && <CircularProgress aria-label="Consultando reportes" /> : <>
-      {datos.totales.map(/** Presenta importes agregados por persistencia con su moneda y etiquetas de resultado. */ function presentar(total) { return <Box key={total.moneda} sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))', md: 'repeat(3, minmax(0, 1fr))' }, gap: 2 }}><TarjetaResumen titulo="Ingresos" valor={importe(total.ingresosCentavos, total.moneda)} tono="positivo" /><TarjetaResumen titulo="Gastos" valor={importe(total.gastosCentavos, total.moneda)} tono="negativo" /><TarjetaResumen titulo="Ganancia neta" valor={importe(total.gananciaCentavos, total.moneda)} tono="destacado" /></Box>; })}
+      {datos.totales.map(/** Presenta importes agregados por persistencia con su moneda y etiquetas de resultado. */ function presentar(total) { return <Box key={total.moneda} sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))', md: 'repeat(3, minmax(0, 1fr))' }, gap: 2 }}><TarjetaResumen titulo="Ingresos" icono={<ArrowDownward />} valor={importe(total.ingresosCentavos, total.moneda)} tono="positivo" /><TarjetaResumen titulo="Gastos" icono={<ArrowUpward />} valor={importe(total.gastosCentavos, total.moneda)} tono="negativo" /><TarjetaResumen titulo="Ganancia neta" icono={<BarChart />} valor={importe(total.gananciaCentavos, total.moneda)} tono="destacado" /></Box>; })}
       {datos.totales.length === 0 && <EstadoVacio titulo="Sin operaciones en este período" descripcion="Elegí otro rango para consultar tus ingresos y gastos." />}
-      {(['actividad', 'categoria', 'medio'] as const).map(/** Mantiene cada desglose en su propia superficie y conserva agrupación por moneda. */ function seccion(grupo) {
+      <ToggleButtonGroup exclusive value={desglose} aria-label="Desglose del reporte" onChange={function cambiarDesglose(_evento, valor: 'actividad' | 'categoria' | 'medio' | null) { if (valor) establecerDesglose(valor); }} sx={{ flexWrap: 'wrap' }}><ToggleButton value="actividad">Por actividad</ToggleButton><ToggleButton value="categoria">Por categoría</ToggleButton><ToggleButton value="medio">Por medio de pago</ToggleButton></ToggleButtonGroup>
+      {[desglose].map(/** Mantiene cada desglose en su propia superficie y conserva agrupación por moneda. */ function seccion(grupo) {
         const filas = datos.desgloses.filter(/** Selecciona agregados ya preparados por persistencia. */ function seleccionar(fila) { return fila.tipo === grupo; });
         return <Paper key={grupo} variant="outlined" sx={{ p: 2 }}><Stack spacing={2}>
           <Typography variant="h6">{grupo === 'actividad' ? 'Rentabilidad por actividad' : grupo === 'categoria' ? 'Gastos por categoría' : 'Por medio de pago'}</Typography>
           {grupo === 'actividad' && <Typography variant="body2" color="text.secondary">La ganancia descuenta únicamente gastos asociados. Los gastos sin actividad se presentan separados.</Typography>}
           {!filas.length && <Typography color="text.secondary">Sin movimientos en este desglose.</Typography>}
           {filas.map(/** Presenta nombre, importes exactos y proporciones sin mezclar monedas ni sumar historial en React. */ function presentar(fila) {
+            const registros = grupo === 'actividad' ? catalogos?.actividades : grupo === 'categoria' ? catalogos?.categorias : catalogos?.medios;
+            const catalogo = registros?.find(function identidad(registro) { return registro.id === fila.id; });
             const total = datos.totales.find(/** Resuelve el denominador agregado de la misma moneda. */ function moneda(candidato) { return candidato.moneda === fila.moneda; });
             const ingreso = porcentajeReporte(fila.ingresosCentavos, total?.ingresosCentavos ?? 0);
             const gasto = porcentajeReporte(fila.gastosCentavos, total?.gastosCentavos ?? 0);
             return <Stack key={`${fila.id}/${fila.moneda}`} spacing={1} sx={{ minHeight: 72, py: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}><IconoCatalogo identificador={grupo === 'actividad' ? 'work_outline' : grupo === 'categoria' ? 'category' : 'payments'} /><Typography sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>{fila.nombre} · {fila.moneda}</Typography></Stack>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}><IconoCatalogo identificador={catalogo?.icono ?? (grupo === 'actividad' ? 'work_outline' : grupo === 'categoria' ? 'category' : 'payments')} color={catalogo?.color ?? null} contenedor /><Typography sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>{fila.nombre} · {fila.moneda}</Typography></Stack>
               {grupo !== 'categoria' && <><Typography variant="body2">Ingresos: {importe(fila.ingresosCentavos, fila.moneda)} · {ingreso}% del ingreso del período</Typography><LinearProgress variant="determinate" value={ingreso} color="success" aria-label={`Participación de ingresos de ${fila.nombre}`} sx={{ height: 8, borderRadius: 999 }} /></>}
               <Typography variant="body2">Gastos: {importe(fila.gastosCentavos, fila.moneda)} · {gasto}% del gasto del período</Typography><LinearProgress variant="determinate" value={gasto} color="error" aria-label={`Participación de gastos de ${fila.nombre}`} sx={{ height: 8, borderRadius: 999 }} />
               {grupo === 'actividad' && <Typography sx={{ fontSize: 20, fontWeight: 700, overflowWrap: 'anywhere' }}>Ganancia neta: {importe(fila.gananciaCentavos, fila.moneda)}</Typography>}
