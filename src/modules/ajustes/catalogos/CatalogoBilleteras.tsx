@@ -1,5 +1,8 @@
 import type { Billetera } from '../../../core/entities/Billetera';
 import { useState } from 'react';
+import SwapHoriz from '@mui/icons-material/SwapHoriz';
+import AccountBalanceWallet from '@mui/icons-material/AccountBalanceWallet';
+import History from '@mui/icons-material/History';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -64,15 +67,15 @@ export function CatalogoBilleteras() {
   function accion(billetera: Billetera, deshabilitado: boolean) {
     /** Elige el destino del movimiento de apertura. */
     function abrir() { establecerConfirmacion(''); establecerBilleteraSaldo(billetera); }
-    return <Button disabled={deshabilitado || !billetera.activo} onClick={abrir} aria-label={`Configurar saldo inicial de ${billetera.nombre}`}>Saldo inicial</Button>;
+    return <Button startIcon={<History />} disabled={deshabilitado || !billetera.activo} onClick={abrir} aria-label={`Configurar saldo inicial de ${billetera.nombre}`}>Saldo inicial</Button>;
   }
   /** Cierra la configuración sin escribir cambios. */
   function cerrar() { establecerBilleteraSaldo(null); }
   /** Comunica una escritura confirmada sin simular un saldo mutable. */
   function registrado() { establecerConfirmacion('Saldo inicial registrado como movimiento trazable.'); establecerBilleteraSaldo(null); }
   return <Stack spacing={2}>
-    <Button component="a" href="#/transferencias" variant="outlined">Transferir entre billeteras</Button>
-    <Button component="a" href="#/billeteras">Ver saldos de billeteras</Button>
+    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}><Button startIcon={<SwapHoriz />} component="a" href="#/transferencias" variant="outlined">Transferir entre billeteras</Button>
+    <Button startIcon={<AccountBalanceWallet />} component="a" href="#/billeteras">Ver saldos de billeteras</Button></Stack>
     {confirmacion && <Alert severity="success">{confirmacion}</Alert>}
     <EditorCatalogo singular="billetera" etiquetaCrear="Nueva billetera" alturaTarjeta={88} tamanoIcono={48} textoBusqueda={textoBusqueda} servicio={servicioBilleteras} crearNuevo={crear} campos={camposConSaldo} detalle={detalle} guardarPersonalizado={guardar} accionAdicional={accion} />
     <DialogoSaldoInicial billetera={billeteraSaldo} alCerrar={cerrar} alRegistrar={registrado} />

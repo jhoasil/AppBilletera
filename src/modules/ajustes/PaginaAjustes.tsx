@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Typography from '@mui/material/Typography';
 import ChevronRight from '@mui/icons-material/ChevronRight';
@@ -40,20 +41,21 @@ export function PaginaAjustes() {
   const [seccion, establecerSeccion] = useState<SeccionAjustes | null>(null);
   /** Devuelve a la lista de accesos de Ajustes. */
   function volver() { establecerSeccion(null); }
+  // Los grupos usan superficies del tema: conservan separación en oscuro sin fondos arbitrarios.
   /** Crea un acceso táctil a una sección de configuración. */
   function mostrarAcceso(destino: (typeof secciones)[number]) {
     /** Abre la sección elegida sin crear ni editar catálogos desde otros módulos. */
     function abrir() { establecerSeccion(destino.id); }
     const Icono = destino.icono;
-    return <ListItemButton key={destino.id} onClick={abrir} sx={{ minHeight: 72, px: 2 }}><ListItemIcon sx={{ minWidth: 40, color: 'primary.main' }}><Icono /></ListItemIcon><ListItemText primary={destino.titulo} secondary={destino.descripcion} /><ChevronRight aria-hidden="true" sx={{ color: 'text.secondary' }} /></ListItemButton>;
+    return <ListItemButton key={destino.id} onClick={abrir} sx={{ minHeight: 64, px: 1.5, borderBottom: '1px solid', borderColor: 'divider', '&:last-child': { borderBottom: 0 } }}><ListItemIcon sx={{ minWidth: 48, color: destino.grupo === 'Catálogos' ? 'secondary.main' : 'primary.main' }}><Box sx={{ width: 36, height: 36, display: 'grid', placeItems: 'center', bgcolor: 'action.hover', borderRadius: '12px' }}><Icono /></Box></ListItemIcon><ListItemText primary={destino.titulo} secondary={destino.descripcion} /><ChevronRight aria-hidden="true" sx={{ color: 'text.secondary' }} /></ListItemButton>;
   }
   /** Encuentra el título de la sección elegida. */
   function buscarSeccion(destino: (typeof secciones)[number]) { return destino.id === seccion; }
-  if (!seccion) return <Stack spacing={3}>
+  if (!seccion) return <Stack spacing={2}>
     <CabeceraPagina titulo="Ajustes" descripcion="Administrá tus catálogos, apariencia y datos." />
-    {(['Configuración', 'Catálogos', 'Datos', 'Información'] as const).map(/** Separa accesos por finalidad sin introducir configuraciones que todavía no existen. */ function mostrarGrupo(grupo) { return <Stack key={grupo} spacing={1}><Typography variant="h6">{grupo}</Typography><Paper variant="outlined"><List aria-label={grupo}>{secciones.filter(/** Elige destinos del grupo actual. */ function pertenece(destino) { return destino.grupo === grupo; }).map(mostrarAcceso)}</List></Paper></Stack>; })}
+    {(['Configuración', 'Catálogos', 'Datos', 'Información'] as const).map(/** Separa accesos por finalidad sin introducir configuraciones que todavía no existen. */ function mostrarGrupo(grupo) { return <Stack key={grupo} spacing={1}><Typography variant="h6">{grupo}</Typography><Paper variant="outlined"><List disablePadding aria-label={grupo}>{secciones.filter(/** Elige destinos del grupo actual. */ function pertenece(destino) { return destino.grupo === grupo; }).map(mostrarAcceso)}</List></Paper></Stack>; })}
   </Stack>;
-  return <Stack spacing={3}>
+  return <Stack spacing={2}>
     <CabeceraPagina titulo={secciones.find(buscarSeccion)?.titulo ?? 'Ajustes'} regreso={{ alPulsar: volver, etiqueta: "Volver a Ajustes" }} />
     {seccion === 'actividades' ? <CatalogoActividades /> : seccion === 'categorias' ? <CatalogoCategoriasGasto /> : seccion === 'medios' ? <CatalogoMediosPago /> : seccion === 'billeteras' ? <CatalogoBilleteras /> : seccion === 'apariencia' ? <SelectorModoTema /> : seccion === 'informacion' ? <InformacionAplicacion /> : <RespaldoDatos />}
   </Stack>;
