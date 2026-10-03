@@ -17,7 +17,7 @@ function crearActividad(): Actividad {
 }
 
 /** Resume el tipo y estado para consultar rápidamente la actividad. */
-function detalle(actividad: Actividad) { return <Stack spacing={0.5}><Typography variant="body2">{actividad.tipo === 'trabajo_temporal' ? 'Trabajo temporal' : actividad.tipo}</Typography><Chip size="small" sx={{ alignSelf: 'flex-start' }} label={actividad.estado === 'activo' ? 'Estado: activo' : actividad.estado === 'finalizado' ? 'Finalizado' : 'Archivado'} variant="outlined" /></Stack>; }
+function detalle(actividad: Actividad) { return <Stack spacing={0.5}><Typography variant="body2">{actividad.tipo === 'trabajo_temporal' ? 'Trabajo temporal' : actividad.tipo}</Typography><Chip size="small" sx={{ alignSelf: 'flex-start' }} label={actividad.estado === 'activo' ? 'Trabajo activo' : actividad.estado === 'finalizado' ? 'Finalizado' : 'Archivado'} color={actividad.estado === 'activo' ? 'success' : 'default'} variant="outlined" /></Stack>; }
 
 /** Incluye nombre y tipo para buscar sin recorrer operaciones financieras. */
 function textoBusqueda(actividad: Actividad) { return `${actividad.nombre} ${actividad.tipo}`; }

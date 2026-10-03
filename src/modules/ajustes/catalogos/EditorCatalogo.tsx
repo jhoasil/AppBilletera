@@ -11,7 +11,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
-import { tokensVisuales } from '../../../app/theme/tokens';
+import IconButton from '@mui/material/IconButton';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import { BuscadorCatalogo } from '../../../shared/components/BuscadorCatalogo';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import { listarCatalogo } from '../../../app/data/datosCargaRapida';
@@ -38,7 +40,7 @@ export interface PropiedadesEditorCatalogo<Entidad extends EntidadCatalogo> {
 }
 
 /** Presenta un ABM paginado con errores visibles y controles deshabilitados durante escrituras. */
-export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, servicio, crearNuevo, campos, detalle, guardarPersonalizado, accionAdicional, etiquetaCrear, masculino = false, alturaTarjeta, tamanoIcono = 48, textoBusqueda }: PropiedadesEditorCatalogo<Entidad>) {
+export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, servicio, crearNuevo, campos, detalle, guardarPersonalizado, accionAdicional, etiquetaCrear, alturaTarjeta, tamanoIcono = 48, textoBusqueda }: PropiedadesEditorCatalogo<Entidad>) {
   const [elementos, establecerElementos] = useState<readonly Entidad[]>([]);
   const [total, establecerTotal] = useState(0);
   const [pagina, establecerPagina] = useState(0);
@@ -115,20 +117,19 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
     }
     return <Card key={entidad.id} sx={{ p: 0 }}><CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 }, minHeight: alturaTarjeta ?? 88 }}>
       <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', minWidth: 0 }}>
-        <Box sx={{ width: tamanoIcono, height: tamanoIcono, flexShrink: 0, display: 'grid', placeItems: 'center', bgcolor: 'action.hover', borderRadius: `${tokensVisuales.radioInput}px` }}><IconoCatalogo identificador={entidad.icono} /></Box>
+        <IconoCatalogo identificador={entidad.icono} color={entidad.color} contenedor tamano={tamanoIcono} />
         <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}><Typography variant="subtitle1" sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>{entidad.nombre}</Typography>
           {detalle && <Box sx={{ color: 'text.secondary', fontSize: 14 }}>{detalle(entidad)}</Box>}
-          <Stack direction="row" useFlexGap spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}><Chip size="small" label={entidad.activo ? masculino ? 'Activo' : 'Activa' : masculino ? 'Inactivo' : 'Inactiva'} variant="outlined" />
-          {entidad.color && <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}><Box component="span" sx={{ width: 12, height: 12, bgcolor: entidad.color, borderRadius: '50%', border: '1px solid', borderColor: 'divider' }} />Color {entidad.color}</Typography>}</Stack>
+          <Chip size="small" sx={{ alignSelf: 'flex-start' }} label={entidad.activo ? 'Disponible' : 'No disponible'} color={entidad.activo ? 'success' : 'default'} variant="outlined" />
         </Stack>
         <Switch checked={entidad.activo} onChange={cambiarActivo} disabled={pendiente} slotProps={{ input: { 'aria-label': `${entidad.activo ? 'Desactivar' : 'Activar'} ${entidad.nombre}` } }} />
+        <IconButton onClick={editar} disabled={pendiente} aria-label={`Consultar o editar ${entidad.nombre}`}><ChevronRight /></IconButton>
       </Stack>
-      <Stack direction="row" useFlexGap spacing={1} sx={{ flexWrap: 'wrap' }}><Button onClick={editar} disabled={pendiente} aria-label={`Consultar o editar ${entidad.nombre}`}>Editar</Button>{accionAdicional?.(entidad, pendiente)}</Stack>
+      {accionAdicional && <Box sx={{ mt: 1 }}>{accionAdicional(entidad, pendiente)}</Box>}
     </CardContent></Card>;
   }
   return <Stack spacing={2}>
-    <BotonAccion etiqueta={etiquetaCrear ?? `Crear ${singular}`} alPulsar={crear} deshabilitado={pendiente} />
-    {textoBusqueda && <CampoTextoCatalogo etiqueta={`Buscar ${singular}`} valor={busqueda} alCambiar={buscar} />}
+    {textoBusqueda && <BuscadorCatalogo etiqueta={`Buscar ${singular}`} valor={busqueda} alCambiar={buscar} />}
     {error && <Alert severity="error" action={<Button onClick={recargar}>Reintentar</Button>}>{error}</Alert>}
     {cargando ? <CircularProgress aria-label="Cargando catálogo" /> : visibles.length ? visibles.map(mostrarEntidad) : !error && <EstadoVacio titulo={busqueda ? "Sin coincidencias" : "Sin registros"} descripcion={busqueda ? "Probá con otro nombre o tipo." : "Creá el primer registro de este catálogo."} />}
     <Stack direction="row" useFlexGap spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
@@ -136,6 +137,8 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
       <Typography variant="body2">Página {pagina + 1} · {totalVisible} registros</Typography>
       <Button onClick={siguiente} disabled={(pagina + 1) * 20 >= totalVisible || cargando || pendiente}>Siguiente</Button>
     </Stack>
+    {/* La acción de alta queda dentro del flujo para no tapar la navegación ni el teclado. */}
+    <BotonAccion etiqueta={etiquetaCrear ?? `Crear ${singular}`} alPulsar={crear} deshabilitado={pendiente} />
     <Dialog open={Boolean(borrador)} onClose={cerrar} fullWidth maxWidth="sm" aria-labelledby={`${formularioId}-titulo`}>
       <DialogTitle id={`${formularioId}-titulo`}>{borrador?.id ? 'Editar' : 'Crear'} {singular}</DialogTitle>
       <DialogContent><Stack component="form" id={formularioId} onSubmit={guardar} spacing={2} sx={{ pt: 1 }}>
