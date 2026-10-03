@@ -22,10 +22,9 @@ function campos(categoria: CategoriaGasto, actualizar: (cambios: Partial<Categor
 /** Busca nombres del catálogo sin consultar operaciones históricas. */
 function textoBusqueda(categoria: CategoriaGasto) { return categoria.nombre; }
 
-/** Explicita que el modelo actual no guarda descripciones de categorías. */
-function detalle() { return 'Sin descripción configurada'; }
+// El modelo vigente no tiene descripción: la fila muestra solamente sus datos reales.
 
 /** Habilita listar, crear, editar y cambiar la disponibilidad conservando registros históricos. */
 export function CatalogoCategoriasGasto() {
-  return <EditorCatalogo singular="categoría de gasto" etiquetaCrear="Nueva categoría" alturaTarjeta={80} tamanoIcono={44} textoBusqueda={textoBusqueda} detalle={detalle} servicio={servicioCategorias} crearNuevo={crearCategoria} campos={campos} />;
+  return <EditorCatalogo singular="categoría de gasto" etiquetaCrear="Nueva categoría" alturaTarjeta={80} tamanoIcono={44} textoBusqueda={textoBusqueda} servicio={servicioCategorias} crearNuevo={crearCategoria} campos={campos} />;
 }
