@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import Paper from '@mui/material/Paper';
+import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
@@ -24,8 +26,9 @@ export function ResumenPatrimonial({ desde, hasta }: { desde: string; hasta: str
   useEffect(cargar, [desde, hasta]);
   /** Formatea un saldo sin convertir divisas. */
   function importe(centavos: number, moneda: string) { return formatearImporte(crearImporte(centavos, moneda)); }
-  return <Stack spacing={2}><Typography variant="h6">Patrimonio y movimientos internos</Typography><Typography color="text.secondary">El patrimonio refleja todos los movimientos registrados. Las transferencias y ajustes del período se muestran separados del resultado.</Typography>{error && <Alert severity="error">{error}</Alert>}
+  return <Paper variant="outlined" sx={{ p: 2 }}><Stack spacing={2}><Typography variant="h6">Patrimonio y movimientos internos</Typography><Typography color="text.secondary">El patrimonio refleja todos los movimientos registrados. Las transferencias y ajustes del período se muestran separados del resultado.</Typography>{error && <Alert severity="error">{error}</Alert>}
+    {!datos && !error && <CircularProgress aria-label="Consultando patrimonio" />}
     {datos?.totales.map(/** Presenta saldos y movimientos internos ya agregados, conservando su moneda. */ function presentar(total) { return <Stack key={total.moneda} spacing={1}><TarjetaResumen titulo="Patrimonio líquido actual" valor={importe(total.saldoCentavos, total.moneda)} /><Typography>Transferencias internas del período: {importe(total.transferenciasCentavos, total.moneda)}</Typography><Typography>Ajustes positivos: {importe(total.ajustesPositivosCentavos, total.moneda)}</Typography><Typography>Ajustes negativos: {importe(total.ajustesNegativosCentavos, total.moneda)}</Typography></Stack>; })}
     {datos?.billeteras.map(/** Presenta saldos y movimientos internos ya agregados, conservando su moneda. */ function presentar({ billetera, saldoCentavos }) { return <Typography key={billetera.id}>{billetera.nombre}: {importe(saldoCentavos, billetera.moneda)}</Typography>; })}
-  </Stack>;
+  </Stack></Paper>;
 }
