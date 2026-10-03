@@ -3086,6 +3086,10 @@ TAREA 87
 
 TAREA 88
 → preparar release solamente cuando sea solicitado
+
+TAREA 89
+→ ajuste adicional de Inicio a la referencia visual; pendiente de implementación
+→ priorizada antes de 86–88; su planificación no autoriza ejecutarla
 ```
 
 La planificación del 03/10/2026 reubica las antiguas TAREAS 67–69 de tests y release después del nuevo bloque visual. No autoriza ejecutarlas.

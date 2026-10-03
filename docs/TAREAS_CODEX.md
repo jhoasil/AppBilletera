@@ -23,6 +23,10 @@ NO crear tests hasta la tarea específica.
 
 NO ejecutar tests sin autorización explícita.
 
+## Prioridad pendiente — revisión de Inicio
+
+La TAREA 89, incorporada a partir de la comparación visual aportada por el usuario, queda pendiente y priorizada antes de las TAREAS 86–88. Se conservan sus números para mantener la trazabilidad. Documentar esta tarea no autoriza su implementación ni la ejecución de tests o la preparación de release.
+
 ---
 
 # TAREA 00 — Crear repositorio y documentación
@@ -4307,3 +4311,54 @@ Rama: `task_AA/088_preparar_release`.
 Commit: `chore(release): prepara version X.Y.Z`.
 
 No crear tag ni hacer push sin autorización explícita. Detenerse.
+
+---
+
+# TAREA 89 — Ajustar Inicio a la referencia visual
+
+## Estado
+
+Pendiente de implementación. Esta incorporación al plan solo define el trabajo.
+
+## Objetivo y referencias
+
+Acercar la composición de Inicio a la lámina «Pantalla 1 — Inicio (claro)», comparándola con la captura actual enviada por el usuario. Las tareas visuales anteriores permanecen completadas; esta revisión corrige diferencias observadas posteriormente.
+
+Referencias de la conversación: `codex-clipboard-64592836-4b85-46aa-a66e-1dfaf909fa3c.png` (objetivo) y `codex-clipboard-e547d528-9252-4ab0-afe0-240e59787785.png` (estado actual). No depender de que sus rutas temporales sigan disponibles: las diferencias y criterios siguientes constituyen la especificación textual.
+
+## Diferencias y cambios requeridos
+
+1. **Tipografía e identidad.** Corregir la apariencia tipográfica respecto de la referencia: marca y títulos con mayor peso, cuerpo sans serif e importes de lectura inmediata. Revisar fuente realmente aplicada, carga y herencia antes de atribuirlo a un fallo. Respetar la familia normativa de GUIA_VISUAL.md; no imponer Roboto solo por el texto de la imagen. Alinear icono de billetera y marca en la cabecera, con Ajustes a la derecha. Evaluar el acceso redundante a Billeteras de la barra de Inicio, conservando su acceso en «Mi dinero».
+2. **Espacio superior.** Reducir el hueco entre la cabecera y la fecha. Usar márgenes laterales de 16 px y espaciado basado en la retícula existente de 8 px. Conservar actualización accesible sin reservarle una franja alta. Comparar a igual ancho y escala; la captura actual tiene un ancho distinto al teléfono de la lámina.
+3. **Ganancia de hoy.** Mantener fondo azul suave en claro y elevado en oscuro. Situar etiqueta y cifra principal a la izquierda, con el icono de tendencia a la derecha. Conservar cifra de 32–36 px según la guía. En la franja inferior, centrar cada columna, destacar importe verde/rojo con signo, colocar su etiqueta debajo y mantener un separador vertical discreto. La captura actual presenta estos importes demasiado pequeños y sin jerarquía semántica.
+4. **Accesos rápidos.** Usar dos tarjetas de superficie neutra en claro: icono circular con fondo semántico a la izquierda y etiqueta/importe a su derecha; botón de ancho completo debajo. Evitar teñir toda la tarjeta de verde o rojo. Asegurar texto e icono legibles sobre los botones, incluido «Agregar ingreso». Reducir altura y relleno respecto de la captura, manteniendo áreas táctiles y foco. Apilar únicamente cuando el contenido no quepa.
+5. **Mi dinero.** Compactar la sección y sus mini tarjetas, con nombre, icono configurado y saldo alineados. Mostrar hasta tres billeteras reales; adaptar el espacio con cero, una, dos o tres, sin columnas ficticias ni tarjetas vacías para imitar la imagen. Colocar «Transferir» y «Ver todas» en dos acciones inferiores de fondo suave, como la referencia, evitando el botón único delineado de ancho completo actual. Evitar duplicar innecesariamente «Ver todas» en encabezado y pie.
+6. **Últimos movimientos.** Reducir el espacio acumulado de las secciones anteriores para que el encabezado y el comienzo del listado queden más próximos al primer pliegue. Usar filas compactas con icono circular, descripción y fecha a la izquierda e importe a la derecha. Conservar entradas, salidas, transferencias y ajustes diferenciados por texto, signo e icono; respetar el ajuste violeta normativo. Estado vacío breve cuando no existan movimientos.
+7. **Navegación y adaptación.** Mantener los cuatro destinos inferiores, indicador de Inicio activo, fondo y borde discretos, espacio de seguridad y contenido final accesible al desplazarse. Conservar la navegación lateral en escritorio. No fijar alturas de pantalla ni recortar contenido para forzar que todo quepa.
+
+## Alcance y restricciones
+
+- Ajustar presentación de Inicio y variantes compartidas estrictamente necesarias; comprobar que estas no alteren otras pantallas que las reutilizan.
+- Reutilizar tokens del tema, componentes e iconos Material existentes. Documentar en español las decisiones de composición no evidentes y las funciones propias modificadas.
+- Preservar consultas, cálculos, monedas, formato monetario vigente, datos, rutas y acciones. No ocultar decimales ni inventar importes, billeteras, logos comerciales o movimientos para reproducir la muestra.
+- Mantener Sistema, Claro y Oscuro, estados de carga/error/vacío y accesibilidad. No modificar persistencia ni introducir nuevas funcionalidades.
+
+## Criterios de finalización
+
+- Comparación antes/después de Inicio a 390 × 844 px, misma escala, tema y estado de datos; evaluar composición, no coincidencia de cifras de muestra.
+- Verificar manualmente 320, 390, 430 y 600 px, más escritorio a 1024 px; comprobar ambos temas y seguimiento de Sistema. Registrar solo lo realmente observado.
+- Confirmar jerarquía de resumen, columnas centradas, iconos circulares, tarjetas rápidas neutras, sección de billeteras compacta y acciones inferiores. Sin desbordamiento horizontal, importes cortados ni contenido tapado por navegación.
+- Comprobar estados con datos existentes y estado vacío cuando estén disponibles. No alterar datos reales para obtener una captura; dejar explícitos los escenarios que no pudieron observarse.
+- Registrar capturas comparables y diferencias deliberadas en REVISION_VISUAL.md, separando revisión visual, comprobación estática y limitaciones. No declarar que Inicio coincide completamente sin evidencia.
+
+## Leer e inspeccionar
+
+AGENTS.md; secciones de Inicio y composición de GUIA_VISUAL.md y PANTALLAS.md; revisión vigente de REVISION_VISUAL.md. Inspeccionar PaginaInicio.tsx, TarjetaResumen.tsx, ListaMovimiento.tsx, IconoCatalogo.tsx, EstructuraPrincipal.tsx y tokens de tipografía/tema únicamente según necesidad.
+
+## Git y validación
+
+Rama: `task_AA/089_ajustar_inicio_referencia` (2026 → `task_26/089_ajustar_inicio_referencia`). La rama puede contener el commit documental de planificación: verificarla y continuar sin recrearla.
+
+Commit de implementación: `style(inicio): ajusta composicion a referencia visual`.
+
+Revisar `git diff` y ejecutar `git diff --check`; realizar validación de tipos y compilación cuando corresponda. No crear ni ejecutar tests. Implementar únicamente cuando el usuario lo autorice; detenerse al terminar.
