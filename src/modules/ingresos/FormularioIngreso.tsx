@@ -4,7 +4,7 @@ import { FormularioOperacionRapida } from '../../shared/components/FormularioOpe
 import type { CargaIngreso } from '../../core/services/CargaIngreso';
 
 /** Conexión del ingreso a sus datos iniciales y operación de aplicación. */
-export interface PropiedadesFormularioIngreso { alGuardar?: (carga: CargaIngreso) => Promise<void>; inicial?: CargaIngreso; alCompletar?: () => void; resumenImpacto?: (moneda: string, lineas: readonly LineaCobro[]) => ReactNode }
+export interface PropiedadesFormularioIngreso { alGuardar?: (carga: CargaIngreso) => Promise<void>; inicial?: CargaIngreso; alCompletar?: () => void; etiquetaGuardar?: string; resumenImpacto?: (moneda: string, lineas: readonly LineaCobro[]) => ReactNode }
 
 /** Especializa el formulario compartido para exigir una actividad y representar cobros. */
 export function FormularioIngreso(propiedades: PropiedadesFormularioIngreso) {

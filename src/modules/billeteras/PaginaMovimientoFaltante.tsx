@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import ArrowDownward from '@mui/icons-material/ArrowDownward';
+import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -81,16 +83,17 @@ export function PaginaMovimientoFaltante() {
   function mostrarImpacto(moneda: string, lineas: readonly LineaCobro[]) {
     try {
       const impacto = calcularImpactoMovimientoFaltante(datos!.saldoCentavos, datos!.billetera, moneda, lineas, tipo);
-      return <Paper variant="outlined" aria-live="polite" sx={{ p: 2, bgcolor: 'action.hover' }}><Stack spacing={1}><Typography variant="h6">Impacto en {datos!.billetera.nombre}</Typography><Typography>Saldo calculado: {importe(datos!.saldoCentavos)}</Typography><Typography>Movimiento: {impacto.movimientoCentavos > 0 ? '+' : ''}{importe(impacto.movimientoCentavos)}</Typography><Typography sx={{ fontSize: 24, fontWeight: 700, overflowWrap: 'anywhere' }}>Nuevo saldo esperado: {importe(impacto.saldoEsperadoCentavos)}</Typography></Stack></Paper>;
+      return <Paper variant="outlined" aria-live="polite" sx={{ p: 2, bgcolor: 'action.hover' }}><Stack spacing={1}><Typography variant="h6">Impacto en {datos!.billetera.nombre}</Typography><Typography>Saldo calculado: {importe(datos!.saldoCentavos)}</Typography><Typography color={tipo === 'ingreso' ? 'success.main' : 'error.main'} sx={{ fontWeight: 700 }}>Movimiento: {impacto.movimientoCentavos > 0 ? '+' : ''}{importe(impacto.movimientoCentavos)}</Typography><Typography sx={{ fontSize: 32, fontWeight: 700, overflowWrap: 'anywhere' }}>Nuevo saldo esperado: {importe(impacto.saldoEsperadoCentavos)}</Typography></Stack></Paper>;
     } catch (causa) { return <Alert severity="error">{causa instanceof Error ? causa.message : 'No se pudo calcular el impacto.'}</Alert>; }
   }
   return <Stack spacing={2} sx={{ maxWidth: tokensVisuales.anchoFormulario, width: '100%' }}>
     <CabeceraPagina titulo="Registrar movimiento faltante" regreso={{ href: `#/conciliacion?id=${encodeURIComponent(id)}&real=${encodeURIComponent(real)}`, etiqueta: "Volver a conciliación", deshabilitado: guardando }} />
     {error && <Alert severity="error" action={<Button onClick={reintentar}>Reintentar</Button>}>{error}</Alert>}
     {!datos || !inicial ? !error && <CircularProgress aria-label="Preparando movimiento faltante" /> : diferencia === 0 ? <Alert severity="success">Los saldos ya coinciden. Volvé a conciliación; no hace falta registrar otra operación.</Alert> : <>
-      <Alert severity="info" sx={{ p: 1.5 }}>La billetera {datos.billetera.nombre} presenta una diferencia de {importe(diferencia)}. Podés registrar la operación real omitida para corregir el saldo. Este flujo no genera un ajuste adicional.</Alert>
-      <ToggleButtonGroup disabled={guardando} exclusive value={tipo} onChange={elegirTipo} aria-label="Tipo de movimiento faltante" sx={{ flexWrap: 'wrap' }}><ToggleButton value="gasto">Registrar gasto</ToggleButton><ToggleButton value="ingreso">Registrar ingreso</ToggleButton></ToggleButtonGroup>
-      {tipo === 'ingreso' ? <FormularioIngreso inicial={inicial} alGuardar={guardarIngreso} alCompletar={completado} resumenImpacto={mostrarImpacto} /> : <FormularioGasto inicial={inicial} alGuardar={guardarGasto} alCompletar={completado} resumenImpacto={mostrarImpacto} />}
+      <Alert severity="info" sx={{ p: 1.5 }}>{datos.billetera.nombre} · Diferencia: {importe(diferencia)}. Registrá la operación real omitida; sin ajuste adicional.</Alert>
+      {/* El tipo cambia la presentación y el servicio normal; nunca crea un ajuste adicional. */}
+      <ToggleButtonGroup disabled={guardando} exclusive value={tipo} onChange={elegirTipo} aria-label="Tipo de movimiento faltante" sx={{ '& button': { flex: 1, gap: 1 } }}><ToggleButton value="gasto"><ArrowUpward />Gasto</ToggleButton><ToggleButton value="ingreso"><ArrowDownward />Ingreso</ToggleButton></ToggleButtonGroup>
+      {tipo === 'ingreso' ? <FormularioIngreso etiquetaGuardar="Guardar ingreso faltante" inicial={inicial} alGuardar={guardarIngreso} alCompletar={completado} resumenImpacto={mostrarImpacto} /> : <FormularioGasto etiquetaGuardar="Guardar gasto faltante" inicial={inicial} alGuardar={guardarGasto} alCompletar={completado} resumenImpacto={mostrarImpacto} />}
     </>}
   </Stack>;
 }

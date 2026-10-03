@@ -29,12 +29,12 @@ import type { MedioPago } from '../../core/entities/MedioPago';
 /** Edición textual de una distribución; su dinero se convierte únicamente mediante dominio. */
 interface LineaFormulario { medioPagoId: string; billeteraId: string; importe: string }
 /** Formulario conectado mediante una acción de aplicación, sin acceso a IndexedDB. */
-export interface PropiedadesFormularioOperacion { tipo: 'ingreso' | 'gasto'; alGuardar?: (carga: CargaOperacion) => Promise<void>; inicial?: CargaIngreso & { categoriaId?: string }; alCompletar?: () => void; resumenImpacto?: (moneda: string, lineas: readonly LineaCobro[]) => ReactNode }
+export interface PropiedadesFormularioOperacion { tipo: 'ingreso' | 'gasto'; alGuardar?: (carga: CargaOperacion) => Promise<void>; inicial?: CargaIngreso & { categoriaId?: string }; alCompletar?: () => void; etiquetaGuardar?: string; resumenImpacto?: (moneda: string, lineas: readonly LineaCobro[]) => ReactNode }
 /** Datos comunes de pantalla; la actividad vacía se convierte en null para un gasto. */
 export interface CargaOperacion extends CargaIngreso { categoriaId: string }
 
 /** Precarga la actividad y muestra los cobros rápidos con suma exacta y ceros sin persistir. */
-export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompletar, resumenImpacto }: PropiedadesFormularioOperacion) {
+export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompletar, resumenImpacto, etiquetaGuardar }: PropiedadesFormularioOperacion) {
   const [datos, establecerDatos] = useState<Awaited<ReturnType<typeof cargarDatosIngreso>> | null>(null);
   const [actividad, establecerActividad] = useState(inicial?.actividadId ?? '');
   const [categoria, establecerCategoria] = useState(inicial?.categoriaId ?? '');
@@ -167,6 +167,6 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
     </Stack>
     {resumenImpacto && !errorImportes && resumenImpacto(moneda, lineas.map(/** Prepara distribuciones positivas para la vista previa delegada al dominio. */ function convertir(linea) { return { medioPagoId: linea.medioPagoId, billeteraId: linea.billeteraId || null, importeCentavos: interpretarCampoRapido(linea.importe) }; }).filter(/** Excluye líneas vacías de la vista previa, igual que en el guardado. */ function positiva(linea) { return linea.importeCentavos > 0; }))}
     {!alGuardar && <Alert severity="info">La persistencia se conectará en la siguiente tarea.</Alert>}
-    <Button startIcon={tipo === 'gasto' ? <Check /> : <Save />} fullWidth type="submit" variant="contained" color={tipo === 'ingreso' ? 'success' : 'error'} loading={pendiente} disabled={!alGuardar || Boolean(errorImportes) || total === 0}>Guardar {tipo}</Button>
+    <Button startIcon={tipo === 'gasto' ? <Check /> : <Save />} fullWidth type="submit" variant="contained" color={tipo === 'ingreso' ? 'success' : 'error'} loading={pendiente} disabled={!alGuardar || Boolean(errorImportes) || total === 0}>{etiquetaGuardar ?? `Guardar ${tipo}`}</Button>
   </Stack>;
 }
