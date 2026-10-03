@@ -23,9 +23,9 @@ NO crear tests hasta la tarea específica.
 
 NO ejecutar tests sin autorización explícita.
 
-## Prioridad pendiente — revisión de Inicio
+## Revisión adicional de Inicio — completada
 
-La TAREA 89, incorporada a partir de la comparación visual aportada por el usuario, queda pendiente y priorizada antes de las TAREAS 86–88. Se conservan sus números para mantener la trazabilidad. Documentar esta tarea no autoriza su implementación ni la ejecución de tests o la preparación de release.
+La actualización del usuario asigna la TAREA 86 al ajuste de Inicio, antes planificado como TAREA 89, y retira las tareas de tests y release. Completada el 03/10/2026; evidencias y límites en REVISION_VISUAL.md. El commit documental anterior conserva la trazabilidad de esa planificación. Esta tarea visual no autoriza crear ni ejecutar tests ni preparar una release.
 
 ---
 
@@ -1820,7 +1820,7 @@ Detenerse.
 
 ---
 
-# Regla de lectura para TAREAS 52–85
+# Regla de lectura para TAREAS 52–86
 
 Durante la fase visual, no leer completos `docs/GUIA_VISUAL.md` y `docs/PANTALLAS.md` en cada tarea salvo que sea realmente necesario.
 
@@ -3634,7 +3634,7 @@ Detenerse.
 
 Estado: completado el 03/10/2026 por autorización expresa del usuario para ejecutar las TAREAS 067–085 con sus ramas, commits y merge a main. Revisión y límites: REVISION_VISUAL.md. Las TAREAS 00–66 ya estaban completadas; no repetirlas ni reescribir su historia.
 
-El plan original definía trabajo futuro. La autorización posterior cubrió exclusivamente este bloque visual; las TAREAS 086–088 permanecen pendientes. No autoriza tests, push, tags ni release.
+El plan original definía trabajo futuro. La autorización posterior cubrió exclusivamente este bloque visual. La actualización del usuario asignó después el ajuste adicional de Inicio a la TAREA 86 y retiró las tareas numeradas de tests y release. No autoriza tests, push, tags ni release.
 
 ## Reglas del bloque
 
@@ -4278,47 +4278,11 @@ Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar
 
 ---
 
-# TAREA 86 — Generar tests
-
-Primera tarea que permite crear tests, únicamente cuando sea autorizada. No ejecutarlos.
-
-Cubrir progresivamente dinero, UUID, catálogos, ingresos/gastos, billetera real por detalle, transferencias, ajustes, conciliación, saldos, repositorios, migraciones compatibles, respaldo, reportes y tema. Agregar componentes y E2E cuando aporten cobertura real.
-
-Rama: `task_AA/086_generar_tests`.
-Commit: `test(proyecto): agrega cobertura inicial`.
-
-Al finalizar informar: «Los tests fueron creados pero no ejecutados». Detenerse.
-
----
-
-# TAREA 87 — Ejecutar tests
-
-No realizar automáticamente. Requiere instrucción explícita equivalente a «Ejecuta los tests».
-
-Ejecutar progresivamente: unitarios, componentes, persistencia y E2E. Detener la progresión ante fallos y corregir la causa real con commits separados; no desactivar cobertura válida.
-
-Rama: `task_AA/087_ejecutar_tests`. Informar resultados reales, comandos, límites y commits de corrección cuando correspondan. Detenerse.
-
----
-
-# TAREA 88 — Preparar release
-
-No realizar automáticamente. Solo cuando el usuario solicite preparar una versión.
-
-Consultar VERSIONADO.md. Informar versión actual, propuesta y motivo antes de modificarla. Actualizar package.json, CHANGELOG.md y versiones nativas cuando corresponda.
-
-Rama: `task_AA/088_preparar_release`.
-Commit: `chore(release): prepara version X.Y.Z`.
-
-No crear tag ni hacer push sin autorización explícita. Detenerse.
-
----
-
-# TAREA 89 — Ajustar Inicio a la referencia visual
+# TAREA 86 — Ajustar Inicio a la referencia visual
 
 ## Estado
 
-Pendiente de implementación. Esta incorporación al plan solo define el trabajo.
+Completada el 03/10/2026. Tipografía local, cabecera, resumen, accesos rápidos, billeteras y movimientos ajustados; comparación manual y límites registrados en REVISION_VISUAL.md. Tipos y compilación correctos. Tests: no creados ni ejecutados.
 
 ## Objetivo y referencias
 
@@ -4357,7 +4321,7 @@ AGENTS.md; secciones de Inicio y composición de GUIA_VISUAL.md y PANTALLAS.md; 
 
 ## Git y validación
 
-Rama: `task_AA/089_ajustar_inicio_referencia` (2026 → `task_26/089_ajustar_inicio_referencia`). La rama puede contener el commit documental de planificación: verificarla y continuar sin recrearla.
+Rama: `task_AA/086_ajustar_inicio_referencia` (2026 → `task_26/086_ajustar_inicio_referencia`). Parte de la planificación documental anterior y conserva los cambios del usuario; verificarla y continuar sin recrearla si ya existe.
 
 Commit de implementación: `style(inicio): ajusta composicion a referencia visual`.
 

@@ -1,8 +1,8 @@
 import type { ThemeOptions } from '@mui/material/styles';
 
-/** Tipografía del sistema disponible offline, con jerarquía legible en pantallas móviles. */
+/** Fuente normativa incluida localmente, con alternativas del sistema mientras se carga. */
 export const tipografia: NonNullable<ThemeOptions['typography']> = {
-  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  fontFamily: '"Roboto Variable", Roboto, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   fontSize: 14,
   h1: { fontSize: '2rem', fontWeight: 700, lineHeight: 1.2 },
   h2: { fontSize: '1.5rem', fontWeight: 700, lineHeight: '32px' },

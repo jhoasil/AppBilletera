@@ -2381,7 +2381,7 @@ Proceso:
 Durante las tareas visuales:
 
 ```text
-TAREAS 52–85
+TAREAS 52–86
 ```
 
 leer únicamente:
@@ -2451,7 +2451,7 @@ No convertir esta tarea en un refactor general.
 Las tareas:
 
 ```text
-52–85
+52–86
 ```
 
 actualizan la interfaz siguiendo:
@@ -2514,7 +2514,7 @@ TAREA 51
 → task_26/051_verificar_alineacion_modelo_financiero
 
 TAREA 86
-→ task_26/086_generar_tests
+→ task_26/086_ajustar_inicio_referencia
 ```
 
 Antes de modificar archivos:
@@ -2692,11 +2692,7 @@ No crear tags automáticamente.
 
 # 91. Preparación de release
 
-La preparación de release corresponde actualmente a:
-
-```text
-TAREA 88
-```
+La preparación de release queda fuera del plan visual vigente y requiere una tarea específica autorizada.
 
 No realizarla automáticamente.
 
@@ -2721,33 +2717,14 @@ No crear tag ni hacer push sin autorización correspondiente.
 
 # 92. Tests
 
-La primera tarea autorizada para crear tests es:
-
-```text
-TAREA 86
-```
-
-Antes de esa tarea:
+Durante las tareas visuales, incluida la TAREA 86:
 
 ```text
 NO crear tests
 NO ejecutar tests
 ```
 
-En la TAREA 86:
-
-```text
-SÍ crear tests
-NO ejecutarlos
-```
-
-La ejecución corresponde exclusivamente a:
-
-```text
-TAREA 87
-```
-
-y necesita autorización explícita.
+La creación y ejecución de tests requieren tareas específicas y autorización explícita. La TAREA 86 vigente ajusta Inicio; no autoriza tests.
 
 ---
 
@@ -2777,13 +2754,13 @@ Solo ejecutar tests cuando el usuario escriba explícitamente algo equivalente a
 Ejecuta los tests.
 ```
 
-y la ejecución esté dentro de la TAREA 87 o exista una autorización explícita que modifique el plan.
+y exista una tarea autorizada o una instrucción explícita que modifique el plan.
 
 ---
 
 # 94. Tests — orden de ejecución
 
-Cuando la TAREA 87 esté autorizada, ejecutar progresivamente:
+Cuando se autorice una tarea de ejecución de tests, ejecutar progresivamente:
 
 ```text
 1. unitarios
@@ -3054,7 +3031,7 @@ Hash:
 Tests: no ejecutados.
 ```
 
-Si los tests fueron ejecutados explícitamente en la TAREA 87, informar el resultado real en lugar de:
+Si los tests fueron ejecutados con autorización explícita, informar el resultado real en lugar de:
 
 ```text
 Tests: no ejecutados.
@@ -3079,20 +3056,12 @@ TAREAS 67–85
 → revisión y límites en docs/REVISION_VISUAL.md
 
 TAREA 86
-→ generar tests sin ejecutarlos, cuando sea autorizada
-
-TAREA 87
-→ ejecutar tests solamente con autorización explícita
-
-TAREA 88
-→ preparar release solamente cuando sea solicitado
-
-TAREA 89
-→ ajuste adicional de Inicio a la referencia visual; pendiente de implementación
-→ priorizada antes de 86–88; su planificación no autoriza ejecutarla
+→ ajuste adicional de Inicio a la referencia visual; completada el 03/10/2026
+→ comparación, comprobaciones y límites en docs/REVISION_VISUAL.md
+→ sustituye la planificación anterior de la TAREA 89 por decisión del usuario
 ```
 
-La planificación del 03/10/2026 reubica las antiguas TAREAS 67–69 de tests y release después del nuevo bloque visual. No autoriza ejecutarlas.
+La actualización del usuario del 03/10/2026 asigna la TAREA 86 al ajuste de Inicio y retira las tareas numeradas de tests y release del plan vigente. Su eventual incorporación requiere planificación y autorización específicas.
 
 El detalle de cada tarea se encuentra en:
 

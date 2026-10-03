@@ -2,6 +2,8 @@
 export const tokensVisuales = {
   espaciado: 8, radioInput: 12, radioTarjeta: 16, radioDialogo: 20, radioBottomSheet: 24,
   alturaInput: 56, alturaBoton: 48, alturaAppBar: 56, alturaNavegacion: 64, anchoFormulario: 600,
+  // Por debajo de este ancho la cifra usa la fila completa junto a iconos de 40 px.
+  anchoTarjetaAccesoCompacta: 210,
   sombraTarjeta: '0 2px 8px rgba(15, 23, 42, 0.06)',
   sombraElevada: '0 6px 20px rgba(15, 23, 42, 0.10)',
   sombraDialogo: '0 12px 32px rgba(15, 23, 42, 0.18)',

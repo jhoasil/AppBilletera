@@ -1,6 +1,47 @@
 # Revisión visual
 
-## Revisión vigente — TAREA 085
+## Revisión vigente de Inicio — TAREA 086
+
+Fecha: 03/10/2026. Alcance: ajuste adicional de Inicio autorizado por el usuario, según GUIA_VISUAL.md y PANTALLAS.md. La planificación anterior de la TAREA 89 se renumera como 86; las tareas numeradas de tests y release fueron retiradas por el usuario.
+
+### Cambios y comparación
+
+- Roboto variable latina incluida localmente, con licencia y fuente incorporadas al precache de producción. Se observó la fuente aplicada en navegador; no se realizó una prueba de desconexión física.
+- Marca con mayor peso, icono de billetera sólido y Ajustes a la derecha. Inicio conserva el acceso a Billeteras en Mi dinero. El título accesible oculto queda fuera del Stack para evitar separación adicional antes de la fecha.
+- Ganancia con etiqueta/cifra a la izquierda e icono de tendencia a la derecha. Importes inferiores destacados y centrados; en 320 px pasan a dos filas para conservar los centavos.
+- Accesos rápidos neutros con círculos semánticos, botones de 48 px y contraste corregido. En tarjetas de hasta 210 px la cifra ocupa la fila completa; en 320 px los accesos se apilan.
+- Billeteras reales distribuidas según su cantidad, sin huecos ficticios, con Transferir y Ver todas al pie. Movimientos más compactos, fecha sin segundos y cifra completa que puede bajar de fila. Los ajustes mantienen violeta.
+- Navegación inferior con indicador activo; escritorio conserva el lateral. Comentarios en español explican las decisiones de composición. Consultas, cálculos, formatos monetarios, acciones y persistencia permanecen iguales.
+
+Se comparó el código anterior del commit a4ef9b4 con la implementación a **390 × 844 px CSS**, en Claro, con la misma escala y los mismos datos existentes. La copia anterior se sirvió temporalmente en el mismo origen y se retiró después de la observación. No se guardaron operaciones financieras para preparar las capturas.
+
+Capturas locales, excluidas de Git: [antes](../tmp/tarea-086/inicio-antes-390-claro.jpg), [después en Claro](../tmp/tarea-086/inicio-despues-390-claro.jpg) y [después en Oscuro](../tmp/tarea-086/inicio-despues-390-oscuro.jpg). La pareja comparable es la de Claro; la captura oscura posterior refleja nuevos registros ingresados por el usuario durante la sesión.
+
+En la pareja comparable, la etiqueta Ganancia pasó de y=178 a y=141 y el encabezado Últimos movimientos de y=817 a y=712: se recuperan 105 px antes del listado. No se afirma coincidencia completa con el PNG: se mantienen decimales, datos reales, iconos configurados y las adaptaciones necesarias para legibilidad.
+
+### Observación manual y límites
+
+| Ancho CSS observado | Claro | Oscuro |
+| --- | --- | --- |
+| 320 px | Inicio, importes completos, foco y scroll | Inicio, accesos apilados |
+| 390 px | Comparación antes/después | Inicio y captura final |
+| 430 px | Inicio | Inicio |
+| 600 px | Inicio | Inicio |
+| 1024 px | Inicio con navegación lateral | Inicio con navegación lateral |
+
+Las muestras finales de la tabla tuvieron altura CSS de 844 px. Se midió el viewport real para compensar la escala del navegador. El ancho del documento no excedió su ancho disponible en las muestras revisadas. Se observó desplazamiento hasta movimientos y foco mediante Tab, sin cortar los centavos al reducir el ancho.
+
+Sistema fue seleccionado y resolvió tema oscuro durante la sesión; no se cambió la apariencia del sistema operativo. La preferencia Oscuro observada se dejó seleccionada. También se revisaron Reportes y detalle de Efectivo: conservan la variante vertical de TarjetaResumen.
+
+Se observaron carga, vacío de movimientos con una billetera y posteriormente registros existentes con dos billeteras. Cero o tres billeteras, nombres extremos, importes extraordinarios, otras divisas y errores de persistencia se revisaron conceptualmente, sin inventar datos. La tabla corresponde a Inicio, no a todas las pantallas. Teclado virtual, lector de pantalla, áreas seguras físicas y dispositivos nativos requieren revisión posterior.
+
+### Comprobaciones y cierre
+
+Validación de tipos y compilación de producción correctas. Fuente WOFF2 y licencia presentes en el precache generado. Diff revisado y git diff --check sin errores. Rama: task_26/086_ajustar_inicio_referencia. Commit indicado: style(inicio): ajusta composicion a referencia visual. Sin cambios de versión, tags ni push.
+
+Tests: no creados ni ejecutados. Se detiene el trabajo al finalizar la TAREA 86.
+
+## Antecedente — TAREA 085
 
 Fecha: 03/10/2026. Alcance: composición de las TAREAS 067–085, según GUIA_VISUAL.md, sección 91, y PANTALLAS.md, sección 51.
 
@@ -55,7 +96,7 @@ Transferencia mostró origen con saldo y destino/acción deshabilitados por falt
 
 Tipos y compilación de producción correctos. Diff revisado y git diff --check sin errores. Cada tarea tiene su rama task_26/NNN_descripcion y commit; el bloque se integra mediante fast-forward en main. No se modificaron versión, tags ni se realizó push.
 
-Tests: no creados ni ejecutados. Las TAREAS 086–088 quedan pendientes y requieren autorización.
+Tests: no creados ni ejecutados. Este cierre precede a la actualización del usuario del 03/10/2026: la TAREA 86 vigente corresponde al ajuste adicional de Inicio y las tareas numeradas de tests y release se retiraron del plan.
 
 ## Antecedente — TAREA 066
 

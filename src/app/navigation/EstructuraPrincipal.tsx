@@ -3,6 +3,8 @@ import { useState, type PropsWithChildren } from 'react';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import { ContextoCabecera, type CabeceraContextual } from './ContextoCabecera';
 import HomeOutlined from '@mui/icons-material/HomeOutlined';
+import Home from '@mui/icons-material/Home';
+import AccountBalanceWallet from '@mui/icons-material/AccountBalanceWallet';
 import ArrowDownward from '@mui/icons-material/ArrowDownward';
 import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import BarChartOutlined from '@mui/icons-material/BarChartOutlined';
@@ -71,16 +73,16 @@ export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstru
         href={`#/${destino.pagina}`}
         value={destino.pagina}
         label={destino.titulo}
-        icon={destino.icono}
+        icon={destino.pagina === 'inicio' && paginaActual === 'inicio' ? <Home /> : destino.icono}
         aria-current={paginaActual === destino.pagina ? 'page' : undefined}
-        sx={{ minWidth: 0, minHeight: 56, px: 1 }}
+        sx={{ minWidth: 0, minHeight: 56, px: 1, position: 'relative', '&.Mui-selected::after': { content: '""', position: 'absolute', bottom: 4, width: 24, height: 3, borderRadius: 1, bgcolor: 'primary.main' } }}
       />
     );
   }
 
   return (
     <ContextoCabecera.Provider value={establecerCabecera}><Box sx={{ minHeight: '100dvh' }}>
-      <AppBar position="fixed" sx={{ zIndex: tema.zIndex.drawer + 1, borderBottom: 1, borderColor: 'divider', pt: 'env(safe-area-inset-top)', pl: 'env(safe-area-inset-left)', pr: 'env(safe-area-inset-right)' }}>
+      <AppBar position="fixed" sx={{ zIndex: tema.zIndex.drawer + 1, borderBottom: 1, borderColor: 'divider', bgcolor: 'background.paper', pt: 'env(safe-area-inset-top)', pl: 'env(safe-area-inset-left)', pr: 'env(safe-area-inset-right)' }}>
         <Toolbar sx={{ gap: 1 }}>
           {/* En móvil el retorno contextual sustituye la marca, sin añadir otra barra fija. */}
           {cabecera && <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 1, minWidth: 0, flex: 1 }}>
@@ -89,17 +91,18 @@ export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstru
             <Typography component="h1" variant="h6" sx={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{cabecera.titulo}</Typography>
           </Box>}
           <Box sx={{ display: cabecera ? { xs: 'none', md: 'flex' } : 'flex', alignItems: 'center', gap: 1, flex: 1 }}>
-          <AccountBalanceWalletOutlined color="primary" />
+          <AccountBalanceWallet color="primary" sx={{ fontSize: 28 }} />
 
           <Typography
             component="a" href="#/inicio" variant="h6"
-            sx={{ flexGrow: 1, color: 'text.primary', textDecoration: 'none' }}
+            sx={{ flexGrow: 1, color: 'text.primary', textDecoration: 'none', fontWeight: 700, fontSize: 20 }}
           >
-            AppBilletera
+            App<Box component="span" sx={{ color: 'primary.main' }}>Billetera</Box>
           </Typography>
-          <IconButton
+          {/* Inicio ya ofrece Billeteras en Mi dinero; se evita duplicar ese acceso en su cabecera. */}
+          {paginaActual !== 'inicio' && <IconButton
             component="a" href="#/billeteras" aria-label="Abrir Billeteras" color={paginaActual === 'billeteras' ? 'primary' : 'default'}
-          ><AccountBalanceWalletOutlined /></IconButton>
+          ><AccountBalanceWalletOutlined /></IconButton>}
           <IconButton
             component="a" href="#/ajustes" aria-label="Abrir Ajustes"
             aria-current={paginaActual === 'ajustes' ? 'page' : undefined}
@@ -126,7 +129,7 @@ export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstru
         <Toolbar />
         <Container
           component="main" id="contenido-principal" tabIndex={-1} maxWidth="lg"
-          sx={{ minWidth: 0, pt: { xs: 'calc(24px + env(safe-area-inset-top))', md: 'calc(32px + env(safe-area-inset-top))' }, pb: { xs: 'calc(96px + env(safe-area-inset-bottom))', md: 'max(32px, env(safe-area-inset-bottom))' }, pl: { xs: 'max(16px, env(safe-area-inset-left))', sm: 'max(24px, env(safe-area-inset-left))' }, pr: { xs: 'max(16px, env(safe-area-inset-right))', sm: 'max(24px, env(safe-area-inset-right))' } }}
+          sx={{ minWidth: 0, pt: { xs: `calc(${paginaActual === 'inicio' ? 8 : 24}px + env(safe-area-inset-top))`, md: 'calc(32px + env(safe-area-inset-top))' }, pb: { xs: 'calc(96px + env(safe-area-inset-bottom))', md: 'max(32px, env(safe-area-inset-bottom))' }, pl: { xs: 'max(16px, env(safe-area-inset-left))', sm: 'max(24px, env(safe-area-inset-left))' }, pr: { xs: 'max(16px, env(safe-area-inset-right))', sm: 'max(24px, env(safe-area-inset-right))' } }}
         >
           {children}
         </Container>
