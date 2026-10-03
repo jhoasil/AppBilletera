@@ -1,7 +1,8 @@
 import type { CategoriaGasto } from '../../../core/entities/CategoriaGasto';
 import { servicioCategorias } from '../../../app/data/serviciosCatalogos';
 import { EditorCatalogo } from './EditorCatalogo';
-import { CampoTextoCatalogo } from '../../../shared/components/CampoTextoCatalogo';
+import { SelectorIcono } from '../../../shared/components/SelectorIcono';
+import { SelectorColor } from '../../../shared/components/SelectorColor';
 
 /** Prepara una categoría editable sin asignar identidad antes del guardado. */
 function crearCategoria(): CategoriaGasto {
@@ -14,11 +15,17 @@ function campos(categoria: CategoriaGasto, actualizar: (cambios: Partial<Categor
   function icono(valor: string) { actualizar({ icono: valor || null }); }
   /** Actualiza el color opcional elegido para clasificar gastos. */
   function color(valor: string) { actualizar({ color: valor || null }); }
-  return <><CampoTextoCatalogo etiqueta="Identificador del icono" valor={categoria.icono ?? ''} alCambiar={icono} />
-    <CampoTextoCatalogo etiqueta="Color hexadecimal (opcional)" valor={categoria.color ?? ''} alCambiar={color} /></>;
+  return <><SelectorIcono valor={categoria.icono ?? 'category'} alCambiar={icono} />
+    <SelectorColor valor={categoria.color} alCambiar={color} /></>;
 }
+
+/** Busca nombres del catálogo sin consultar operaciones históricas. */
+function textoBusqueda(categoria: CategoriaGasto) { return categoria.nombre; }
+
+/** Explicita que el modelo actual no guarda descripciones de categorías. */
+function detalle() { return 'Sin descripción configurada'; }
 
 /** Habilita listar, crear, editar y cambiar la disponibilidad conservando registros históricos. */
 export function CatalogoCategoriasGasto() {
-  return <EditorCatalogo singular="categoría de gasto" servicio={servicioCategorias} crearNuevo={crearCategoria} campos={campos} />;
+  return <EditorCatalogo singular="categoría de gasto" etiquetaCrear="Nueva categoría" alturaTarjeta={80} tamanoIcono={44} textoBusqueda={textoBusqueda} detalle={detalle} servicio={servicioCategorias} crearNuevo={crearCategoria} campos={campos} />;
 }
