@@ -4,6 +4,10 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import { IconoCatalogo } from '../../shared/components/IconoCatalogo';
+import { estadosFinancieros, tokensVisuales } from '../../app/theme/tokens';
 import { useParametroRuta } from '../../app/navigation/useParametroRuta';
 import { servicioDetalleBilletera } from '../../app/data/servicioDetalleBilletera';
 import { servicioConciliacion } from '../../app/data/servicioConciliacion';
@@ -50,24 +54,26 @@ export function PaginaConciliacion({ alConfirmar = confirmarConciliacion }: Prop
     catch (causa) { establecerError(causa instanceof Error ? causa.message : 'No se pudo confirmar la conciliación.'); }
     finally { establecerPendiente(false); }
   }
-  return <Stack spacing={2} sx={{ maxWidth: 640 }}>
+  return <Stack spacing={2} sx={{ maxWidth: tokensVisuales.anchoFormulario, width: '100%' }}>
     <CabeceraPagina titulo={`Conciliar ${datos?.billetera.nombre ?? 'billetera'}`} acciones={<Button component="a" href={`#/billetera?id=${id}`} disabled={pendiente}>Volver</Button>} />
     {error && <Alert severity="error" action={<Button onClick={actualizar} disabled={pendiente}>Actualizar saldo</Button>}>{error}</Alert>}
     {!datos ? !error && <CircularProgress aria-label="Consultando saldo" /> : <Stack component="form" onSubmit={confirmar} spacing={2}>
-      <Typography variant="h5">Saldo calculado: {formatearImporte(crearImporte(datos.saldoCentavos, datos.billetera.moneda))}</Typography>
+      <Paper variant="outlined" sx={{ minHeight: 96, p: 2 }}><Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}><IconoCatalogo identificador={datos.billetera.icono} /><Typography variant="h6">{datos.billetera.nombre} · {datos.billetera.moneda}</Typography></Stack><Typography variant="body2" color="text.secondary">Saldo calculado · solo lectura</Typography><Typography sx={{ fontSize: 24, fontWeight: 700, overflowWrap: 'anywhere' }}>{formatearImporte(crearImporte(datos.saldoCentavos, datos.billetera.moneda))}</Typography></Paper>
       <Stack component="fieldset" disabled={pendiente} spacing={2} sx={{ border: 0, p: 0, m: 0, minWidth: 0 }}>
         <CampoImporte etiqueta="Saldo real" valor={real} alCambiar={establecerReal} error={errorReal} obligatorio ayuda="Importe con hasta dos decimales, sin separadores de miles." />
-        {comparacion && <Typography variant="h5" color={comparacion.diferenciaCentavos < 0 ? 'error.main' : 'success.main'}>Diferencia: {formatearImporte(crearImporte(comparacion.diferenciaCentavos, datos.billetera.moneda))}</Typography>}
+        {comparacion && <Paper aria-live="polite" sx={/** Destaca signo e importe con superficies financieras de ambos temas. */ function apariencia(tema) { const colores = estadosFinancieros[tema.palette.mode === 'dark' ? 'oscuro' : 'claro']; const estado = comparacion.diferenciaCentavos < 0 ? colores.gasto : colores.ingreso; return { minHeight: 96, p: 2, bgcolor: comparacion.diferenciaCentavos === 0 ? 'action.hover' : estado.fondo, color: comparacion.diferenciaCentavos === 0 ? 'text.primary' : estado.texto }; }}><Typography>Diferencia · saldo real menos saldo calculado</Typography><Typography sx={{ fontSize: 32, fontWeight: 700, overflowWrap: 'anywhere', fontVariantNumeric: 'tabular-nums' }}>{comparacion.diferenciaCentavos > 0 ? '+' : ''}{formatearImporte(crearImporte(comparacion.diferenciaCentavos, datos.billetera.moneda))}</Typography></Paper>}
         {comparacion && comparacion.diferenciaCentavos !== 0 && <CampoTextoCatalogo etiqueta="Motivo" valor={motivo} alCambiar={establecerMotivo} obligatorio />}
-        <details><summary>Observación opcional</summary><Stack sx={{ pt: 1 }}><CampoTextoCatalogo etiqueta="Observación (opcional)" valor={observaciones} alCambiar={establecerObservaciones} /></Stack></details>
+        <CampoTextoCatalogo etiqueta="Observaciones (opcional)" valor={observaciones} alCambiar={establecerObservaciones} />
         {comparacion?.diferenciaCentavos === 0 && <Alert severity="success">Los saldos coinciden. No se generará un ajuste.</Alert>}
         {comparacion && comparacion.diferenciaCentavos !== 0 && <>
           <Alert severity="info">Si falta una operación real, registrala primero y luego actualizá el saldo. Un ajuste documenta la diferencia y se mantiene separado de ingresos y gastos.</Alert>
-          <Button component="a" href={`#/${comparacion.diferenciaCentavos < 0 ? 'gastos' : 'ingresos'}?nuevo=1`}>Registrar {comparacion.diferenciaCentavos < 0 ? 'gasto' : 'ingreso'} faltante</Button>
         </>}
       </Stack>
       {!alConfirmar && <Alert severity="info">La confirmación del ajuste se conectará en el siguiente paso de implementación.</Alert>}
-      <Button type="submit" variant="contained" loading={pendiente} disabled={!alConfirmar || !comparacion || !datos.billetera.activo}>{comparacion?.diferenciaCentavos === 0 ? 'Confirmar coincidencia' : 'Ajustar diferencia'}</Button>
+      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', '@media (min-width:360px)': { gridTemplateColumns: comparacion?.diferenciaCentavos ? '1fr 1fr' : '1fr' }, gap: 1.5 }}>
+        {comparacion && comparacion.diferenciaCentavos !== 0 && <Button component="a" href={`#/${comparacion.diferenciaCentavos < 0 ? 'gastos' : 'ingresos'}?nuevo=1`} variant="outlined" disabled={pendiente || !datos.billetera.activo} sx={{ minHeight: 112 }}><Stack spacing={1}><span>Registrar movimiento faltante</span><Typography variant="body2">{comparacion.diferenciaCentavos < 0 ? 'Gasto' : 'Ingreso'} real omitido</Typography></Stack></Button>}
+        <Button fullWidth type="submit" variant="contained" loading={pendiente} sx={{ minHeight: comparacion?.diferenciaCentavos ? 112 : 48 }} disabled={!alConfirmar || !comparacion || !datos.billetera.activo}>{comparacion?.diferenciaCentavos === 0 ? 'Confirmar coincidencia' : 'Ajustar diferencia'}</Button>
+      </Box>
     </Stack>}
   </Stack>;
 }
