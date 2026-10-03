@@ -2830,4 +2830,12 @@ Mantener 390 × 844 px como referencia y revisar 320, 430, 600, 768, 1024 y 1440
 
 La implementación ya posee paletas, medidas, consultas financieras, modos Sistema/Claro/Oscuro y estados básicos. La nueva fase refina composición, densidad, cabeceras e iconos; no rehace estos mecanismos.
 
+## Ajuste de Inicio — TAREA 086
+
+Roboto se incluye localmente mediante su variante de peso variable y subconjunto latino, con alternativas del sistema mientras carga. La fuente y su licencia acompañan la compilación y el precache PWA; no depende de Google Fonts ni de una conexión para usos posteriores.
+
+Inicio dispone de un resumen con icono a la derecha y dos columnas centradas de ingresos/gastos. Por debajo de 360 px, esa franja usa dos filas para conservar importes completos. Por decisión posterior del usuario del 03/10/2026, los accesos rápidos se simplifican a dos botones semánticos: Agregar ingreso y Agregar gasto, sin tarjetas ni totales repetidos. Se muestran una sola vez, fuera de los resúmenes por moneda; se apilan por debajo de 360 px. Esta decisión reemplaza la composición de tarjetas rápidas de la referencia. La variante compartida de tarjeta permanece disponible sin cambiar los otros resúmenes.
+
+Mi dinero adapta sus columnas a las billeteras realmente disponibles y ofrece Transferir/Ver todas en el pie. Los movimientos permiten bajar el importe completo a una segunda fila en anchos estrechos. El resumen principal conserva cifra de 34 px; los ingresos/gastos de su franja inferior, 20 px; los movimientos, 16 px. No se fuerzan alturas para hacer caber contenido debajo de la navegación fija.
+
 Las imágenes tienen diferencias entre sí. Se conservan paleta normativa, cuatro destinos inferiores, entrada positiva, salida negativa y ajuste violeta. No copiar logos comerciales ni cifras de muestra. Color de acento configurable, descripción de categorías, comparativas, cantidad de movimientos, arrastre y notificaciones quedan fuera hasta una tarea funcional autorizada.

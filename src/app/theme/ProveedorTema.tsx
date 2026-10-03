@@ -1,5 +1,7 @@
 import { useEffect, useState, type PropsWithChildren } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+// El subconjunto latino incluye español y todos los pesos sin depender de una petición externa.
+import './fuente.css';
 import { ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { ContextoTema, type ModoTema } from './ContextoTema';
