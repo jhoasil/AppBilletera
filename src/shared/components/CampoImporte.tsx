@@ -13,12 +13,14 @@ interface PropiedadesCampoImporte {
   error?: string;
   deshabilitado?: boolean;
   obligatorio?: boolean;
+  alineadoDerecha?: boolean;
+  etiquetaOculta?: boolean;
 }
 
 /** Facilita la escritura de un importe con teclado decimal sin convertir ni calcular dinero. */
 export function CampoImporte({
   etiqueta, valor, alCambiar, simbolo = '$', ayuda, error,
-  deshabilitado = false, obligatorio = false, compacto = false,
+  deshabilitado = false, obligatorio = false, compacto = false, alineadoDerecha = false, etiquetaOculta = false,
 }: PropiedadesCampoImporte) {
   const identificador = useId();
 
@@ -28,11 +30,12 @@ export function CampoImporte({
   }
 
   return (
-    <TextField id={identificador} label={etiqueta} value={valor} onChange={cambiarTexto}
-      sx={{ '& input': { fontSize: 18, fontWeight: 600, fontVariantNumeric: 'tabular-nums' } }} type="text" disabled={deshabilitado} required={obligatorio}
+    <TextField id={identificador} label={etiquetaOculta ? undefined : etiqueta} value={valor} onChange={cambiarTexto}
+      placeholder={alineadoDerecha ? '0' : undefined}
+      sx={{ '& input': { fontSize: 18, fontWeight: 600, fontVariantNumeric: 'tabular-nums', ...(alineadoDerecha && { textAlign: 'right' }) } }} type="text" disabled={deshabilitado} required={obligatorio}
       error={Boolean(error)} helperText={error || ayuda || (compacto ? undefined : ' ')}
       slotProps={{
-        htmlInput: { inputMode: 'decimal' },
+        htmlInput: { inputMode: 'decimal', ...(etiquetaOculta && { 'aria-label': etiqueta }) },
         input: { startAdornment: <InputAdornment position="start">{simbolo}</InputAdornment> },
       }} />
   );

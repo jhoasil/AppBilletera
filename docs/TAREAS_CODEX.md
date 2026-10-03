@@ -4326,3 +4326,34 @@ Rama: `task_AA/086_ajustar_inicio_referencia` (2026 → `task_26/086_ajustar_ini
 Commit de implementación: `style(inicio): ajusta composicion a referencia visual`.
 
 Revisar `git diff` y ejecutar `git diff --check`; realizar validación de tipos y compilación cuando corresponda. No crear ni ejecutar tests. Implementar únicamente cuando el usuario lo autorice; detenerse al terminar.
+
+---
+
+# TAREA 87 — Refinar Nuevo ingreso según la referencia visual
+
+## Estado
+
+Completada el 03/10/2026. Documentada antes de modificar código; revisión manual y límites en REVISION_VISUAL.md. Tipos y compilación correctos. Tests: no creados ni ejecutados.
+
+## Objetivo y alcance
+
+Ajustar el formulario Nuevo ingreso a la referencia codex-clipboard-823e9c5b-5a80-4eb6-8d29-b681a68e8a94.png. No rediseñar el listado de Ingresos ni cambiar el modelo financiero.
+
+## Cambios previstos
+
+- Conservar cabecera contextual con regreso y título, actividad obligatoria y última actividad disponible precargada.
+- Mostrar etiquetas por encima de los campos de actividad, fecha, descripción y observaciones; añadir iconos de apoyo y ejemplos en los textos opcionales. Reutilizar componentes mediante propiedades opcionales que no alteren los demás formularios.
+- Compactar medios de cobro: icono y nombre a la izquierda, importe a la derecha, con placeholder cero y alineación numérica. Mantener siempre visible y editable la billetera real de cada distribución, aunque el PNG la omita. Conservar quitar/agregar medios y moneda accesible.
+- Ubicar una ayuda breve sobre campos vacíos debajo de las filas; conservar instrucciones de formato decimal y validaciones.
+- Total verde exacto de 24 px, resumen claro y acción Guardar ingreso azul con icono de guardado, como la referencia. Mantener estado pendiente, bloqueo y errores.
+- Adaptar 320 y 390 px sin recortar contenido; preservar el formulario de gasto y sus colores mediante cambios optativos para ingreso.
+
+## Restricciones y validación
+
+Sin datos ficticios, logos comerciales, cambios de cálculos, preferencias, persistencia o migraciones. Descripción y observaciones siguen siendo opcionales. No ocultar decimales ni guardar operaciones para preparar capturas. Revisar visualmente el borrador disponible y el formulario compartido de gasto; registrar lo realmente observado y los límites en REVISION_VISUAL.md. No crear ni ejecutar tests. Comprobar tipos, revisar git diff y ejecutar git diff --check.
+
+## Git
+
+Rama: task_26/087_refinar_nuevo_ingreso.
+Commit: style(ingresos): refina formulario de nuevo ingreso.
+Sin push ni merge automático. Detenerse al finalizar.

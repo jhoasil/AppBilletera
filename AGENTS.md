@@ -3059,6 +3059,10 @@ TAREA 86
 → ajuste adicional de Inicio a la referencia visual; completada el 03/10/2026
 → comparación, comprobaciones y límites en docs/REVISION_VISUAL.md
 → sustituye la planificación anterior de la TAREA 89 por decisión del usuario
+
+TAREA 87
+→ refinamiento visual de Nuevo ingreso autorizado y completado el 03/10/2026
+→ alcance y límites en docs/TAREAS_CODEX.md y docs/REVISION_VISUAL.md
 ```
 
 La actualización del usuario del 03/10/2026 asigna la TAREA 86 al ajuste de Inicio y retira las tareas numeradas de tests y release del plan vigente. Su eventual incorporación requiere planificación y autorización específicas.

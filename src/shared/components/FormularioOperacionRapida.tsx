@@ -4,6 +4,9 @@ import IconButton from '@mui/material/IconButton';
 import Close from '@mui/icons-material/Close';
 import Check from '@mui/icons-material/Check';
 import Save from '@mui/icons-material/Save';
+import CalendarMonth from '@mui/icons-material/CalendarMonth';
+import DescriptionOutlined from '@mui/icons-material/DescriptionOutlined';
+import ChatBubbleOutlined from '@mui/icons-material/ChatBubbleOutlined';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -110,10 +113,11 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
     /** Conserva todas las posiciones excepto la retirada. */
     function conservar(_actual: LineaFormulario, posicion: number) { return posicion !== indice; }
     // El importe comparte fila con el medio; la billetera sigue visible y editable debajo.
-    return <Card key={`${linea.medioPagoId}-${indice}`} variant="outlined"><CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 } }}><Stack spacing={1.5}>
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(110px, 42%)', gap: 1, alignItems: 'center' }}>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', minWidth: 0 }}><IconoCatalogo identificador={medio?.icono ?? null} color={medio?.color ?? null} contenedor tamano={32} /><Typography sx={{ fontWeight: 600, overflowWrap: 'anywhere', fontSize: 14 }}>{medio?.nombre ?? 'Medio histórico'}</Typography></Stack>
-        <CampoImporte etiqueta={`Importe ${medio?.nombre ?? ''}`} valor={linea.importe} alCambiar={cambiarImporte} compacto />
+    return <Card key={`${linea.medioPagoId}-${indice}`} variant="outlined"><CardContent sx={{ p: tipo === 'ingreso' ? 1 : 1.5, '&:last-child': { pb: tipo === 'ingreso' ? 1 : 1.5 } }}><Stack spacing={1.5}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(110px, 42%)', gap: 1, alignItems: 'center', ...(tipo === 'ingreso' && { '@media (max-width:359px)': { gridTemplateColumns: 'minmax(0, 1fr)' } }) }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', minWidth: 0 }}><IconoCatalogo identificador={medio?.icono ?? null} color={medio?.color ?? null} contenedor tamano={tipo === 'ingreso' ? 40 : 32} /><Typography sx={{ fontWeight: 600, overflowWrap: 'anywhere', fontSize: 14 }}>{medio?.nombre ?? 'Medio histórico'}</Typography></Stack>
+        {/* El nombre del medio ya identifica la fila; el importe conserva una etiqueta accesible sin duplicarla visualmente. */}
+        <CampoImporte etiqueta={`Importe ${medio?.nombre ?? ''}`} valor={linea.importe} alCambiar={cambiarImporte} compacto alineadoDerecha={tipo === 'ingreso'} etiquetaOculta={tipo === 'ingreso'} />
       </Box>
       <Stack direction="row" spacing={1} sx={{ alignItems: 'flex-start' }}><Box sx={{ flex: 1, minWidth: 0 }}><SelectorCatalogo etiqueta="Billetera real" valor={linea.billeteraId} alCambiar={cambiarBilletera} opciones={datos?.billeteras.filter(billeteraDisponible) ?? []} obligatorio /></Box><IconButton aria-label={`Quitar ${medio?.nombre ?? 'medio'}`} onClick={quitar}><Close /></IconButton></Stack>
     </Stack></CardContent></Card>;
@@ -152,21 +156,23 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
     <Stack component="fieldset" disabled={pendiente} spacing={2} sx={{ border: 0, p: 0, m: 0, minWidth: 0 }}>
       <Paper variant="outlined" sx={{ p: 2 }}><Stack spacing={2}>
       {tipo === 'gasto' && <SelectorCatalogo etiqueta="Categoría" valor={categoria} alCambiar={establecerCategoria} opciones={datos.categorias.filter(categoriaDisponible)} obligatorio />}
-      <SelectorCatalogo etiqueta={tipo === 'ingreso' ? 'Actividad' : 'Actividad (opcional)'} valor={actividad} alCambiar={establecerActividad} opciones={datos.actividades.filter(actividadDisponible)} obligatorio={tipo === 'ingreso'} />
-      <CampoTextoCatalogo etiqueta="Fecha" valor={fecha} alCambiar={establecerFecha} tipo="date" obligatorio />
-      <CampoTextoCatalogo etiqueta={tipo === 'ingreso' ? 'Descripción (opcional)' : 'Descripción'} valor={descripcion} alCambiar={establecerDescripcion} obligatorio={tipo === 'gasto'} />
-      <CampoTextoCatalogo etiqueta="Observaciones (opcional)" valor={observaciones} alCambiar={establecerObservaciones} />
+      {/* Las etiquetas exteriores y los iconos son optativos para no rediseñar los otros formularios. */}
+      <SelectorCatalogo etiqueta={tipo === 'ingreso' ? 'Actividad' : 'Actividad (opcional)'} valor={actividad} alCambiar={establecerActividad} opciones={datos.actividades.filter(actividadDisponible)} obligatorio={tipo === 'ingreso'} etiquetaExterior={tipo === 'ingreso'} />
+      <CampoTextoCatalogo etiqueta="Fecha" valor={fecha} alCambiar={establecerFecha} tipo="date" obligatorio etiquetaExterior={tipo === 'ingreso'} icono={tipo === 'ingreso' ? <CalendarMonth /> : undefined} />
+      <CampoTextoCatalogo etiqueta={tipo === 'ingreso' ? 'Descripción (opcional)' : 'Descripción'} valor={descripcion} alCambiar={establecerDescripcion} obligatorio={tipo === 'gasto'} etiquetaExterior={tipo === 'ingreso'} icono={tipo === 'ingreso' ? <DescriptionOutlined /> : undefined} ejemplo={tipo === 'ingreso' ? 'Ej. Carrera matutina' : undefined} />
+      <CampoTextoCatalogo etiqueta="Observaciones (opcional)" valor={observaciones} alCambiar={establecerObservaciones} etiquetaExterior={tipo === 'ingreso'} icono={tipo === 'ingreso' ? <ChatBubbleOutlined /> : undefined} ejemplo={tipo === 'ingreso' ? 'Ej. Zona centro, buen día' : undefined} />
       <details><summary>Moneda: {moneda}</summary><Stack sx={{ pt: 2 }}><CampoTextoCatalogo etiqueta="Moneda" valor={moneda} alCambiar={establecerMoneda} obligatorio /></Stack></details>
       </Stack></Paper>
       <Paper variant="outlined" sx={{ p: 2 }}><Stack spacing={1.5}>
       <Typography variant="h6">{tipo === 'ingreso' ? 'Medios de cobro' : 'Medios de pago'} · {moneda}</Typography>
-      <Typography variant="body2" color="text.secondary">Vacío equivale a 0. Usá coma o punto decimal, sin separadores de miles. El destino sugerido puede cambiarse en cada medio.</Typography>{lineas.map(mostrarLinea)}
+      {tipo === 'gasto' && <Typography variant="body2" color="text.secondary">Vacío equivale a 0. Usá coma o punto decimal, sin separadores de miles. El destino sugerido puede cambiarse en cada medio.</Typography>}{lineas.map(mostrarLinea)}
+      {tipo === 'ingreso' && <Alert severity="info">Los campos vacíos se consideran 0. Usá coma o punto decimal, sin separadores de miles. Podés cambiar la billetera real de cada cobro.</Alert>}
       <Stack direction="row" sx={{ flexWrap: 'wrap' }}>{datos.medios.map(mostrarMedio)}</Stack>
       </Stack></Paper>
       {errorImportes ? <Alert severity="error">{errorImportes}</Alert> : <Paper aria-live="polite" sx={/** Usa la misma superficie financiera para ingresos y gastos en ambos temas. */ function apariencia(tema) { const estado = estadosFinancieros[tema.palette.mode === 'dark' ? 'oscuro' : 'claro'][tipo]; return { minHeight: 68, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1, bgcolor: estado.fondo, color: estado.texto }; }}><Typography sx={{ fontWeight: 600 }}>TOTAL</Typography><Typography sx={{ fontSize: 24, fontWeight: 700, overflowWrap: 'anywhere', fontVariantNumeric: 'tabular-nums' }}>{formatearImporte(crearImporte(total, moneda))}</Typography></Paper>}
     </Stack>
     {resumenImpacto && !errorImportes && resumenImpacto(moneda, lineas.map(/** Prepara distribuciones positivas para la vista previa delegada al dominio. */ function convertir(linea) { return { medioPagoId: linea.medioPagoId, billeteraId: linea.billeteraId || null, importeCentavos: interpretarCampoRapido(linea.importe) }; }).filter(/** Excluye líneas vacías de la vista previa, igual que en el guardado. */ function positiva(linea) { return linea.importeCentavos > 0; }))}
     {!alGuardar && <Alert severity="info">La persistencia se conectará en la siguiente tarea.</Alert>}
-    <Button startIcon={tipo === 'gasto' ? <Check /> : <Save />} fullWidth type="submit" variant="contained" color={tipo === 'ingreso' ? 'success' : 'error'} loading={pendiente} disabled={!alGuardar || Boolean(errorImportes) || total === 0}>{etiquetaGuardar ?? `Guardar ${tipo}`}</Button>
+    <Button startIcon={tipo === 'gasto' ? <Check /> : <Save />} fullWidth type="submit" variant="contained" color={tipo === 'ingreso' ? 'primary' : 'error'} loading={pendiente} disabled={!alGuardar || Boolean(errorImportes) || total === 0}>{etiquetaGuardar ?? `Guardar ${tipo}`}</Button>
   </Stack>;
 }

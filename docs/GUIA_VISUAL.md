@@ -2839,3 +2839,7 @@ Inicio dispone de un resumen con icono a la derecha y dos columnas centradas de 
 Mi dinero adapta sus columnas a las billeteras realmente disponibles y ofrece Transferir/Ver todas en el pie. Los movimientos permiten bajar el importe completo a una segunda fila en anchos estrechos. El resumen principal conserva cifra de 34 px; los ingresos/gastos de su franja inferior, 20 px; los movimientos, 16 px. No se fuerzan alturas para hacer caber contenido debajo de la navegación fija.
 
 Las imágenes tienen diferencias entre sí. Se conservan paleta normativa, cuatro destinos inferiores, entrada positiva, salida negativa y ajuste violeta. No copiar logos comerciales ni cifras de muestra. Color de acento configurable, descripción de categorías, comparativas, cantidad de movimientos, arrastre y notificaciones quedan fuera hasta una tarea funcional autorizada.
+
+## Ajuste de Nuevo ingreso — TAREA 087
+
+La referencia de Nuevo ingreso aportada el 03/10/2026 guía etiquetas exteriores, iconos de apoyo, importes alineados a la derecha, ayuda inferior, total verde y guardado azul. La billetera real permanece visible y editable por distribución; no se copia su omisión en la imagen. Se preservan moneda, formato decimal exacto, actividad precargada y campos opcionales. Las propiedades visuales nuevas son optativas para conservar otros formularios.

@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import { IconoCatalogo } from './IconoCatalogo';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
 /** Opción visual independiente de las entidades y de los repositorios de catálogos. */
 export interface OpcionCatalogo {
@@ -23,12 +24,13 @@ interface PropiedadesSelectorCatalogo {
   error?: string;
   obligatorio?: boolean;
   deshabilitado?: boolean;
+  etiquetaExterior?: boolean;
 }
 
 /** Muestra un catálogo recibido por propiedades sin cargar datos ni permitir editarlo. */
 export function SelectorCatalogo({
   etiqueta, valor, opciones, alCambiar, ayuda, error,
-  obligatorio = false, deshabilitado = false,
+  obligatorio = false, deshabilitado = false, etiquetaExterior = false,
 }: PropiedadesSelectorCatalogo) {
   const identificador = useId();
 
@@ -43,12 +45,15 @@ export function SelectorCatalogo({
   }
 
   return (
-    <TextField select id={identificador} label={etiqueta} value={valor}
+    <Box sx={{ minWidth: 0 }}>
+    {etiquetaExterior && <Typography id={`${identificador}-etiqueta`} sx={{ mb: 1 }}>{etiqueta}</Typography>}
+    <TextField fullWidth select id={identificador} label={etiquetaExterior ? undefined : etiqueta} value={valor}
+      slotProps={{ select: { ...(etiquetaExterior && { labelId: `${identificador}-etiqueta` }) } }}
       onChange={cambiarSeleccion} required={obligatorio}
       disabled={deshabilitado || opciones.length === 0} error={Boolean(error)}
       helperText={error || ayuda || (opciones.length === 0 ? 'No hay opciones disponibles.' : undefined)}>
       <MenuItem value="">Sin seleccionar</MenuItem>
       {opciones.map(mostrarOpcion)}
-    </TextField>
+    </TextField></Box>
   );
 }
