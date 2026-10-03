@@ -32,7 +32,7 @@ export function CampoImporte({
   return (
     <TextField id={identificador} label={etiquetaOculta ? undefined : etiqueta} value={valor} onChange={cambiarTexto}
       placeholder={alineadoDerecha ? '0' : undefined}
-      sx={{ '& input': { fontSize: 18, fontWeight: 600, fontVariantNumeric: 'tabular-nums', ...(alineadoDerecha && { textAlign: 'right' }) } }} type="text" disabled={deshabilitado} required={obligatorio}
+      sx={{ ...(alineadoDerecha && { '& .MuiOutlinedInput-root': { minHeight: 48 } }), '& input': { fontSize: 18, fontWeight: 600, fontVariantNumeric: 'tabular-nums', ...(alineadoDerecha && { textAlign: 'right', py: 1.5 }) } }} type="text" disabled={deshabilitado} required={obligatorio}
       error={Boolean(error)} helperText={error || ayuda || (compacto ? undefined : ' ')}
       slotProps={{
         htmlInput: { inputMode: 'decimal', ...(etiquetaOculta && { 'aria-label': etiqueta }) },

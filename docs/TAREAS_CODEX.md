@@ -4341,6 +4341,8 @@ Ajustar el formulario Nuevo ingreso a la referencia codex-clipboard-823e9c5b-5a8
 
 ## Cambios previstos
 
+Corrección posterior autorizada: compactar el formulario de ingreso. Fecha y Descripción compartirán fila desde 390 px, con fecha nativa sin icono duplicado; por debajo se apilarán. Reducir rellenos, separaciones y controles de cobro a 48 px sin ocultar la billetera real ni perder etiquetas accesibles. Simplificar la ayuda conservando instrucciones decimales. Conservar Gasto mediante propiedades optativas.
+
 - Conservar cabecera contextual con regreso y título, actividad obligatoria y última actividad disponible precargada.
 - Mostrar etiquetas por encima de los campos de actividad, fecha, descripción y observaciones; añadir iconos de apoyo y ejemplos en los textos opcionales. Reutilizar componentes mediante propiedades opcionales que no alteren los demás formularios.
 - Compactar medios de cobro: icono y nombre a la izquierda, importe a la derecha, con placeholder cero y alineación numérica. Mantener siempre visible y editable la billetera real de cada distribución, aunque el PNG la omita. Conservar quitar/agregar medios y moneda accesible.

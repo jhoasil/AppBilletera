@@ -25,12 +25,13 @@ interface PropiedadesSelectorCatalogo {
   obligatorio?: boolean;
   deshabilitado?: boolean;
   etiquetaExterior?: boolean;
+  compacto?: boolean;
 }
 
 /** Muestra un catálogo recibido por propiedades sin cargar datos ni permitir editarlo. */
 export function SelectorCatalogo({
   etiqueta, valor, opciones, alCambiar, ayuda, error,
-  obligatorio = false, deshabilitado = false, etiquetaExterior = false,
+  obligatorio = false, deshabilitado = false, etiquetaExterior = false, compacto = false,
 }: PropiedadesSelectorCatalogo) {
   const identificador = useId();
 
@@ -48,6 +49,7 @@ export function SelectorCatalogo({
     <Box sx={{ minWidth: 0 }}>
     {etiquetaExterior && <Typography id={`${identificador}-etiqueta`} sx={{ mb: 1 }}>{etiqueta}</Typography>}
     <TextField fullWidth select id={identificador} label={etiquetaExterior ? undefined : etiqueta} value={valor}
+      sx={compacto ? { '& .MuiOutlinedInput-root': { minHeight: 48 }, '& .MuiSelect-select': { py: 1.5 } } : undefined}
       slotProps={{ select: { ...(etiquetaExterior && { labelId: `${identificador}-etiqueta` }) } }}
       onChange={cambiarSeleccion} required={obligatorio}
       disabled={deshabilitado || opciones.length === 0} error={Boolean(error)}
