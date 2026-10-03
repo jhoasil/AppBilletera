@@ -76,7 +76,7 @@ export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstru
 
   return (
     <Box sx={{ minHeight: '100dvh' }}>
-      <AppBar position="fixed" sx={{ zIndex: tema.zIndex.drawer + 1, borderBottom: 1, borderColor: 'divider' }}>
+      <AppBar position="fixed" sx={{ zIndex: tema.zIndex.drawer + 1, borderBottom: 1, borderColor: 'divider', pt: 'env(safe-area-inset-top)' }}>
         <Toolbar sx={{ gap: 1 }}>
           <Typography
             component="a" href="#/inicio" variant="h6"
@@ -112,7 +112,7 @@ export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstru
         <Toolbar />
         <Container
           component="main" id="contenido-principal" tabIndex={-1} maxWidth="lg"
-          sx={{ pt: { xs: 3, md: 4 }, pb: { xs: 'calc(96px + env(safe-area-inset-bottom))', md: 4 } }}
+          sx={{ minWidth: 0, pt: { xs: 'calc(24px + env(safe-area-inset-top))', md: 'calc(32px + env(safe-area-inset-top))' }, pb: { xs: 'calc(96px + env(safe-area-inset-bottom))', md: 4 }, pl: { xs: 'max(16px, env(safe-area-inset-left))', sm: 3 }, pr: { xs: 'max(16px, env(safe-area-inset-right))', sm: 3 } }}
         >
           {children}
         </Container>

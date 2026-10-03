@@ -21,7 +21,7 @@ const coloresTono = {
 /** Destaca un valor ya formateado usando los colores semánticos del tema. */
 export function TarjetaResumen({ titulo, valor, detalle, icono, tono = 'neutro' }: PropiedadesTarjetaResumen) {
   return (
-    <Card sx={{ height: '100%' }}>
+    <Card sx={{ height: '100%', minWidth: 0, flex: 1 }}>
       <CardContent>
         <Stack spacing={1}>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>

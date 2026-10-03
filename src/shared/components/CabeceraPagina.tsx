@@ -14,7 +14,7 @@ interface PropiedadesCabeceraPagina {
 export function CabeceraPagina({ titulo, descripcion, acciones }: PropiedadesCabeceraPagina) {
   return (
     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ justifyContent: 'space-between', alignItems: { sm: 'center' } }}>
-      <Box>
+      <Box sx={{ minWidth: 0, overflowWrap: 'anywhere' }}>
         <Typography component="h1" variant="h2">{titulo}</Typography>
         {descripcion && <Typography color="text.secondary" sx={{ mt: 1 }}>{descripcion}</Typography>}
       </Box>
