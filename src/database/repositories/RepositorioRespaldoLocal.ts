@@ -5,7 +5,7 @@ import { baseLocal, prepararBaseLocal } from '../componerBaseLocal';
 import type { ContextoDatos, RegistroDatos } from '../contracts/ContextoDatos';
 
 /** Compara registros por columnas declaradas, independientemente del orden de las propiedades JSON. */
-function mismosDatos(a: RegistroDatos, b: RegistroDatos): boolean { const claves = Object.keys(a).sort(); return claves.length === Object.keys(b).length && claves.every(function comparar(clave) { return a[clave] === b[clave]; }); }
+function mismosDatos(a: RegistroDatos, b: RegistroDatos): boolean { const claves = Object.keys(a).sort(); return claves.length === Object.keys(b).length && claves.every(/** Compara valores de una misma columna para rechazar conflictos de identidad. */ function comparar(clave) { return a[clave] === b[clave]; }); }
 
 /** Exporta tablas completas e importa sin sobrescribir identidades ni eliminar registros históricos. */
 export class RepositorioRespaldoLocal implements RepositorioRespaldo {
@@ -14,18 +14,18 @@ export class RepositorioRespaldoLocal implements RepositorioRespaldo {
     await prepararBaseLocal();
     /** Materializa el respaldo únicamente ante una exportación expresa. */
     async function leer(contexto: ContextoDatos) { const datos: DatosRespaldo = {}; for (const tabla of tablasV1) { const filas: RegistroDatos[] = []; /** Conserva todas las revisiones vigentes y borradas lógicamente. */ function agregar(registro: RegistroDatos) { filas.push(registro); } await contexto.recorrer(tabla.nombre, agregar); datos[tabla.nombre] = filas; } return datos; }
-    return baseLocal.ejecutarTransaccion({ recursos: tablasV1.map(function nombre(tabla) { return tabla.nombre; }), modo: 'lectura' }, leer);
+    return baseLocal.ejecutarTransaccion({ recursos: tablasV1.map(/** Obtiene los nombres declarados para delimitar las tablas de la transacción de respaldo. */ function nombre(tabla) { return tabla.nombre; }), modo: 'lectura' }, leer);
   }
   /** Valida el grafo completo y confirma todos los registros nuevos juntos; cualquier conflicto revierte. */
   async importar(datos: DatosRespaldo): Promise<void> {
-    const nombres = tablasV1.map(function nombre(tabla) { return tabla.nombre; });
-    if (Object.keys(datos).length !== nombres.length || Object.keys(datos).some(function desconocida(nombre) { return !nombres.includes(nombre as typeof nombres[number]); })) throw new Error('El respaldo no contiene exactamente las tablas compatibles.');
+    const nombres = tablasV1.map(/** Obtiene los nombres declarados para delimitar las tablas de la transacción de respaldo. */ function nombre(tabla) { return tabla.nombre; });
+    if (Object.keys(datos).length !== nombres.length || Object.keys(datos).some(/** Detecta tablas ajenas al formato compatible antes de importar. */ function desconocida(nombre) { return !nombres.includes(nombre as typeof nombres[number]); })) throw new Error('El respaldo no contiene exactamente las tablas compatibles.');
     const registros = new Map<string, Map<string, RegistroDatos>>();
     for (const tabla of tablasV1) {
       const filas = datos[tabla.nombre]; if (!Array.isArray(filas)) throw new Error(`Falta la tabla ${tabla.nombre}.`);
       const indice = new Map<string, RegistroDatos>(); registros.set(tabla.nombre, indice);
       for (const fila of filas) {
-        if (!fila || typeof fila !== 'object' || Array.isArray(fila) || typeof fila.id !== 'string' || indice.has(fila.id) || Object.keys(fila).length !== tabla.columnas.length || tabla.columnas.some(function ausente(columna) { return !(columna.nombre in fila); })) throw new Error(`Registro inválido o repetido en ${tabla.nombre}.`);
+        if (!fila || typeof fila !== 'object' || Array.isArray(fila) || typeof fila.id !== 'string' || indice.has(fila.id) || Object.keys(fila).length !== tabla.columnas.length || tabla.columnas.some(/** Detecta columnas obligatorias ausentes para rechazar registros incompletos. */ function ausente(columna) { return !(columna.nombre in fila); })) throw new Error(`Registro inválido o repetido en ${tabla.nombre}.`);
         indice.set(fila.id, fila);
       }
     }

@@ -10,7 +10,7 @@ export class ContextoSQLite implements ContextoDatos {
   /** Conserva una conexión y los recursos autorizados por el coordinador. */
   constructor(private readonly conexion: SQLiteDBConnection, private readonly recursos: readonly string[], private readonly escritura = false) {}
   /** Rechaza tablas fuera del ámbito transaccional antes de ejecutar SQL. */
-  private definicion(tabla: NombreTabla) { const definicion = tablasV1.find(function buscar(valor) { return valor.nombre === tabla; }); if (!definicion || !this.recursos.includes(tabla)) throw new Error('La tabla no pertenece a esta transacción.'); return definicion; }
+  private definicion(tabla: NombreTabla) { const definicion = tablasV1.find(/** Localiza una definición declarativa para impedir SQL sobre tablas o índices desconocidos. */ function buscar(valor) { return valor.nombre === tabla; }); if (!definicion || !this.recursos.includes(tabla)) throw new Error('La tabla no pertenece a esta transacción.'); return definicion; }
   /** Reconstruye booleanos del motor sin modificar dinero ni fechas. */
   private convertir(tabla: NombreTabla, registro: RegistroDatos): RegistroDatos { for (const columna of this.definicion(tabla).columnas) if (columna.tipo === 'booleano' && registro[columna.nombre] !== null) registro[columna.nombre] = registro[columna.nombre] === 1; return registro; }
   /** Consulta una marca técnica sin introducir preferencias financieras. */
@@ -35,11 +35,11 @@ export class ContextoSQLite implements ContextoDatos {
   }
   /** Traduce índices y rangos declarativos a columnas conocidas; solo los valores se interpolan como parámetros. */
   private async recorrerBloques(tabla: NombreTabla, visitar: (registro: RegistroDatos) => Promise<void>, indice: string | undefined, rango: RangoConsulta | undefined, descendente: boolean) {
-    const definicion = this.definicion(tabla); const columnas = indice ? definicion.indices?.find(function buscar(valor) { return valor.nombre === indice; })?.columnas : ['id'];
+    const definicion = this.definicion(tabla); const columnas = indice ? definicion.indices?.find(/** Localiza una definición declarativa para impedir SQL sobre tablas o índices desconocidos. */ function buscar(valor) { return valor.nombre === indice; })?.columnas : ['id'];
     if (!columnas) throw new Error('El índice no pertenece al esquema.');
     const valores: (string | number)[] = []; const condiciones: string[] = [];
     /** Produce una comparación inclusiva para una clave simple o compuesta. */
-    function extremo(clave: ClaveConsulta, operador: string) { const partes = Array.isArray(clave) ? clave : [clave]; if (partes.length !== columnas!.length) throw new Error('El rango no coincide con el índice.'); valores.push(...partes as (string | number)[]); condiciones.push(columnas!.length === 1 ? `${columnas![0]} ${operador} ?` : `(${columnas!.join(',')}) ${operador} (${partes.map(function parametro() { return '?'; }).join(',')})`); }
+    function extremo(clave: ClaveConsulta, operador: string) { const partes = Array.isArray(clave) ? clave : [clave]; if (partes.length !== columnas!.length) throw new Error('El rango no coincide con el índice.'); valores.push(...partes as (string | number)[]); condiciones.push(columnas!.length === 1 ? `${columnas![0]} ${operador} ?` : `(${columnas!.join(',')}) ${operador} (${partes.map(/** Genera un marcador SQL para vincular valores sin interpolarlos en la sentencia. */ function parametro() { return '?'; }).join(',')})`); }
     if (rango?.inferior !== undefined) extremo(rango.inferior, '>='); if (rango?.superior !== undefined) extremo(rango.superior, '<=');
     const orden = descendente ? `${columnas[columnas.length - 1]} DESC,id ASC` : [...columnas, ...(columnas.includes('id') ? [] : ['id'])].join(',');
     let desplazamiento = 0;
@@ -52,8 +52,8 @@ export class ContextoSQLite implements ContextoDatos {
   async guardar(tabla: NombreTabla, registro: RegistroDatos, insertar = false) {
     if (!this.escritura) throw new Error('Esta transacción es de solo lectura.');
     const definicion = this.definicion(tabla); await validarRegistro(this, tabla, registro);
-    const columnas = definicion.columnas.map(function nombre(columna) { return columna.nombre; }); const valores = columnas.map(function valor(nombre) { const valor = registro[nombre]; return typeof valor === 'boolean' ? Number(valor) : valor; });
-    const actualizacion = columnas.filter(function excluir(nombre) { return nombre !== 'id'; }).map(function asignar(nombre) { return `${nombre}=excluded.${nombre}`; }).join(',');
-    await this.conexion.run(`INSERT INTO ${tabla} (${columnas.join(',')}) VALUES (${columnas.map(function parametro() { return '?'; }).join(',')})${insertar ? '' : ` ON CONFLICT(id) DO UPDATE SET ${actualizacion}`}`, valores, false);
+    const columnas = definicion.columnas.map(/** Obtiene la columna declarada para conservar el orden de los valores al guardar. */ function nombre(columna) { return columna.nombre; }); const valores = columnas.map(/** Convierte booleanos al entero SQLite y conserva intactos dinero y fechas. */ function valor(nombre) { const valor = registro[nombre]; return typeof valor === 'boolean' ? Number(valor) : valor; });
+    const actualizacion = columnas.filter(/** Excluye la identidad de la actualización para preservar el UUID existente. */ function excluir(nombre) { return nombre !== 'id'; }).map(/** Construye una asignación de columna conocida para actualizar sin reemplazar el registro. */ function asignar(nombre) { return `${nombre}=excluded.${nombre}`; }).join(',');
+    await this.conexion.run(`INSERT INTO ${tabla} (${columnas.join(',')}) VALUES (${columnas.map(/** Genera un marcador SQL para vincular valores sin interpolarlos en la sentencia. */ function parametro() { return '?'; }).join(',')})${insertar ? '' : ` ON CONFLICT(id) DO UPDATE SET ${actualizacion}`}`, valores, false);
   }
 }

@@ -29,7 +29,7 @@ export class RepositorioPatrimonioLocal implements RepositorioPatrimonio {
         if (registro.eliminado_en !== null) return;
         const fecha = new Date(String(registro.fecha)); const dia = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
         if (dia < desde || dia > hasta) return;
-        const billetera = catalogo.find(function identificar(valor) { return valor.id === registro.billetera_id; }); if (!billetera) return;
+        const billetera = catalogo.find(/** Encuentra la billetera histórica del ajuste para agregarlo en su propia moneda. */ function identificar(valor) { return valor.id === registro.billetera_id; }); if (!billetera) return;
         const diferencia = BigInt(Number(registro.diferencia_centavos)); const total = acumulador(billetera.moneda); if (diferencia > 0n) total.positivos += diferencia; else total.negativos += diferencia;
       }
       await contexto.recorrer('ajustes_billetera', ajuste);

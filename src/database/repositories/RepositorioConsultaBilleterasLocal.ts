@@ -7,7 +7,7 @@ import type { ContextoDatos, RegistroDatos } from '../contracts/ContextoDatos';
 import { sumarSaldo, convertirSaldo } from './consultasSaldo';
 import { validarPagina } from './consultasDatos';
 
-/** Lee billeteras y saldos en una instantánea consistente del motor Web. */
+/** Lee billeteras y saldos en una instantánea consistente del motor local seleccionado. */
 export class RepositorioConsultaBilleterasLocal implements RepositorioConsultaBilleteras {
   /** Pagina el catálogo pequeño y agrega los saldos por índice sin materializar los movimientos. */
   async consultar(consulta: ConsultaCatalogo): Promise<ConsultaBilleterasConSaldo> {

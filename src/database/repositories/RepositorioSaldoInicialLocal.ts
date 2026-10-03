@@ -6,7 +6,7 @@ import { baseLocal, prepararBaseLocal } from '../componerBaseLocal';
 import { convertirRegistro } from '../contracts/convertirRegistros';
 import type { ContextoDatos, RegistroDatos } from '../contracts/ContextoDatos';
 
-/** Adaptador Web que protege el saldo inicial incluso frente a escrituras desde otras pestañas. */
+/** Repositorio local que protege el saldo inicial incluso frente a escrituras concurrentes. */
 export class RepositorioSaldoInicialLocal implements RepositorioSaldoInicial {
   /** Comprueba e inserta en una sola transacción; jamás reemplaza un saldo inicial anterior. */
   async registrar(movimiento: MovimientoBilletera, billeteraNueva?: Billetera): Promise<void> {

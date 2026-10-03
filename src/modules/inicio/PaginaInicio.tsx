@@ -40,7 +40,7 @@ export function PaginaInicio() {
     <CabeceraPagina titulo="Inicio" acciones={<Button onClick={actualizar}>Actualizar</Button>} />
     {error && <Alert severity="error">{error}</Alert>}
     {!resumen || !billeteras ? !error && <CircularProgress aria-label="Cargando resumen" /> : <>
-      {resumen.totales.map(function presentar(total) { return <Stack key={total.moneda} spacing={2}>
+      {resumen.totales.map(/** Presenta un resumen, billetera o movimiento ya preparado, sin agregar importes financieros. */ function presentar(total) { return <Stack key={total.moneda} spacing={2}>
         <TarjetaResumen titulo="Ganancia de hoy" valor={importe(total.gananciaCentavos, total.moneda)} tono="destacado" />
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
           <Stack sx={{ flex: 1 }}><TarjetaResumen titulo="Ingresos de hoy" valor={importe(total.ingresosCentavos, total.moneda)} tono="positivo" /><Button component="a" href="#/ingresos?nuevo=1">+ Agregar ingreso</Button></Stack>
@@ -48,11 +48,11 @@ export function PaginaInicio() {
         </Stack>
       </Stack>; })}
       <Typography variant="h6">Mi dinero</Typography>
-      {billeteras.elementos.map(function presentar({ billetera, saldoCentavos }) { return <Button key={billetera.id} component="a" href={`#/billetera?id=${billetera.id}`} sx={{ justifyContent: 'space-between' }}><span>{billetera.nombre}</span><span>{importe(saldoCentavos, billetera.moneda)}</span></Button>; })}
+      {billeteras.elementos.map(/** Presenta un resumen, billetera o movimiento ya preparado, sin agregar importes financieros. */ function presentar({ billetera, saldoCentavos }) { return <Button key={billetera.id} component="a" href={`#/billetera?id=${billetera.id}`} sx={{ justifyContent: 'space-between' }}><span>{billetera.nombre}</span><span>{importe(saldoCentavos, billetera.moneda)}</span></Button>; })}
       {!billeteras.total && <Typography color="text.secondary">Creá tu primera billetera desde Ajustes.</Typography>}
       <Stack direction="row" spacing={1}><Button component="a" href="#/transferencias" variant="contained">Transferir</Button><Button component="a" href="#/billeteras">Ver todas</Button></Stack>
       <Typography variant="h6">Últimos movimientos</Typography>
-      {resumen.movimientos.map(function presentar(movimiento) { const billetera = billeteras.elementos.find(function identificar(elemento) { return elemento.billetera.id === movimiento.billeteraId; }); return <Paper key={movimiento.id} variant="outlined" sx={{ p: 1.5 }}><Button component="a" href={`#/billetera?id=${movimiento.billeteraId}`}>{movimiento.descripcion || movimiento.tipo.replaceAll('_', ' ')} · {billetera?.billetera.nombre ?? 'Ver billetera'}</Button></Paper>; })}
+      {resumen.movimientos.map(/** Presenta un resumen, billetera o movimiento ya preparado, sin agregar importes financieros. */ function presentar(movimiento) { const billetera = billeteras.elementos.find(/** Encuentra la etiqueta de una billetera del resumen para mostrar un movimiento reciente. */ function identificar(elemento) { return elemento.billetera.id === movimiento.billeteraId; }); return <Paper key={movimiento.id} variant="outlined" sx={{ p: 1.5 }}><Button component="a" href={`#/billetera?id=${movimiento.billeteraId}`}>{movimiento.descripcion || movimiento.tipo.replaceAll('_', ' ')} · {billetera?.billetera.nombre ?? 'Ver billetera'}</Button></Paper>; })}
       {!resumen.movimientos.length && <Typography color="text.secondary">Todavía no hay movimientos de billetera.</Typography>}
     </>}
   </Stack>;

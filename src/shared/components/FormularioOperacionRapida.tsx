@@ -105,7 +105,7 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
     return <Card key={`${linea.medioPagoId}-${indice}`} variant="outlined"><CardContent><Stack spacing={1}>
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}><IconoCatalogo identificador={medio?.icono ?? null} /><Typography variant="subtitle1">{medio?.nombre ?? 'Medio histórico'}</Typography><Button onClick={quitar} sx={{ ml: 'auto' }}>Quitar</Button></Stack>
       <CampoImporte etiqueta={`Importe ${medio?.nombre ?? ''}`} valor={linea.importe} alCambiar={cambiarImporte} />
-      <details><summary>Destino: {datos?.billeteras.find(function identificar(billetera) { return billetera.id === linea.billeteraId; })?.nombre ?? 'Sin billetera'}</summary><Stack sx={{ pt: 1 }}><SelectorCatalogo etiqueta="Billetera" valor={linea.billeteraId} alCambiar={cambiarBilletera} opciones={datos?.billeteras.filter(billeteraDisponible) ?? []} ayuda="Sin billetera: la operación no modifica un saldo." /></Stack></details>
+      <details><summary>Destino: {datos?.billeteras.find(/** Encuentra la etiqueta del destino seleccionado sin alterar la billetera sugerida. */ function identificar(billetera) { return billetera.id === linea.billeteraId; })?.nombre ?? 'Sin billetera'}</summary><Stack sx={{ pt: 1 }}><SelectorCatalogo etiqueta="Billetera" valor={linea.billeteraId} alCambiar={cambiarBilletera} opciones={datos?.billeteras.filter(billeteraDisponible) ?? []} ayuda="Sin billetera: la operación no modifica un saldo." /></Stack></details>
     </Stack></CardContent></Card>;
   }
   /** Agrega un medio activo que no esté presente, sin editar su catálogo. */

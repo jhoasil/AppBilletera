@@ -7,6 +7,7 @@ import { ContextoSQLite } from './ContextoSQLite';
 /** Motor nativo SQLite con versión lógica propia y transacciones explícitas compartidas por todas las operaciones. */
 export class AdaptadorSQLite implements AdaptadorBaseLocal<ContextoDatos, ContextoMigracionEsquema> {
   private conexion: SQLiteDBConnection | undefined; private readonly gestor = new SQLiteConnection(CapacitorSQLite);
+  // _metadatos almacena la versión lógica y marcas de preparación; nunca saldos ni preferencias financieras.
   /** Abre la base privada de la aplicación, sin cifrado ni dependencias del adaptador Web. */
   async abrir() {
     const conexion = await this.gestor.createConnection('app_billetera', false, 'no-encryption', 1, false);

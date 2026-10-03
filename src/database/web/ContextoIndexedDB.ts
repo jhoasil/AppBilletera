@@ -62,7 +62,7 @@ export class ContextoIndexedDB implements ContextoDatos {
     return new Promise(conectar);
   }
 
-  /** Recorre por fecha descendente y UUID ascendente usando cursores, sin cargar todos los registros. */
+  /** Espera solo lecturas del mismo contexto antes de continuar; una espera externa haría expirar IndexedDB. */
   recorrerAsincrono(tabla: NombreTabla, visitar: (registro: RegistroDatos) => Promise<void>, indice?: string, rango?: RangoConsulta): Promise<void> {
     const almacen = this.transaccion.objectStore(tabla);
     const solicitud = (indice ? almacen.index(indice) : almacen).openCursor(convertirRango(rango));

@@ -22,11 +22,11 @@ import { useParametroRuta } from '../../app/navigation/useParametroRuta';
 export interface RegistroOperacion { id: string; fecha: string; descripcion: string | null; importeCentavos: number; moneda: string; actualizadoEn: string }
 /** Acciones de aplicación consumidas por el ABM sin conocer sus repositorios físicos. */
 export interface ServicioABM<Entidad extends RegistroOperacion, Carga> {
-  listar(consulta: ConsultaOperaciones): Promise<PaginaResultado<Entidad>>;
-  obtener(id: string): Promise<{ entidad: Entidad; carga: Carga }>;
-  crear(carga: Carga): Promise<void>;
-  editar(id: string, carga: Carga, actualizadoEnEsperado: string): Promise<void>;
-  eliminar(id: string, actualizadoEnEsperado: string): Promise<void>;
+  /** Consulta una página de operaciones mediante el servicio, sin cargar toda la historia. */ listar(consulta: ConsultaOperaciones): Promise<PaginaResultado<Entidad>>;
+  /** Recupera una operación y su carga editable para preservar referencias históricas. */ obtener(id: string): Promise<{ entidad: Entidad; carga: Carga }>;
+  /** Confirma una operación nueva mediante la transacción del servicio. */ crear(carga: Carga): Promise<void>;
+  /** Guarda cambios solo si la revisión esperada continúa vigente. */ editar(id: string, carga: Carga, actualizadoEnEsperado: string): Promise<void>;
+  /** Solicita el borrado lógico con control de revisión, conservando trazabilidad. */ eliminar(id: string, actualizadoEnEsperado: string): Promise<void>;
 }
 /** Configuración del listado reutilizable con formulario específico de cada operación. */
 interface PropiedadesPantallaOperaciones<Entidad extends RegistroOperacion, Carga> {

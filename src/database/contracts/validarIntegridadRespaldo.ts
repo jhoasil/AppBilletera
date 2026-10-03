@@ -7,7 +7,7 @@ import type { NombreTabla } from '../migrations/EsquemaBaseDatos';
 /** Valida tipos y efectos monetarios completos antes de abrir la transacción de importación. */
 export async function validarIntegridadRespaldo(datos: DatosRespaldo): Promise<void> {
   const indices = new Map<string, Map<string, RegistroDatos>>();
-  for (const tabla of tablasV1) indices.set(tabla.nombre, new Map(datos[tabla.nombre]!.map(function identificar(registro) { return [String(registro.id), registro] as const; })));
+  for (const tabla of tablasV1) indices.set(tabla.nombre, new Map(datos[tabla.nombre]!.map(/** Indexa cada registro del archivo por UUID para comprobar referencias sin consultar el dispositivo. */ function identificar(registro) { return [String(registro.id), registro] as const; })));
   /** Resuelve referencias exclusivamente dentro del archivo, sin depender de los datos ya instalados. */
   async function obtener(tabla: NombreTabla, id: string) { return indices.get(tabla)?.get(id) ?? null; }
   for (const tabla of tablasV1) for (const registro of datos[tabla.nombre]!) await validarRegistro({ obtener }, tabla.nombre, registro);
