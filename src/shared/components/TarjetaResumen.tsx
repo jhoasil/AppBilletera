@@ -30,7 +30,7 @@ export function TarjetaResumen({ titulo, valor, detalle, icono, tono = 'neutro',
     <Card sx={/** Aplica superficies semánticas y adapta la jerarquía del importe sin alterar sus datos. */ function apariencia(tema) {
       const estado = estadosFinancieros[tema.palette.mode === 'dark' ? 'oscuro' : 'claro'];
       const financiero = tono === 'positivo' ? estado.ingreso : tono === 'negativo' ? estado.gasto : null;
-      return { height: '100%', minWidth: 0, flex: 1, minHeight: alturaMinima ?? (principal ? 152 : 112), bgcolor: suave ? 'action.selected' : principal ? 'primary.main' : financiero?.fondo ?? 'background.paper', color: suave ? 'text.primary' : principal ? 'primary.contrastText' : financiero?.texto ?? 'text.primary' };
+      return { height: '100%', minWidth: 0, flex: 1, minHeight: alturaMinima ?? (principal ? 152 : 112), bgcolor: suave ? (tono === 'destacado' ? 'action.selected' : 'background.paper') : principal ? 'primary.main' : financiero?.fondo ?? 'background.paper', color: suave ? 'text.primary' : principal ? 'primary.contrastText' : financiero?.texto ?? 'text.primary' };
     }}>
       <CardContent>
         <Stack spacing={1}>

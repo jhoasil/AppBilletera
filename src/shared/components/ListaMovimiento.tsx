@@ -31,13 +31,13 @@ export function ListaMovimiento({ elementos, etiqueta = 'Movimientos' }: Propied
   /** Distribuye el texto y el importe de una fila sin ocultar su información en pantallas pequeñas. */
   function mostrarMovimiento(elemento: ElementoListaMovimiento) {
     return (
-      <ListItem key={elemento.id} divider sx={{ minHeight: 72, py: 1.5, gap: 1.5, alignItems: 'flex-start' }}>
-        {elemento.icono && <Box aria-hidden="true" sx={{ display: 'grid', placeItems: 'center', width: 40, height: 40, flexShrink: 0, borderRadius: 1.5, bgcolor: 'action.hover', color: coloresMovimiento[elemento.tono] }}>{elemento.icono}</Box>}
+      <ListItem key={elemento.id} divider sx={{ minHeight: 72, px: 0, py: 1.5, gap: 1, alignItems: 'flex-start' }}>
+        {elemento.icono && <Box aria-hidden="true" sx={{ display: 'grid', placeItems: 'center', width: 40, height: 40, flexShrink: 0, borderRadius: '50%', bgcolor: 'action.hover', color: coloresMovimiento[elemento.tono] }}>{elemento.icono}</Box>}
         <Stack spacing={0.5} sx={{ minWidth: 0, flex: 1 }}>
           <Typography sx={{ overflowWrap: 'anywhere' }}>{elemento.titulo}</Typography>
           <Typography variant="body2" color="text.secondary">{elemento.detalle}</Typography>
         </Stack>
-        <Typography sx={{ color: coloresMovimiento[elemento.tono], fontSize: 20, fontWeight: 700, fontVariantNumeric: 'tabular-nums', maxWidth: '40%', overflowWrap: 'anywhere' }}>{elemento.importe}</Typography>
+        <Typography sx={{ color: coloresMovimiento[elemento.tono], fontSize: 18, fontWeight: 700, fontVariantNumeric: 'tabular-nums', maxWidth: '40%', overflowWrap: 'anywhere' }}>{elemento.importe}</Typography>
       </ListItem>
     );
   }

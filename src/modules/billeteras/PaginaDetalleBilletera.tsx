@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import SwapHoriz from '@mui/icons-material/SwapHoriz';
+import FactCheck from '@mui/icons-material/FactCheck';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -78,17 +80,20 @@ export function PaginaDetalleBilletera() {
     return { id: movimiento.id, titulo: visual.nombre, detalle: `${fecha}${movimiento.descripcion ? ` · ${movimiento.descripcion}` : ''}`, importe: `${movimiento.importeCentavos > 0 ? '+' : ''}${formatearImporte(crearImporte(movimiento.importeCentavos, datos!.billetera.moneda))}`, icono, tono };
   }
   return <Stack spacing={2}>
-    <CabeceraPagina titulo={datos?.billetera.nombre ?? 'Detalle de billetera'} regreso={{ href: "#/billeteras", etiqueta: "Volver a billeteras" }} />
+    <CabeceraPagina titulo={datos?.billetera.nombre ?? 'Detalle de billetera'} icono={datos?.billetera.icono ?? null} color={datos?.billetera.color ?? null} regreso={{ href: "#/billeteras", etiqueta: "Volver a billeteras" }} />
     {error && <Alert severity="error" action={<Button onClick={actualizar}>Reintentar</Button>}>{error}</Alert>}
     {cargando ? <CircularProgress aria-label="Cargando saldo y movimientos" /> : !error && datos && <>
-      <TarjetaResumen titulo={`${datos.billetera.nombre} · Saldo actual`} principal alturaMinima={152} valor={formatearImporte(crearImporte(datos.saldoCentavos, datos.billetera.moneda))} icono={<IconoCatalogo identificador={datos.billetera.icono} />} tono={datos.saldoCentavos < 0 ? 'negativo' : 'positivo'} detalle={`Última conciliación: ${datos.billetera.conciliadoEn ? new Date(datos.billetera.conciliadoEn).toLocaleString('es-AR') : 'Sin conciliaciones'} · ${datos.billetera.activo ? 'Activa' : 'Inactiva'}`} />
-      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', '@media (min-width:360px)': { gridTemplateColumns: '1fr 1fr' }, gap: 1.5 }}><Button component="a" href={`#/transferencias?origen=${id}`} variant="contained" disabled={!datos.billetera.activo}>Transferir</Button><Button component="a" href={`#/conciliacion?id=${id}`} variant="outlined" disabled={!datos.billetera.activo}>Conciliar</Button></Box>
+      <TarjetaResumen titulo={`${datos.billetera.nombre} · Saldo actual`} principal suave alturaMinima={152} valor={formatearImporte(crearImporte(datos.saldoCentavos, datos.billetera.moneda))} icono={<IconoCatalogo identificador={datos.billetera.icono} color={datos.billetera.color} contenedor />} tono={datos.saldoCentavos < 0 ? 'negativo' : 'positivo'} detalle={`Última conciliación: ${datos.billetera.conciliadoEn ? new Date(datos.billetera.conciliadoEn).toLocaleString('es-AR') : 'Sin conciliaciones'} · ${datos.billetera.activo ? 'Activa' : 'Inactiva'}`} />
+      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', '@media (min-width:360px)': { gridTemplateColumns: '1fr 1fr' }, gap: 1.5 }}><Button startIcon={<SwapHoriz />} component="a" href={`#/transferencias?origen=${id}`} variant="contained" disabled={!datos.billetera.activo}>Transferir</Button><Button startIcon={<FactCheck />} component="a" href={`#/conciliacion?id=${id}`} variant="outlined" disabled={!datos.billetera.activo}>Conciliar</Button></Box>
       <Button onClick={actualizar}>Actualizar saldo y movimientos</Button>
+      {/* Los filtros pertenecen al historial; el saldo superior conserva su consulta independiente. */}
+      <Paper variant="outlined" sx={{ p: 2 }}><Stack spacing={1.5}>
       <Typography variant="h6">Últimos movimientos</Typography>
       <Typography variant="body2" color="text.secondary">El período filtra los movimientos; el saldo mostrado sigue siendo el actual.</Typography>
       <ToggleButtonGroup exclusive value={periodoRapido} onChange={seleccionarPeriodo} aria-label="Período de movimientos" sx={{ minHeight: 44, '& .MuiToggleButton-root': { flex: 1, px: 1, minWidth: 0 } }}>{['Hoy', 'Semana', 'Mes', 'Todos'].map(/** Expone cada rango con estado seleccionado accesible. */ function opcion(valor) { return <ToggleButton key={valor} value={valor}>{valor}</ToggleButton>; })}</ToggleButtonGroup>
       <details><summary>Período personalizado</summary><Stack spacing={1} sx={{ pt: 2 }}><CampoTextoCatalogo etiqueta="Desde" valor={desde} alCambiar={establecerDesde} tipo="date" /><CampoTextoCatalogo etiqueta="Hasta" valor={hasta} alCambiar={establecerHasta} tipo="date" /><Stack direction="row" spacing={1}><Button onClick={aplicar}>Aplicar</Button><Button onClick={limpiar}>Limpiar</Button></Stack></Stack></details>
-      <Paper variant="outlined"><ListaMovimiento elementos={datos.movimientos.elementos.map(presentar)} etiqueta={`Movimientos de ${datos.billetera.nombre}`} /></Paper>
+      <ListaMovimiento elementos={datos.movimientos.elementos.map(presentar)} etiqueta={`Movimientos de ${datos.billetera.nombre}`} />
+      </Stack></Paper>
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}><Button onClick={anterior} disabled={pagina === 0}>Anterior</Button><Typography>Página {pagina + 1} · {datos.movimientos.total}</Typography><Button onClick={siguiente} disabled={(pagina + 1) * 20 >= datos.movimientos.total}>Siguiente</Button></Stack>
     </>}
   </Stack>;

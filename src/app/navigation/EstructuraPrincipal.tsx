@@ -1,3 +1,4 @@
+import { IconoCatalogo } from '../../shared/components/IconoCatalogo';
 import { useState, type PropsWithChildren } from 'react';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import { ContextoCabecera, type CabeceraContextual } from './ContextoCabecera';
@@ -84,6 +85,7 @@ export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstru
           {/* En móvil el retorno contextual sustituye la marca, sin añadir otra barra fija. */}
           {cabecera && <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 1, minWidth: 0, flex: 1 }}>
             <IconButton {...(cabecera.href ? { component: 'a', href: cabecera.href } : { onClick: cabecera.alVolver })} disabled={cabecera.deshabilitado} aria-label={cabecera.etiqueta}><ArrowBack /></IconButton>
+            {cabecera.icono && <IconoCatalogo identificador={cabecera.icono} color={cabecera.color ?? null} />}
             <Typography component="h1" variant="h6" sx={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{cabecera.titulo}</Typography>
           </Box>}
           <Box sx={{ display: cabecera ? { xs: 'none', md: 'flex' } : 'flex', alignItems: 'center', gap: 1, flex: 1 }}>
