@@ -11,6 +11,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
+import { tokensVisuales } from '../../../app/theme/tokens';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import { listarCatalogo } from '../../../app/data/datosCargaRapida';
@@ -28,6 +29,7 @@ export interface PropiedadesEditorCatalogo<Entidad extends EntidadCatalogo> {
   campos: (entidad: Entidad, actualizar: (cambios: Partial<Entidad>) => void) => ReactNode;
   detalle?: (entidad: Entidad) => ReactNode;
   etiquetaCrear?: string;
+  masculino?: boolean;
   alturaTarjeta?: number;
   tamanoIcono?: number;
   textoBusqueda?: (entidad: Entidad) => string;
@@ -36,7 +38,7 @@ export interface PropiedadesEditorCatalogo<Entidad extends EntidadCatalogo> {
 }
 
 /** Presenta un ABM paginado con errores visibles y controles deshabilitados durante escrituras. */
-export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, servicio, crearNuevo, campos, detalle, guardarPersonalizado, accionAdicional, etiquetaCrear, alturaTarjeta, tamanoIcono = 48, textoBusqueda }: PropiedadesEditorCatalogo<Entidad>) {
+export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, servicio, crearNuevo, campos, detalle, guardarPersonalizado, accionAdicional, etiquetaCrear, masculino = false, alturaTarjeta, tamanoIcono = 48, textoBusqueda }: PropiedadesEditorCatalogo<Entidad>) {
   const [elementos, establecerElementos] = useState<readonly Entidad[]>([]);
   const [total, establecerTotal] = useState(0);
   const [pagina, establecerPagina] = useState(0);
@@ -61,7 +63,7 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
     let vigente = true;
     establecerCargando(true); establecerError('');
     /** Actualiza el listado solo si corresponde a la página vigente. */
-    function completar(resultado: { elementos: readonly Entidad[]; total: number }) { if (vigente) { establecerElementos(resultado.elementos); establecerTotal(resultado.total); establecerCargando(false); } }
+    function completar(resultado: { elementos: readonly Entidad[]; total: number }) { if (vigente) { establecerElementos(resultado.elementos); establecerTotal(resultado.total); establecerCargando(false); establecerPagina(/** Corrige una página que quedó fuera de rango al cambiar un catálogo. */ function acotar(actual) { return Math.min(actual, Math.max(0, Math.ceil(resultado.total / 20) - 1)); }); } }
     /** Presenta un error de lectura con posibilidad de reintentar. */
     function fallar(causa: unknown) { if (vigente) { establecerError(mensajeError(causa)); establecerCargando(false); } }
     /** Carga únicamente catálogos pequeños cuando hay búsqueda; conserva las páginas de otros listados. */
@@ -113,10 +115,10 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
     }
     return <Card key={entidad.id} sx={{ p: 0 }}><CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 }, minHeight: alturaTarjeta ?? 88 }}>
       <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', minWidth: 0 }}>
-        <Box sx={{ width: tamanoIcono, height: tamanoIcono, flexShrink: 0, display: 'grid', placeItems: 'center', bgcolor: 'action.hover', borderRadius: 1.5 }}><IconoCatalogo identificador={entidad.icono} /></Box>
+        <Box sx={{ width: tamanoIcono, height: tamanoIcono, flexShrink: 0, display: 'grid', placeItems: 'center', bgcolor: 'action.hover', borderRadius: `${tokensVisuales.radioInput}px` }}><IconoCatalogo identificador={entidad.icono} /></Box>
         <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}><Typography variant="subtitle1" sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>{entidad.nombre}</Typography>
           {detalle && <Box sx={{ color: 'text.secondary', fontSize: 14 }}>{detalle(entidad)}</Box>}
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}><Chip size="small" label={entidad.activo ? 'Activa' : 'Inactiva'} variant="outlined" />
+          <Stack direction="row" useFlexGap spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}><Chip size="small" label={entidad.activo ? masculino ? 'Activo' : 'Activa' : masculino ? 'Inactivo' : 'Inactiva'} variant="outlined" />
           {entidad.color && <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}><Box component="span" sx={{ width: 12, height: 12, bgcolor: entidad.color, borderRadius: '50%', border: '1px solid', borderColor: 'divider' }} />Color {entidad.color}</Typography>}</Stack>
         </Stack>
         <Switch checked={entidad.activo} onChange={cambiarActivo} disabled={pendiente} slotProps={{ input: { 'aria-label': `${entidad.activo ? 'Desactivar' : 'Activar'} ${entidad.nombre}` } }} />
@@ -129,7 +131,7 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
     {textoBusqueda && <CampoTextoCatalogo etiqueta={`Buscar ${singular}`} valor={busqueda} alCambiar={buscar} />}
     {error && <Alert severity="error" action={<Button onClick={recargar}>Reintentar</Button>}>{error}</Alert>}
     {cargando ? <CircularProgress aria-label="Cargando catálogo" /> : visibles.length ? visibles.map(mostrarEntidad) : !error && <EstadoVacio titulo={busqueda ? "Sin coincidencias" : "Sin registros"} descripcion={busqueda ? "Probá con otro nombre o tipo." : "Creá el primer registro de este catálogo."} />}
-    <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
+    <Stack direction="row" useFlexGap spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
       <Button onClick={anterior} disabled={pagina === 0 || cargando || pendiente}>Anterior</Button>
       <Typography variant="body2">Página {pagina + 1} · {totalVisible} registros</Typography>
       <Button onClick={siguiente} disabled={(pagina + 1) * 20 >= totalVisible || cargando || pendiente}>Siguiente</Button>

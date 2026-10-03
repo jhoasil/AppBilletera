@@ -55,16 +55,16 @@ export function PaginaInicio() {
         </Box>
       </Stack>; })}
       <Typography variant="h6">Mi dinero</Typography>
-      {billeteras.elementos.slice(0, 3).map(/** Presenta un resumen, billetera o movimiento ya preparado, sin agregar importes financieros. */ function presentar({ billetera, saldoCentavos }) { return <Button key={billetera.id} component="a" href={`#/billetera?id=${billetera.id}`} sx={{ justifyContent: 'space-between', gap: 1, minHeight: 64, p: 2, bgcolor: 'background.paper' }}><IconoCatalogo identificador={billetera.icono} /><span>{billetera.nombre}</span><span>{importe(saldoCentavos, billetera.moneda)}</span></Button>; })}
+      {billeteras.elementos.slice(0, 3).map(/** Presenta un resumen, billetera o movimiento ya preparado, sin agregar importes financieros. */ function presentar({ billetera, saldoCentavos }) { return <Button key={billetera.id} component="a" href={`#/billetera?id=${billetera.id}`} sx={{ justifyContent: 'space-between', gap: 1, minHeight: 64, p: 2, bgcolor: 'background.paper' }}><IconoCatalogo identificador={billetera.icono} /><Box component="span" sx={{ flex: 1, minWidth: 0, textAlign: 'left', overflowWrap: 'anywhere' }}>{billetera.nombre}</Box><Box component="span" sx={{ overflowWrap: 'anywhere', maxWidth: '45%', fontVariantNumeric: 'tabular-nums' }}>{importe(saldoCentavos, billetera.moneda)}</Box></Button>; })}
       {!billeteras.total && <Typography color="text.secondary">Creá tu primera billetera desde Ajustes.</Typography>}
-      <Stack direction="row" spacing={1}><Button component="a" href="#/transferencias" variant="contained">Transferir</Button><Button component="a" href="#/billeteras">Ver todas</Button></Stack>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}><Button component="a" href="#/transferencias" variant="contained">Transferir</Button><Button component="a" href="#/billeteras">Ver todas</Button></Stack>
       <Typography variant="h6">Últimos movimientos</Typography>
       {resumen.movimientos.map(/** Muestra signo, tipo, fecha e importe con la moneda histórica de la billetera. */ function presentar(movimiento) {
         const billetera = catalogoBilleteras.find(/** Resuelve solamente metadatos para formatear el movimiento. */ function identificar(registro) { return registro.id === movimiento.billeteraId; });
         const visual = presentacionMovimiento(movimiento.tipo);
         return <Paper key={movimiento.id} variant="outlined"><Button component="a" href={`#/billetera?id=${movimiento.billeteraId}`} color="inherit" sx={{ width: '100%', minHeight: 72, p: 1.5, gap: 1.5, justifyContent: 'flex-start' }}>
           <Box sx={{ display: 'flex', color: visual.color }}>{visual.icono}</Box><Box sx={{ flex: 1, minWidth: 0, textAlign: 'left' }}><Typography sx={{ overflowWrap: 'anywhere' }}>{visual.nombre} · {movimiento.descripcion || billetera?.nombre || 'Ver billetera'}</Typography><Typography variant="body2" color="text.secondary">{new Date(movimiento.fecha).toLocaleString('es-AR')}</Typography></Box>
-          <Typography sx={{ fontWeight: 700, maxWidth: '40%', overflowWrap: 'anywhere', color: visual.color }}>{billetera ? `${movimiento.importeCentavos > 0 ? '+' : ''}${importe(movimiento.importeCentavos, billetera.moneda)}` : 'Ver importe'}</Typography>
+          <Typography sx={{ fontSize: 20, fontWeight: 700, fontVariantNumeric: 'tabular-nums', maxWidth: '40%', overflowWrap: 'anywhere', color: visual.color }}>{billetera ? `${movimiento.importeCentavos > 0 ? '+' : ''}${importe(movimiento.importeCentavos, billetera.moneda)}` : 'Ver importe'}</Typography>
         </Button></Paper>;
       })}
       {!resumen.movimientos.length && <Typography color="text.secondary">Todavía no hay movimientos de billetera.</Typography>}

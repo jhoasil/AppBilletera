@@ -18,7 +18,7 @@ function crearBilletera(): Billetera {
 }
 
 /** Resume la ubicación y moneda del dinero para consultar el catálogo. */
-function detalle(billetera: Billetera) { return `${billetera.tipo} · ${billetera.moneda} · ${billetera.activo ? 'Activa' : 'Inactiva'}`; }
+function detalle(billetera: Billetera) { return `${billetera.tipo} · ${billetera.moneda}`; }
 
 /** Busca nombre, tipo y moneda exclusivamente en metadatos de catálogo. */
 function textoBusqueda(billetera: Billetera) { return `${billetera.nombre} ${billetera.tipo} ${billetera.moneda}`; }

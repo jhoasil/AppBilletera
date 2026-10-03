@@ -76,7 +76,7 @@ export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstru
 
   return (
     <Box sx={{ minHeight: '100dvh' }}>
-      <AppBar position="fixed" sx={{ zIndex: tema.zIndex.drawer + 1, borderBottom: 1, borderColor: 'divider', pt: 'env(safe-area-inset-top)' }}>
+      <AppBar position="fixed" sx={{ zIndex: tema.zIndex.drawer + 1, borderBottom: 1, borderColor: 'divider', pt: 'env(safe-area-inset-top)', pl: 'env(safe-area-inset-left)', pr: 'env(safe-area-inset-right)' }}>
         <Toolbar sx={{ gap: 1 }}>
           <Typography
             component="a" href="#/inicio" variant="h6"
@@ -112,7 +112,7 @@ export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstru
         <Toolbar />
         <Container
           component="main" id="contenido-principal" tabIndex={-1} maxWidth="lg"
-          sx={{ minWidth: 0, pt: { xs: 'calc(24px + env(safe-area-inset-top))', md: 'calc(32px + env(safe-area-inset-top))' }, pb: { xs: 'calc(96px + env(safe-area-inset-bottom))', md: 4 }, pl: { xs: 'max(16px, env(safe-area-inset-left))', sm: 3 }, pr: { xs: 'max(16px, env(safe-area-inset-right))', sm: 3 } }}
+          sx={{ minWidth: 0, pt: { xs: 'calc(24px + env(safe-area-inset-top))', md: 'calc(32px + env(safe-area-inset-top))' }, pb: { xs: 'calc(96px + env(safe-area-inset-bottom))', md: 'max(32px, env(safe-area-inset-bottom))' }, pl: { xs: 'max(16px, env(safe-area-inset-left))', sm: 'max(24px, env(safe-area-inset-left))' }, pr: { xs: 'max(16px, env(safe-area-inset-right))', sm: 'max(24px, env(safe-area-inset-right))' } }}
         >
           {children}
         </Container>

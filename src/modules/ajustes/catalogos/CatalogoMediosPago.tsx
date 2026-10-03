@@ -61,7 +61,8 @@ export function CatalogoMediosPago() {
     /** Alterna la visibilidad de carga rápida sin cambiar su actividad. */
     function rapidez() { actualizar({ mostrarEnCargaRapida: !medio.mostrarEnCargaRapida }); }
     const opciones = billeteras.filter(/** Ofrece solamente destinos activos para preferencias nuevas. */ function activa(billetera) { return billetera.activo; }).map(opcion);
-    if (medio.billeteraPredeterminadaId && !opciones.some(esDestino)) opciones.push({ id: medio.billeteraPredeterminadaId, nombre: billeteras.find(/** Conserva el nombre de un destino inactivo seleccionado. */ function elegida(billetera) { return billetera.id === medio.billeteraPredeterminadaId; })?.nombre ? `${billeteras.find(esDestino)?.nombre} (inactiva)` : 'Billetera no disponible' });
+    const seleccionada = billeteras.find(esDestino);
+    if (medio.billeteraPredeterminadaId && !opciones.some(esDestino)) opciones.push({ id: medio.billeteraPredeterminadaId, nombre: seleccionada ? `${seleccionada.nombre} (inactiva)` : 'Billetera no disponible' });
     /** Identifica una opción ya seleccionada para conservar referencias inactivas al editar. */
     function esDestino(candidata: { id: string }) { return candidata.id === medio.billeteraPredeterminadaId; }
     return <><SelectorIcono valor={medio.icono ?? 'payments'} alCambiar={icono} />
@@ -71,5 +72,5 @@ export function CatalogoMediosPago() {
       <Alert severity="info">La billetera predeterminada solo sugiere el destino de nuevas operaciones. No cambia registros históricos.</Alert>
       <FormControlLabel label="Mostrar en carga rápida" control={<Switch checked={medio.mostrarEnCargaRapida} onChange={rapidez} />} /></>;
   }
-  return <>{error && <Alert severity="error">{error}</Alert>}<EditorCatalogo singular="medio de pago" etiquetaCrear="Nuevo medio de pago" alturaTarjeta={96} tamanoIcono={48} textoBusqueda={textoBusqueda} servicio={servicioMedios} crearNuevo={crearMedio} campos={campos} detalle={detalle} /></>;
+  return <>{error && <Alert severity="error">{error}</Alert>}<EditorCatalogo singular="medio de pago" etiquetaCrear="Nuevo medio de pago" masculino alturaTarjeta={96} tamanoIcono={48} textoBusqueda={textoBusqueda} servicio={servicioMedios} crearNuevo={crearMedio} campos={campos} detalle={detalle} /></>;
 }
