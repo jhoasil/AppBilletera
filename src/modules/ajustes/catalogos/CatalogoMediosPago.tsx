@@ -1,10 +1,16 @@
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Chip from '@mui/material/Chip';
+import { SelectorIcono } from '../../../shared/components/SelectorIcono';
+import { SelectorColor } from '../../../shared/components/SelectorColor';
+import { listarCatalogo } from '../../../app/data/datosCargaRapida';
 import { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import type { MedioPago } from '../../../core/entities/MedioPago';
 import type { Billetera } from '../../../core/entities/Billetera';
-import { listarBilleterasActivas, servicioMedios } from '../../../app/data/serviciosCatalogos';
+import { servicioBilleteras, servicioMedios } from '../../../app/data/serviciosCatalogos';
 import { SelectorCatalogo } from '../../../shared/components/SelectorCatalogo';
 import { CampoTextoCatalogo } from '../../../shared/components/CampoTextoCatalogo';
 import { EditorCatalogo } from './EditorCatalogo';
@@ -18,14 +24,14 @@ function crearMedio(): MedioPago {
 export function CatalogoMediosPago() {
   const [billeteras, establecerBilleteras] = useState<readonly Billetera[]>([]);
   const [error, establecerError] = useState('');
-  /** Consulta destinos activos al abrir el catálogo. */
+  /** Resuelve nombres de destinos activos e inactivos conservando las preferencias existentes. */
   function cargar() {
     let vigente = true;
     /** Entrega destinos disponibles si la pantalla permanece abierta. */
     function completar(resultado: readonly Billetera[]) { if (vigente) establecerBilleteras(resultado); }
     /** Comunica fallos de lectura en vez de ocultar destinos. */
     function fallar(causa: unknown) { if (vigente) establecerError(causa instanceof Error ? causa.message : 'No se pudieron cargar las billeteras.'); }
-    void listarBilleterasActivas().then(completar, fallar);
+    void listarCatalogo(servicioBilleteras).then(completar, fallar);
     /** Ignora actualizaciones visuales después de salir del catálogo. */
     function cancelar() { vigente = false; }
     return cancelar;
@@ -34,7 +40,14 @@ export function CatalogoMediosPago() {
   /** Proporciona opciones sin exponer entidades de persistencia al selector. */
   function opcion(billetera: Billetera) { return { id: billetera.id, nombre: billetera.nombre }; }
   /** Resume preferencias del medio sin usar nombres como reglas. */
-  function detalle(medio: MedioPago) { return `${medio.activo ? 'Activo' : 'Inactivo'} · ${medio.mostrarEnCargaRapida ? 'En carga rápida' : 'Fuera de carga rápida'} · Orden ${medio.orden}`; }
+  function detalle(medio: MedioPago) {
+    /** Resuelve exclusivamente la preferencia del medio, sin reconstruir billeteras históricas. */
+    function destino(billetera: Billetera) { return billetera.id === medio.billeteraPredeterminadaId; }
+    const billetera = billeteras.find(destino);
+    return <Stack spacing={0.5}><Typography variant="body2">Billetera predeterminada: {billetera ? `${billetera.nombre}${billetera.activo ? '' : ' (inactiva)'}` : medio.billeteraPredeterminadaId ? 'No disponible' : 'Sin sugerencia'}</Typography>{medio.mostrarEnCargaRapida && <Chip label="Carga rápida" color="primary" variant="outlined" size="small" sx={{ alignSelf: 'flex-start' }} />}<Typography variant="caption">Orden {medio.orden}</Typography></Stack>;
+  }
+  /** Busca el nombre visible del medio en el catálogo completo. */
+  function textoBusqueda(medio: MedioPago) { return medio.nombre; }
   /** Presenta los campos particulares del medio, controlados por el borrador. */
   function campos(medio: MedioPago, actualizar: (cambios: Partial<MedioPago>) => void) {
     /** Actualiza el identificador visual del medio. */
@@ -47,15 +60,16 @@ export function CatalogoMediosPago() {
     function destino(valor: string) { actualizar({ billeteraPredeterminadaId: valor || null }); }
     /** Alterna la visibilidad de carga rápida sin cambiar su actividad. */
     function rapidez() { actualizar({ mostrarEnCargaRapida: !medio.mostrarEnCargaRapida }); }
-    const opciones = billeteras.map(opcion);
-    if (medio.billeteraPredeterminadaId && !opciones.some(esDestino)) opciones.push({ id: medio.billeteraPredeterminadaId, nombre: 'Billetera actual (inactiva)' });
+    const opciones = billeteras.filter(/** Ofrece solamente destinos activos para preferencias nuevas. */ function activa(billetera) { return billetera.activo; }).map(opcion);
+    if (medio.billeteraPredeterminadaId && !opciones.some(esDestino)) opciones.push({ id: medio.billeteraPredeterminadaId, nombre: billeteras.find(/** Conserva el nombre de un destino inactivo seleccionado. */ function elegida(billetera) { return billetera.id === medio.billeteraPredeterminadaId; })?.nombre ? `${billeteras.find(esDestino)?.nombre} (inactiva)` : 'Billetera no disponible' });
     /** Identifica una opción ya seleccionada para conservar referencias inactivas al editar. */
     function esDestino(candidata: { id: string }) { return candidata.id === medio.billeteraPredeterminadaId; }
-    return <><CampoTextoCatalogo etiqueta="Identificador del icono" valor={medio.icono ?? ''} alCambiar={icono} />
-      <CampoTextoCatalogo etiqueta="Color hexadecimal (opcional)" valor={medio.color ?? ''} alCambiar={color} />
+    return <><SelectorIcono valor={medio.icono ?? 'payments'} alCambiar={icono} />
+      <SelectorColor valor={medio.color} alCambiar={color} />
       <CampoTextoCatalogo etiqueta="Orden" valor={String(medio.orden)} alCambiar={orden} tipo="number" obligatorio />
       <SelectorCatalogo etiqueta="Billetera predeterminada (opcional)" valor={medio.billeteraPredeterminadaId ?? ''} opciones={opciones} alCambiar={destino} />
+      <Alert severity="info">La billetera predeterminada solo sugiere el destino de nuevas operaciones. No cambia registros históricos.</Alert>
       <FormControlLabel label="Mostrar en carga rápida" control={<Switch checked={medio.mostrarEnCargaRapida} onChange={rapidez} />} /></>;
   }
-  return <>{error && <Alert severity="error">{error}</Alert>}<EditorCatalogo singular="medio de pago" servicio={servicioMedios} crearNuevo={crearMedio} campos={campos} detalle={detalle} /></>;
+  return <>{error && <Alert severity="error">{error}</Alert>}<EditorCatalogo singular="medio de pago" etiquetaCrear="Nuevo medio de pago" alturaTarjeta={96} tamanoIcono={48} textoBusqueda={textoBusqueda} servicio={servicioMedios} crearNuevo={crearMedio} campos={campos} detalle={detalle} /></>;
 }
