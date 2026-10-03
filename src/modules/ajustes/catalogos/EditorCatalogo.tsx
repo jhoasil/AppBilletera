@@ -122,7 +122,7 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
           {detalle && <Box sx={{ color: 'text.secondary', fontSize: 14 }}>{detalle(entidad)}</Box>}
           <Chip size="small" sx={{ alignSelf: 'flex-start' }} label={entidad.activo ? 'Disponible' : 'No disponible'} color={entidad.activo ? 'success' : 'default'} variant="outlined" />
         </Stack>
-        <Switch checked={entidad.activo} onChange={cambiarActivo} disabled={pendiente} slotProps={{ input: { 'aria-label': `${entidad.activo ? 'Desactivar' : 'Activar'} ${entidad.nombre}` } }} />
+        <Stack sx={{ alignItems: 'center', flexShrink: 0 }}><Typography variant="caption">Disponible</Typography><Switch checked={entidad.activo} onChange={cambiarActivo} disabled={pendiente} slotProps={{ input: { 'aria-label': `${entidad.activo ? 'Desactivar' : 'Activar'} ${entidad.nombre}` } }} /></Stack>
         <IconButton onClick={editar} disabled={pendiente} aria-label={`Consultar o editar ${entidad.nombre}`}><ChevronRight /></IconButton>
       </Stack>
       {accionAdicional && <Box sx={{ mt: 1 }}>{accionAdicional(entidad, pendiente)}</Box>}

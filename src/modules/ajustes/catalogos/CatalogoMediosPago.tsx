@@ -44,7 +44,8 @@ export function CatalogoMediosPago() {
     /** Resuelve exclusivamente la preferencia del medio, sin reconstruir billeteras históricas. */
     function destino(billetera: Billetera) { return billetera.id === medio.billeteraPredeterminadaId; }
     const billetera = billeteras.find(destino);
-    return <Stack spacing={0.5}><Typography variant="body2">Billetera predeterminada: {billetera ? `${billetera.nombre}${billetera.activo ? '' : ' (inactiva)'}` : medio.billeteraPredeterminadaId ? 'No disponible' : 'Sin sugerencia'}</Typography>{medio.mostrarEnCargaRapida && <Chip label="Carga rápida" color="primary" variant="outlined" size="small" sx={{ alignSelf: 'flex-start' }} />}<Typography variant="caption">Orden {medio.orden}</Typography></Stack>;
+    // El orden se edita en el diálogo; esta fila distingue destino sugerido y carga rápida.
+    return <Stack spacing={0.5}><Typography variant="body2">Billetera predeterminada: {billetera ? `${billetera.nombre}${billetera.activo ? '' : ' (inactiva)'}` : medio.billeteraPredeterminadaId ? 'No disponible' : 'Sin sugerencia'}</Typography>{medio.mostrarEnCargaRapida && <Chip label="Carga rápida" color="success" variant="outlined" size="small" sx={{ alignSelf: 'flex-start' }} />}</Stack>;
   }
   /** Busca el nombre visible del medio en el catálogo completo. */
   function textoBusqueda(medio: MedioPago) { return medio.nombre; }
