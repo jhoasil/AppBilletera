@@ -1816,7 +1816,7 @@ Detenerse.
 
 ---
 
-# Regla de lectura para TAREAS 52–66
+# Regla de lectura para TAREAS 52–85
 
 Durante la fase visual, no leer completos `docs/GUIA_VISUAL.md` y `docs/PANTALLAS.md` en cada tarea salvo que sea realmente necesario.
 
@@ -3626,121 +3626,684 @@ Detenerse.
 
 ---
 
-# TAREA 67 — Generar tests
+# Nueva fase visual — TAREAS 67–85
 
-ESTA ES LA PRIMERA TAREA EN LA QUE SE PUEDEN CREAR TESTS.
+Estado: pendiente. Plan solicitado el 03/10/2026 a partir de las quince referencias visuales adjuntas. Las TAREAS 00–66 están completadas; no repetirlas ni reescribir su historia.
 
-Crear tests para:
+Esta edición solo define trabajo futuro. No autoriza ejecutar ninguna tarea, crear tests, hacer push, generar tags ni preparar una release.
 
-```text
-dinero
-UUID
-actividades
-categorías
-medios
-billeteras
-ingresos
-gastos
-transferencias
-ajustes
-conciliación
-saldos
-repositorios
-migraciones
-backup
-reportes
-modo oscuro
-```
+## Reglas del bloque
 
-Agregar componentes cuando aporte valor.
+- Comparar primero la implementación vigente; conservar lo que ya cumple.
+- Utilizar las imágenes como referencia de composición, jerarquía y densidad. Sus anotaciones no reemplazan AGENTS.md ni las reglas financieras.
+- Mantener Material UI, español, arquitectura compartida y funcionamiento offline.
+- Conservar UUID, billetera histórica obligatoria, moneda, atomicidad, idempotencia y datos existentes.
+- No copiar cifras, porcentajes, fechas, logotipos comerciales ni registros de ejemplo como datos reales.
+- No usar la billetera predeterminada para reinterpretar movimientos anteriores.
+- No agregar eliminación física, modificar saldos directamente ni duplicar formularios o ThemeProvider.
+- No crear ni ejecutar tests durante las TAREAS 67–85. Tipos, compilación, revisión manual y git diff --check siguen siendo comprobaciones permitidas.
+- Al ejecutar posteriormente cada tarea: rama task_AA/NNN_descripcion, revisión de diff, commit propio y detenerse. Merge según la autorización vigente del usuario; nunca push automático.
+- Referencia principal: 390 × 844 px. Revisar también 320, 430, 600, 768, 1024 y 1440 px, en Claro, Oscuro y Sistema. No reducir áreas táctiles para copiar una maqueta.
 
-Agregar E2E para flujos principales.
+## Referencias proporcionadas
 
-IMPORTANTE:
+Identificarlas por nombre de archivo; no depender de una ruta personal de Downloads ni copiar los PNG al repositorio sin necesidad.
 
-NO EJECUTARLOS.
+| Pantalla | Referencia |
+| --- | --- |
+| Sistema general | Sistema de diseño para app financiera.png |
+| Inicio claro / oscuro | image-gen-1(7).png / image-gen-8.png |
+| Nuevo ingreso / nuevo gasto | image-gen-9.png / image-gen-10.png |
+| Transferencia | image-gen-4(1).png |
+| Listado / detalle de billetera | image-gen-5(1).png / image-gen-3(1).png |
+| Conciliación / movimiento faltante | image-gen-6(1).png / image-gen-2(1).png |
+| Actividades / categorías / medios | image-gen-7.png / image-gen-1(8).png / image-gen-2(2).png |
+| Reportes / Apariencia | image-gen-3(2).png / image-gen-4(2).png |
+| Ajustes oscuro | Panel Ajustes de Sistema de diseño para app financiera.png |
 
-No ejecutar:
+## Límites de las referencias
 
-```text
-pnpm test
-vitest
-playwright
-npm test
-```
+Las láminas no son idénticas entre sí: cambian paletas, tamaños, flechas, navegación y algunos controles. La TAREA 67 debe fijar una interpretación común antes de programar. Mantener como base los tokens normativos actuales; no sustituirlos por cada hexadecimal de cada PNG.
 
-## Commit
+La navegación móvil conserva Inicio, Ingresos, Gastos y Reportes; Ajustes continúa accesible desde la cabecera. Ingreso usa entrada/positivo, gasto salida/negativo y ajuste semántica violeta, aunque una lámina muestre otras flechas o un ajuste rojo.
 
-```text
-test(proyecto): agrega cobertura inicial
-```
-
-Al finalizar escribir:
-
-```text
-Los tests fueron creados pero no ejecutados.
-```
-
-Detenerse.
+Color de acento configurable, descripción persistida de categorías, variaciones contra otro período, cantidad total de movimientos, reordenamiento por arrastre, preferencias nuevas y notificaciones son ampliaciones funcionales. No incorporarlas de forma implícita en esta fase. Si no están soportadas, omitirlas limpiamente y registrar la diferencia; no mostrar botones sin acción ni inventar valores. Podrán planificarse por separado cuando el usuario lo solicite.
 
 ---
 
-# TAREA 68 — Ejecutar tests
+# TAREA 67 — Consolidar la especificación de las nuevas referencias
 
-NO REALIZAR AUTOMÁTICAMENTE.
+## Objetivo y alcance
 
-Esperar instrucción explícita:
+Actualizar únicamente las secciones necesarias de GUIA_VISUAL.md y PANTALLAS.md con la composición elegida, sin modificar aún componentes.
 
-```text
-Ejecuta los tests.
-```
+## Cambios
 
-Cuando se autorice ejecutar progresivamente:
+- Contrastar el estado registrado en REVISION_VISUAL.md con las referencias y registrar qué ya cumple y qué realmente falta.
+- Precisar cabeceras principales y secundarias, superficies suaves, filas compactas, iconos coloreados y acciones primarias.
+- Resolver diferencias entre láminas y normativa: conservar paleta base, tamaños legibles, navegación de cuatro destinos y semántica financiera.
+- Documentar variantes responsive y las funciones de las imágenes que quedan fuera del bloque.
 
-1. unitarios;
-2. componentes;
-3. persistencia;
-4. E2E.
+## Criterio de finalización
 
-No ejecutar todo junto inicialmente.
+Documentación coherente, sin instrucciones contradictorias ni cambios en src. Las tareas siguientes deben tener una referencia verificable.
 
-Corregir fallos reales mediante commits separados.
+## Leer e inspeccionar
+
+AGENTS.md; GUIA_VISUAL.md y PANTALLAS.md, secciones relevantes; REVISION_VISUAL.md. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/067_consolidar_referencias_visuales` (2026 → `task_26/067_consolidar_referencias_visuales`).
+
+Commit: `docs(ui): define composicion visual de referencia`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
 
 ---
 
-# TAREA 69 — Preparar release
+# TAREA 68 — Ajustar componentes visuales compartidos
 
-NO REALIZAR AUTOMÁTICAMENTE.
+## Objetivo y alcance
 
-Cuando el usuario solicite preparar versión:
+Refinar src/app/theme y los componentes relacionados de src/shared/components según la especificación de la 67.
 
-mostrar primero:
+## Cambios
 
-```text
-Versión actual
-Versión propuesta
-Motivo
-```
+- Distinguir tarjeta de resumen, tarjeta de contenido y fila compacta; evitar usar un bloque azul saturado para todo dato principal.
+- Permitir iconos de catálogo con su color configurado, contenedor suave y tamaño apropiado. Mantener alternativa para iconos desconocidos y colores legados, con contraste suficiente.
+- Unificar buscador con lupa, chips suaves, separadores, botones con icono, campos y selección de período.
+- Conservar tokens centralizados y estados de foco, loading, error y disabled. Preparar variantes sin cambiar indiscriminadamente todas las pantallas.
 
-Después actualizar:
+## Criterio de finalización
 
-```text
-package.json
-CHANGELOG.md
-Android
-iOS
-```
+Componentes reutilizables, sin estilos financieros duplicados ni colores propios dispersos. Las variantes preservan accesibilidad y comportamiento.
 
-Commit:
+## Leer e inspeccionar
 
-```text
-chore(release): prepara version X.Y.Z
-```
+theme; IconoCatalogo; TarjetaResumen; CampoImporte; CampoTextoCatalogo; SelectorCatalogo; SelectorColor. Leer solo las secciones relacionadas.
 
-Tag:
+## Git y validación
 
-```text
-vX.Y.Z
-```
+Rama: `task_AA/068_ajustar_componentes_visuales` (2026 → `task_26/068_ajustar_componentes_visuales`).
 
-Solo después de autorización.
+Commit: `style(ui): refina componentes visuales compartidos`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 69 — Integrar cabeceras y navegación de pantallas
+
+## Objetivo y alcance
+
+Ajustar EstructuraPrincipal, CabeceraPagina y la navegación necesaria para eliminar la doble cabecera en móvil.
+
+## Cambios
+
+- En pantallas principales mostrar identidad AppBilletera con icono y acceso a Ajustes.
+- En formularios, detalles y subpantallas mostrar flecha de regreso y título en la misma barra; evitar otro título grande y un botón Volver en una fila adicional.
+- Definir retorno explícito al origen existente, sin depender solo de history.back ni perder el contexto de conciliación.
+- Conservar cuatro destinos inferiores y navegación lateral en escritorio. Evitar superposición de barras, teclado y áreas seguras; identificar el destino activo correctamente.
+
+## Criterio de finalización
+
+Una única cabecera útil por pantalla, retornos correctos y navegación consistente; las acciones secundarias no consumen espacio redundante.
+
+## Leer e inspeccionar
+
+EstructuraPrincipal; CabeceraPagina; navegación de aplicación; secciones generales de PANTALLAS.md. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/069_integrar_cabeceras_y_navegacion` (2026 → `task_26/069_integrar_cabeceras_y_navegacion`).
+
+Commit: `style(navegacion): integra cabeceras de pantalla`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 70 — Refinar Inicio en claro y oscuro
+
+## Objetivo y alcance
+
+Ajustar PaginaInicio y sus variantes de resumen, sin cambiar consultas ni cálculos.
+
+## Cambios
+
+- Mostrar fecha actual localizada debajo de la cabecera, evitando un segundo título Inicio cuando resulte redundante.
+- Usar una tarjeta de ganancia con superficie suave, cifra 32–36 px, icono de tendencia y franja interna de ingresos/gastos con signos y separador.
+- Usar dos tarjetas compactas de acceso rápido con iconos semánticos y botones Agregar ingreso/gasto claramente primarios; apilar en 320 px cuando haga falta.
+- Agrupar Mi dinero en una superficie; mostrar hasta tres billeteras en mini tarjetas si caben, con alternativa de filas y acceso Ver todas.
+- Agrupar cuatro o cinco movimientos en una lista con iconos, fechas y signos; conservar acceso real a detalles. No inventar una pantalla global de movimientos para un enlace decorativo.
+
+## Criterio de finalización
+
+Mejor jerarquía y densidad que el estado previo; mismo resultado financiero y ausencia de desborde en móvil.
+
+## Leer e inspeccionar
+
+PaginaInicio; TarjetaResumen; presentacionMovimiento; referencias Inicio claro y oscuro. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/070_refinar_inicio` (2026 → `task_26/070_refinar_inicio`).
+
+Commit: `style(inicio): aproxima composicion a las referencias`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 71 — Compactar Nuevo ingreso
+
+## Objetivo y alcance
+
+Refinar FormularioIngreso y FormularioOperacionRapida con la cabecera y componentes ya preparados.
+
+## Cambios
+
+- Agrupar actividad, fecha, descripción y observaciones en una tarjeta de formulario de lectura clara.
+- Presentar actividad y fecha con iconos; conservar actividad precargada únicamente si sigue disponible.
+- Convertir cada medio rápido en fila: icono/nombre e importe alineado a la derecha; mostrar la billetera real sugerida en una segunda línea editable y accesible.
+- Conservar importe vacío como cero visual, detalles positivos únicamente, selección de billetera real y acceso a medios adicionales.
+- Alinear total verde y acción Guardar ingreso con icono; evitar que un pie fijo o el teclado tape campos o mensajes.
+
+## Criterio de finalización
+
+Menos altura y desplazamiento innecesarios, sin ocultar la billetera real ni alterar validaciones o distribución monetaria.
+
+## Leer e inspeccionar
+
+FormularioIngreso; FormularioOperacionRapida; campos y selectores compartidos; referencia image-gen-9.png. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/071_compactar_nuevo_ingreso` (2026 → `task_26/071_compactar_nuevo_ingreso`).
+
+Commit: `style(ingresos): compacta formulario de ingreso`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 72 — Compactar Nuevo gasto
+
+## Objetivo y alcance
+
+Aplicar el patrón compartido de la 71 a FormularioGasto.
+
+## Cambios
+
+- Mantener categoría, actividad opcional, fecha, descripción obligatoria y observaciones en ese orden.
+- Mostrar selectores con iconos y conservar las preferencias de última categoría y actividad válida.
+- Alinear medios de pago e importes reutilizando exactamente la variante de filas rápidas del ingreso.
+- Mostrar total con semántica roja y Guardar gasto con icono; reducir texto introductorio repetido sin perder ayudas necesarias.
+
+## Criterio de finalización
+
+Ingreso y gasto mantienen posiciones, alturas y navegación coherentes; sus diferencias corresponden a campos y semántica.
+
+## Leer e inspeccionar
+
+FormularioGasto; FormularioOperacionRapida; referencia image-gen-10.png. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/072_compactar_nuevo_gasto` (2026 → `task_26/072_compactar_nuevo_gasto`).
+
+Commit: `style(gastos): compacta formulario de gasto`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 73 — Alinear listados de Ingresos y Gastos
+
+## Objetivo y alcance
+
+Ajustar PantallaOperaciones y la presentación de PaginaIngresos/PaginaGastos como continuación del mismo sistema.
+
+## Cambios
+
+- Conservar filtros y paginación en un bloque compacto, sin desplegar todos los controles por defecto si perjudica el móvil; permitir reconocer el período activo.
+- Usar filas de icono, actividad o categoría, descripción, fecha y monto firmado; preservar la resolución de catálogos históricos.
+- Concentrar edición y eliminación en una acción secundaria accesible, evitando una fila de botones permanente por registro.
+- Mantener confirmación explícita del borrado lógico, estados vacíos útiles y acceso directo a una nueva operación.
+
+## Criterio de finalización
+
+Listados compactos y legibles que conservan filtros, consulta, edición y borrado lógico existentes.
+
+## Leer e inspeccionar
+
+PantallaOperaciones; PaginaIngresos; PaginaGastos; guía general y patrón de movimientos. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/073_alinear_listados_operaciones` (2026 → `task_26/073_alinear_listados_operaciones`).
+
+Commit: `style(operaciones): alinea listados de ingresos y gastos`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 74 — Refinar Transferencia y su vista previa
+
+## Objetivo y alcance
+
+Ajustar PaginaTransferencia y SelectorBilletera a image-gen-4(1).png.
+
+## Cambios
+
+- Mostrar origen y destino como selectores de icono, nombre y saldo, conservando la moneda y compatibilidad de destinos.
+- Destacar el campo monto; mantener fecha y descripción en el formulario limitado a 600 px.
+- Mostrar dos filas de impacto: salida negativa del origen y entrada positiva del destino, con saldos esperados después de la operación cuando puedan prepararse en dominio/aplicación.
+- Reutilizar operaciones monetarias exactas del dominio para la vista previa; no implementar cálculos financieros en React ni guardar nuevas proyecciones de saldo.
+- Conservar aviso de que no modifica ingresos, gastos o ganancia y acción Transferir con icono de intercambio.
+
+## Criterio de finalización
+
+Vista previa comprensible y fiel a los saldos consultados; no introduce otro flujo de persistencia ni mezcla monedas.
+
+## Leer e inspeccionar
+
+PaginaTransferencia; SelectorBilletera; servicios monetarios existentes; referencia de transferencia. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/074_refinar_transferencia` (2026 → `task_26/074_refinar_transferencia`).
+
+Commit: `style(billeteras): refina transferencia e impacto`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 75 — Refinar el listado de Billeteras
+
+## Objetivo y alcance
+
+Ajustar PaginaBilleteras con la referencia de listado.
+
+## Cambios
+
+- Usar resumen Mi dinero sobre superficie suave, cifra destacada y moneda explícita, manteniendo totales separados por divisa.
+- Agrupar Transferir y el acceso existente a saldos/movimientos sin añadir rutas ficticias.
+- Usar filas de icono coloreado, nombre, saldo, última conciliación y chevron hacia detalle.
+- Retirar botones repetidos de transferencia por fila si el acceso global y el detalle ya resuelven la misma acción.
+- Omitir comparativas patrimoniales y cantidad de movimientos cuando el contrato actual no entregue esos datos.
+
+## Criterio de finalización
+
+Lista más compacta con acceso inequívoco a cada billetera; saldos actuales siguen proviniendo de persistencia.
+
+## Leer e inspeccionar
+
+PaginaBilleteras; contrato de consulta; referencia image-gen-5(1).png. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/075_refinar_listado_billeteras` (2026 → `task_26/075_refinar_listado_billeteras`).
+
+Commit: `style(billeteras): compacta listado patrimonial`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 76 — Refinar Detalle de billetera
+
+## Objetivo y alcance
+
+Ajustar PaginaDetalleBilletera y ListaMovimiento siguiendo image-gen-3(1).png.
+
+## Cambios
+
+- Mostrar nombre e icono en la cabecera contextual.
+- Usar tarjeta de saldo sobre superficie neutra/suave, cifra 32–36 px y última conciliación legible.
+- Agregar iconos a Transferir y Conciliar; dos columnas si caben y apilado en móvil pequeño.
+- Agrupar movimientos y filtros en una tarjeta; resaltar período seleccionado y mantener Todos y rango personalizado como alternativas accesibles.
+- Mostrar filas compactas con icono sobre superficie semántica, tipo, descripción, fecha e importe; el filtro y la paginación no cambian el saldo actual.
+
+## Criterio de finalización
+
+Saldo y movimientos tienen jerarquía diferenciada. Ajustes mantienen violeta y texto explícito, aunque la lámina utilice rojo.
+
+## Leer e inspeccionar
+
+PaginaDetalleBilletera; ListaMovimiento; presentacionMovimiento; referencia de detalle. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/076_refinar_detalle_billetera` (2026 → `task_26/076_refinar_detalle_billetera`).
+
+Commit: `style(billeteras): refina detalle y movimientos`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 77 — Refinar Conciliación
+
+## Objetivo y alcance
+
+Ajustar PaginaConciliacion al patrón de tarjetas y acciones de image-gen-6(1).png.
+
+## Cambios
+
+- Separar identificación de billetera, saldo calculado de solo lectura y saldo real editable, con iconos de cálculo y edición.
+- Destacar diferencia mediante signo, texto, icono y semántica positiva/negativa; conservar estado neutral al coincidir.
+- Alinear motivo y observaciones, sin convertir el motivo libre actual en un catálogo nuevo.
+- Mostrar las dos alternativas como tarjetas de acción con icono, título, explicación corta y acceso claro.
+- Conservar confirmación de coincidencia y la regla diferencia cero sin movimiento de ajuste; registrar una operación faltante sigue siendo un flujo independiente.
+
+## Criterio de finalización
+
+El usuario comprende la comparación y elige explícitamente entre una operación real y un ajuste; sin saldo editable ni ajuste automático.
+
+## Leer e inspeccionar
+
+PaginaConciliacion; calcularConciliacion; referencia de conciliación. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/077_refinar_conciliacion` (2026 → `task_26/077_refinar_conciliacion`).
+
+Commit: `style(billeteras): refina comparacion de conciliacion`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 78 — Refinar Movimiento faltante
+
+## Objetivo y alcance
+
+Ajustar PaginaMovimientoFaltante reutilizando las variantes normales de ingreso y gasto.
+
+## Cambios
+
+- Reducir el banner a contexto de billetera y diferencia, con texto claro y sin desplazar excesivamente el formulario.
+- Usar selector de tipo compacto con icono y etiquetas; conservar la elección del usuario y la sugerencia según diferencia.
+- Mantener categoría/actividad y la billetera real dentro del formulario normal. No crear un formulario reducido que omita el medio de pago.
+- Destacar saldo calculado, movimiento firmado y nuevo saldo esperado en una tarjeta de impacto.
+- Adaptar el texto de guardar al contexto, si corresponde, conservando el servicio normal y el retorno a conciliación con saldo real declarado.
+
+## Criterio de finalización
+
+La vista muestra contexto e impacto sin duplicar lógica financiera ni crear además un ajuste.
+
+## Leer e inspeccionar
+
+PaginaMovimientoFaltante; FormularioOperacionRapida; calcularImpactoMovimientoFaltante; referencia de movimiento faltante. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/078_refinar_movimiento_faltante` (2026 → `task_26/078_refinar_movimiento_faltante`).
+
+Commit: `style(billeteras): compacta movimiento faltante`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 79 — Compactar Actividades y su editor
+
+## Objetivo y alcance
+
+Ajustar CatalogoActividades y las variantes necesarias de EditorCatalogo.
+
+## Cambios
+
+- Buscador con lupa; filas de icono coloreado, nombre, tipo y chip de estado.
+- Usar chevron o menú contextual para editar; retirar el botón Editar y el hexadecimal como texto permanente de cada fila.
+- Distinguir estado de trabajo (activo/finalizado/archivado) y disponibilidad, sin chips contradictorios ni pérdida de acceso a inactivos.
+- Ubicar Nueva actividad en un área alcanzable y consistente, sin solapar navegación ni teclado.
+- Ordenar el editor y reutilizar selectores visuales de icono y color; conservar fechas y acciones existentes.
+
+## Criterio de finalización
+
+Lista compacta que conserva toda la administración y las identidades históricas; sin eliminación física.
+
+## Leer e inspeccionar
+
+CatalogoActividades; EditorCatalogo; referencia image-gen-7.png. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/079_compactar_actividades` (2026 → `task_26/079_compactar_actividades`).
+
+Commit: `style(actividades): refina listado y editor`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 80 — Compactar Categorías de gastos
+
+## Objetivo y alcance
+
+Ajustar CatalogoCategoriasGasto al mismo lenguaje de Actividades.
+
+## Cambios
+
+- Usar icono y color configurados, nombre, chip de disponibilidad y acceso contextual a edición.
+- Retirar textos repetidos como Sin descripción configurada si no aportan información; no inventar descripciones de los ejemplos.
+- Conservar búsqueda por nombre y acciones Crear, Editar, Activar y Desactivar.
+- Si una tarea funcional posterior agrega descripción, el diseño debe poder mostrarla como texto secundario; esta tarea no agrega campos ni migraciones.
+
+## Criterio de finalización
+
+Catálogo visualmente alineado con Actividades, sin modificar el modelo CategoriaGasto ni los gastos históricos.
+
+## Leer e inspeccionar
+
+CatalogoCategoriasGasto; EditorCatalogo; referencia image-gen-1(8).png. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/080_compactar_categorias` (2026 → `task_26/080_compactar_categorias`).
+
+Commit: `style(categorias): refina listado y editor`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 81 — Compactar Medios de pago
+
+## Objetivo y alcance
+
+Ajustar CatalogoMediosPago y su editor con image-gen-2(2).png.
+
+## Cambios
+
+- Mostrar icono coloreado, nombre y billetera predeterminada como texto o chip de destino; conservar el nombre de destinos inactivos.
+- Mostrar Carga rápida como chip semántico solo cuando corresponda.
+- Definir etiquetas inequívocas para disponibilidad y carga rápida: un switch Activo no debe aparentar que controla mostrarEnCargaRapida.
+- Concentrar edición, orden y configuración en el editor/menú; no agregar arrastre ni reutilizar un switch con dos significados.
+- Conservar aclaración de que la billetera predeterminada solo sugiere nuevas operaciones; el historial usa la billetera real del detalle.
+
+## Criterio de finalización
+
+La lista distingue preferencia, disponibilidad y carga rápida; no cambia reglas históricas ni comportamiento del guardado.
+
+## Leer e inspeccionar
+
+CatalogoMediosPago; EditorCatalogo; referencia de medios de pago. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/081_compactar_medios_pago` (2026 → `task_26/081_compactar_medios_pago`).
+
+Commit: `style(medios-pago): refina preferencias del catalogo`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 82 — Refinar Reportes y desgloses
+
+## Objetivo y alcance
+
+Ajustar PaginaReportes y ResumenPatrimonial con image-gen-3(2).png.
+
+## Cambios
+
+- Selector de período compacto y encabezado de rango localizado; mantener Personalizado accesible.
+- Indicadores con iconos semánticos y cifras legibles; tres columnas solo si el contenido real cabe, sin reducir texto ni áreas táctiles.
+- Separar desgloses por actividad, categoría y medio mediante pestañas o selector equivalente; cada fila muestra identidad, importe, porcentaje y barra.
+- Usar iconos reales de catálogos cuando disponibles; presentar claramente qué importe y denominador expresa cada porcentaje y mantener agrupación por moneda.
+- Mostrar patrimonio como lista de billeteras con acceso al detalle; transferencias y ajustes permanecen en un bloque separado.
+- No mostrar variaciones del período anterior, ranking arbitrario o porcentajes de ejemplo sin datos y definición funcional aprobada.
+
+## Criterio de finalización
+
+Resultado, desgloses y patrimonio se entienden sin una pantalla excesivamente larga. Cálculos y agregaciones permanecen fuera de React.
+
+## Leer e inspeccionar
+
+PaginaReportes; ResumenPatrimonial; porcentajeReporte; contratos vigentes; referencia de Reportes. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/082_refinar_reportes` (2026 → `task_26/082_refinar_reportes`).
+
+Commit: `style(reportes): refina resumen y desgloses`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 83 — Refinar Ajustes y catálogo de Billeteras
+
+## Objetivo y alcance
+
+Ajustar PaginaAjustes y CatalogoBilleteras siguiendo el panel Ajustes de la referencia general.
+
+## Cambios
+
+- Conservar grupos Configuración, Catálogos, Datos e Información con filas de icono, título, descripción y chevron.
+- Aplicar superficies diferenciadas y espaciado compacto en oscuro, sin copiar un fondo negro puro ni degradados arbitrarios.
+- Mostrar solo destinos funcionales; no agregar Preferencias o Notificaciones como accesos vacíos.
+- Alinear el catálogo de Billeteras con los demás: icono coloreado, nombre, tipo, moneda, disponibilidad y editor contextual.
+- Conservar saldo inicial como flujo trazable separado; no introducir edición directa del saldo en el catálogo.
+
+## Criterio de finalización
+
+Ajustes tiene grupos legibles y todos los accesos funcionan; el catálogo mantiene su alcance de configuración.
+
+## Leer e inspeccionar
+
+PaginaAjustes; CatalogoBilleteras; EditorCatalogo; panel Ajustes oscuro. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/083_refinar_ajustes` (2026 → `task_26/083_refinar_ajustes`).
+
+Commit: `style(ajustes): refina grupos y accesos`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 84 — Refinar Apariencia y vistas previas
+
+## Objetivo y alcance
+
+Ajustar SelectorModoTema con image-gen-4(2).png usando el proveedor existente.
+
+## Cambios
+
+- Agrupar Sistema, Claro y Oscuro en un bloque de opciones compacto; tres columnas en móvil si son legibles, con alternativa para 320 px.
+- Mantener icono, nombre, borde y check de selección; reducir explicaciones repetidas fuera de la opción.
+- Mejorar las dos miniaturas con una representación de Inicio: cabecera, tarjeta de resumen, acción y navegación, usando datos de demostración claramente visuales y sin acceder a datos financieros reales.
+- Conservar una sola preferencia de modo: no agregar un switch Usar ajuste del sistema que pueda contradecir la opción Sistema.
+- Omitir selector de acento, fuente, colores dinámicos y navegación configurable mientras no haya una tarea funcional autorizada para esas preferencias.
+
+## Criterio de finalización
+
+Apariencia es fiel al patrón visual y muestra ambas paletas sin duplicar ThemeProvider ni presentar controles ficticios.
+
+## Leer e inspeccionar
+
+SelectorModoTema; ProveedorTema; tema/tokens; referencia de Apariencia. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/084_refinar_apariencia` (2026 → `task_26/084_refinar_apariencia`).
+
+Commit: `style(tema): refina seleccion y vistas previas`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 85 — Revisar la nueva composición visual
+
+## Objetivo y alcance
+
+Revisar todas las pantallas modificadas y actualizar REVISION_VISUAL.md.
+
+## Cambios
+
+- Comparar cada pantalla con la interpretación normativa fijada en la 67; registrar diferencias deliberadas respecto de los PNG.
+- Revisar 320, 390, 430, 600, 768, 1024 y 1440 px en Claro, Oscuro y Sistema, distinguiendo observación manual de revisión conceptual.
+- Verificar jerarquía, densidad, colores de iconos, filas rápidas, retorno, estados vacíos/loading/error/disabled, foco, teclado, scroll y áreas seguras.
+- Confirmar coherencia entre ingreso/gasto y entre los cuatro catálogos; no ocultar la billetera real ni confundir resultado y patrimonio.
+- Corregir únicamente defectos visuales del bloque; no agregar funcionalidades ni datos de prueba para simular porcentajes o comparativas.
+
+## Criterio de finalización
+
+Documentación de lo efectivamente observado, límites explícitos y checks estáticos adecuados; no atribuir pruebas físicas o cobertura automática inexistentes.
+
+## Leer e inspeccionar
+
+GUIA_VISUAL.md; PANTALLAS.md; REVISION_VISUAL.md; componentes afectados. Leer solo las secciones relacionadas.
+
+## Git y validación
+
+Rama: `task_AA/085_revisar_composicion_visual` (2026 → `task_26/085_revisar_composicion_visual`).
+
+Commit: `style(ui): verifica composicion visual de pantallas`.
+
+Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar únicamente cuando el usuario lo autorice y detenerse al finalizar.
+
+---
+
+# TAREA 86 — Generar tests
+
+Primera tarea que permite crear tests, únicamente cuando sea autorizada. No ejecutarlos.
+
+Cubrir progresivamente dinero, UUID, catálogos, ingresos/gastos, billetera real por detalle, transferencias, ajustes, conciliación, saldos, repositorios, migraciones compatibles, respaldo, reportes y tema. Agregar componentes y E2E cuando aporten cobertura real.
+
+Rama: `task_AA/086_generar_tests`.
+Commit: `test(proyecto): agrega cobertura inicial`.
+
+Al finalizar informar: «Los tests fueron creados pero no ejecutados». Detenerse.
+
+---
+
+# TAREA 87 — Ejecutar tests
+
+No realizar automáticamente. Requiere instrucción explícita equivalente a «Ejecuta los tests».
+
+Ejecutar progresivamente: unitarios, componentes, persistencia y E2E. Detener la progresión ante fallos y corregir la causa real con commits separados; no desactivar cobertura válida.
+
+Rama: `task_AA/087_ejecutar_tests`. Informar resultados reales, comandos, límites y commits de corrección cuando correspondan. Detenerse.
+
+---
+
+# TAREA 88 — Preparar release
+
+No realizar automáticamente. Solo cuando el usuario solicite preparar una versión.
+
+Consultar VERSIONADO.md. Informar versión actual, propuesta y motivo antes de modificarla. Actualizar package.json, CHANGELOG.md y versiones nativas cuando corresponda.
+
+Rama: `task_AA/088_preparar_release`.
+Commit: `chore(release): prepara version X.Y.Z`.
+
+No crear tag ni hacer push sin autorización explícita. Detenerse.

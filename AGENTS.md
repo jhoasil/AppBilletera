@@ -2381,7 +2381,7 @@ Proceso:
 Durante las tareas visuales:
 
 ```text
-TAREAS 52–66
+TAREAS 52–85
 ```
 
 leer únicamente:
@@ -2451,7 +2451,7 @@ No convertir esta tarea en un refactor general.
 Las tareas:
 
 ```text
-52–66
+52–85
 ```
 
 actualizan la interfaz siguiendo:
@@ -2513,8 +2513,8 @@ TAREA 10
 TAREA 51
 → task_26/051_verificar_alineacion_modelo_financiero
 
-TAREA 67
-→ task_26/067_generar_tests
+TAREA 86
+→ task_26/086_generar_tests
 ```
 
 Antes de modificar archivos:
@@ -2695,7 +2695,7 @@ No crear tags automáticamente.
 La preparación de release corresponde actualmente a:
 
 ```text
-TAREA 69
+TAREA 88
 ```
 
 No realizarla automáticamente.
@@ -2724,7 +2724,7 @@ No crear tag ni hacer push sin autorización correspondiente.
 La primera tarea autorizada para crear tests es:
 
 ```text
-TAREA 67
+TAREA 86
 ```
 
 Antes de esa tarea:
@@ -2734,7 +2734,7 @@ NO crear tests
 NO ejecutar tests
 ```
 
-En la TAREA 67:
+En la TAREA 86:
 
 ```text
 SÍ crear tests
@@ -2744,7 +2744,7 @@ NO ejecutarlos
 La ejecución corresponde exclusivamente a:
 
 ```text
-TAREA 68
+TAREA 87
 ```
 
 y necesita autorización explícita.
@@ -2777,13 +2777,13 @@ Solo ejecutar tests cuando el usuario escriba explícitamente algo equivalente a
 Ejecuta los tests.
 ```
 
-y la ejecución esté dentro de la TAREA 68 o exista una autorización explícita que modifique el plan.
+y la ejecución esté dentro de la TAREA 87 o exista una autorización explícita que modifique el plan.
 
 ---
 
 # 94. Tests — orden de ejecución
 
-Cuando la TAREA 68 esté autorizada, ejecutar progresivamente:
+Cuando la TAREA 87 esté autorizada, ejecutar progresivamente:
 
 ```text
 1. unitarios
@@ -3054,7 +3054,7 @@ Hash:
 Tests: no ejecutados.
 ```
 
-Si los tests fueron ejecutados explícitamente en la TAREA 68, informar el resultado real en lugar de:
+Si los tests fueron ejecutados explícitamente en la TAREA 87, informar el resultado real en lugar de:
 
 ```text
 Tests: no ejecutados.
@@ -3071,24 +3071,23 @@ No ejecutar automáticamente la siguiente tarea.
 El estado vigente del proyecto es:
 
 ```text
-TAREAS 00–50
+TAREAS 00–66
 → completadas
 
-TAREA 51
-→ verificar alineación del modelo financiero
+TAREAS 67–85
+→ nueva composición visual según referencias; pendientes
 
-TAREAS 52–66
-→ actualización visual de pantallas
+TAREA 86
+→ generar tests sin ejecutarlos, cuando sea autorizada
 
-TAREA 67
-→ generar tests sin ejecutarlos
-
-TAREA 68
+TAREA 87
 → ejecutar tests solamente con autorización explícita
 
-TAREA 69
+TAREA 88
 → preparar release solamente cuando sea solicitado
 ```
+
+La planificación del 03/10/2026 reubica las antiguas TAREAS 67–69 de tests y release después del nuevo bloque visual. No autoriza ejecutarlas.
 
 El detalle de cada tarea se encuentra en:
 
