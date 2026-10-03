@@ -20,6 +20,9 @@ function crearBilletera(): Billetera {
 /** Resume la ubicación y moneda del dinero para consultar el catálogo. */
 function detalle(billetera: Billetera) { return `${billetera.tipo} · ${billetera.moneda} · ${billetera.activo ? 'Activa' : 'Inactiva'}`; }
 
+/** Busca nombre, tipo y moneda exclusivamente en metadatos de catálogo. */
+function textoBusqueda(billetera: Billetera) { return `${billetera.nombre} ${billetera.tipo} ${billetera.moneda}`; }
+
 /** Edita únicamente propiedades de billetera; los saldos provienen de movimientos. */
 function campos(billetera: Billetera, actualizar: (cambios: Partial<Billetera>) => void) {
   /** Actualiza la clasificación libre de la billetera. */
@@ -71,7 +74,7 @@ export function CatalogoBilleteras() {
     <Button component="a" href="#/transferencias" variant="outlined">Transferir entre billeteras</Button>
     <Button component="a" href="#/billeteras">Ver saldos de billeteras</Button>
     {confirmacion && <Alert severity="success">{confirmacion}</Alert>}
-    <EditorCatalogo singular="billetera" servicio={servicioBilleteras} crearNuevo={crear} campos={camposConSaldo} detalle={detalle} guardarPersonalizado={guardar} accionAdicional={accion} />
+    <EditorCatalogo singular="billetera" etiquetaCrear="Nueva billetera" alturaTarjeta={88} tamanoIcono={48} textoBusqueda={textoBusqueda} servicio={servicioBilleteras} crearNuevo={crear} campos={camposConSaldo} detalle={detalle} guardarPersonalizado={guardar} accionAdicional={accion} />
     <DialogoSaldoInicial billetera={billeteraSaldo} alCerrar={cerrar} alRegistrar={registrado} />
   </Stack>;
 }
