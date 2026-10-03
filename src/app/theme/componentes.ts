@@ -2,6 +2,7 @@ import type { Components, Theme } from '@mui/material/styles';
 
 /** Valores compartidos para superficies compactas y controles cómodos al tacto. */
 export const componentes: Components<Theme> = {
+  MuiCssBaseline: { styleOverrides: { summary: { cursor: 'pointer', minHeight: 44, display: 'list-item', paddingTop: 12, '&:focus-visible': { outline: '3px solid currentColor', outlineOffset: 2 } } } },
   MuiButtonBase: {
     styleOverrides: { root: { '&.Mui-focusVisible': { outline: '3px solid currentColor', outlineOffset: 3 } } },
   },

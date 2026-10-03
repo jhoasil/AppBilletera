@@ -62,7 +62,7 @@ export function PaginaTransferencia() {
   try { if (importe.trim() && seleccionada) total = formatearImporte(crearImporte(interpretarImporte(importe), seleccionada.moneda)); }
   catch (causa) { errorImporte = causa instanceof Error ? causa.message : 'Importe inválido.'; }
   return <Stack spacing={2} sx={{ maxWidth: 640 }}>
-    <CabeceraPagina titulo="Transferencia entre billeteras" acciones={<Button component="a" href="#/ajustes">Ajustes</Button>} />
+    <CabeceraPagina titulo="Transferencia entre billeteras" acciones={<Button component="a" href="#/billeteras">Volver a billeteras</Button>} />
     {error && <Alert severity="error" action={<Button onClick={reintentar}>Actualizar billeteras</Button>}>{error}</Alert>}{confirmacion && <Alert severity="success">{confirmacion}</Alert>}
     {!billeteras ? !error && <CircularProgress aria-label="Cargando billeteras" /> : <Stack component="form" onSubmit={guardar} spacing={2}>
       <Stack component="fieldset" disabled={pendiente} spacing={2} sx={{ border: 0, p: 0, m: 0, minWidth: 0 }}>
@@ -71,7 +71,7 @@ export function PaginaTransferencia() {
         <CampoImporte etiqueta={`Monto (${seleccionada?.moneda ?? 'seleccioná el origen'})`} valor={importe} alCambiar={establecerImporte} error={errorImporte} ayuda="Importe positivo, sin separadores de miles." obligatorio />
         {total && <Typography variant="h5">{total}</Typography>}
         <CampoTextoCatalogo etiqueta="Fecha" valor={fecha} alCambiar={establecerFecha} tipo="date" obligatorio />
-        <CampoTextoCatalogo etiqueta="Descripción (opcional)" valor={descripcion} alCambiar={establecerDescripcion} />
+        <details><summary>Descripción opcional</summary><Stack sx={{ pt: 1 }}><CampoTextoCatalogo etiqueta="Descripción (opcional)" valor={descripcion} alCambiar={establecerDescripcion} /></Stack></details>
         <Alert severity="info">Una transferencia mueve dinero entre tus billeteras y no modifica tus ingresos, gastos ni ganancia. Ambas deben tener la misma moneda.</Alert>
       </Stack><Button type="submit" variant="contained" loading={pendiente} disabled={!origen || !destino || Boolean(errorImporte) || !importe.trim()}>Transferir</Button>
     </Stack>}

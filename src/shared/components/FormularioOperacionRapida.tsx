@@ -104,8 +104,8 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
     function conservar(_actual: LineaFormulario, posicion: number) { return posicion !== indice; }
     return <Card key={`${linea.medioPagoId}-${indice}`} variant="outlined"><CardContent><Stack spacing={1}>
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}><IconoCatalogo identificador={medio?.icono ?? null} /><Typography variant="subtitle1">{medio?.nombre ?? 'Medio histórico'}</Typography><Button onClick={quitar} sx={{ ml: 'auto' }}>Quitar</Button></Stack>
-      <CampoImporte etiqueta={`Importe ${medio?.nombre ?? ''}`} valor={linea.importe} alCambiar={cambiarImporte} ayuda="Vacío equivale a 0. Usá coma o punto decimal, sin miles." />
-      <SelectorCatalogo etiqueta="Billetera" valor={linea.billeteraId} alCambiar={cambiarBilletera} opciones={datos?.billeteras.filter(billeteraDisponible) ?? []} ayuda="Sin billetera: la operación no modifica un saldo." />
+      <CampoImporte etiqueta={`Importe ${medio?.nombre ?? ''}`} valor={linea.importe} alCambiar={cambiarImporte} />
+      <details><summary>Destino: {datos?.billeteras.find(function identificar(billetera) { return billetera.id === linea.billeteraId; })?.nombre ?? 'Sin billetera'}</summary><Stack sx={{ pt: 1 }}><SelectorCatalogo etiqueta="Billetera" valor={linea.billeteraId} alCambiar={cambiarBilletera} opciones={datos?.billeteras.filter(billeteraDisponible) ?? []} ayuda="Sin billetera: la operación no modifica un saldo." /></Stack></details>
     </Stack></CardContent></Card>;
   }
   /** Agrega un medio activo que no esté presente, sin editar su catálogo. */
@@ -143,12 +143,12 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
       {tipo === 'gasto' && <SelectorCatalogo etiqueta="Categoría" valor={categoria} alCambiar={establecerCategoria} opciones={datos.categorias.filter(categoriaDisponible)} obligatorio />}
       <SelectorCatalogo etiqueta={tipo === 'ingreso' ? 'Actividad' : 'Actividad (opcional)'} valor={actividad} alCambiar={establecerActividad} opciones={datos.actividades.filter(actividadDisponible)} obligatorio={tipo === 'ingreso'} />
       <CampoTextoCatalogo etiqueta="Fecha" valor={fecha} alCambiar={establecerFecha} tipo="date" obligatorio />
-      <CampoTextoCatalogo etiqueta="Moneda" valor={moneda} alCambiar={establecerMoneda} obligatorio />
-      <Typography variant="h6">{tipo === 'ingreso' ? 'Medios de cobro' : 'Medios de pago'}</Typography>{lineas.map(mostrarLinea)}
+      <Typography variant="h6">{tipo === 'ingreso' ? 'Medios de cobro' : 'Medios de pago'} · {moneda}</Typography>
+      <Typography variant="body2" color="text.secondary">Vacío equivale a 0. Usá coma o punto decimal, sin separadores de miles. El destino sugerido puede cambiarse en cada medio.</Typography>{lineas.map(mostrarLinea)}
       <Stack direction="row" sx={{ flexWrap: 'wrap' }}>{datos.medios.map(mostrarMedio)}</Stack>
       {errorImportes ? <Alert severity="error">{errorImportes}</Alert> : <Typography variant="h5" color={tipo === 'ingreso' ? 'success.main' : 'error.main'} aria-live="polite">Total {formatearImporte(crearImporte(total, moneda))}</Typography>}
       <CampoTextoCatalogo etiqueta={tipo === 'ingreso' ? 'Descripción (opcional)' : 'Descripción'} valor={descripcion} alCambiar={establecerDescripcion} obligatorio={tipo === 'gasto'} />
-      <CampoTextoCatalogo etiqueta="Observaciones (opcional)" valor={observaciones} alCambiar={establecerObservaciones} />
+      <details open={Boolean(inicial?.observaciones)}><summary>Más opciones</summary><Stack spacing={2} sx={{ pt: 2 }}><CampoTextoCatalogo etiqueta="Moneda" valor={moneda} alCambiar={establecerMoneda} obligatorio /><CampoTextoCatalogo etiqueta="Observaciones (opcional)" valor={observaciones} alCambiar={establecerObservaciones} /></Stack></details>
     </Stack>
     {!alGuardar && <Alert severity="info">La persistencia se conectará en la siguiente tarea.</Alert>}
     <Button type="submit" variant="contained" color={tipo === 'ingreso' ? 'success' : 'error'} loading={pendiente} disabled={!alGuardar || Boolean(errorImportes) || total === 0}>Guardar {tipo}</Button>

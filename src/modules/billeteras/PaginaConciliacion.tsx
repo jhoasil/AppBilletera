@@ -58,8 +58,8 @@ export function PaginaConciliacion({ alConfirmar = confirmarConciliacion }: Prop
       <Stack component="fieldset" disabled={pendiente} spacing={2} sx={{ border: 0, p: 0, m: 0, minWidth: 0 }}>
         <CampoImporte etiqueta="Saldo real" valor={real} alCambiar={establecerReal} error={errorReal} obligatorio ayuda="Importe con hasta dos decimales, sin separadores de miles." />
         {comparacion && <Typography variant="h5" color={comparacion.diferenciaCentavos < 0 ? 'error.main' : 'success.main'}>Diferencia: {formatearImporte(crearImporte(comparacion.diferenciaCentavos, datos.billetera.moneda))}</Typography>}
-        <CampoTextoCatalogo etiqueta="Motivo" valor={motivo} alCambiar={establecerMotivo} obligatorio={Boolean(comparacion?.diferenciaCentavos)} />
-        <CampoTextoCatalogo etiqueta="Observación (opcional)" valor={observaciones} alCambiar={establecerObservaciones} />
+        {comparacion && comparacion.diferenciaCentavos !== 0 && <CampoTextoCatalogo etiqueta="Motivo" valor={motivo} alCambiar={establecerMotivo} obligatorio />}
+        <details><summary>Observación opcional</summary><Stack sx={{ pt: 1 }}><CampoTextoCatalogo etiqueta="Observación (opcional)" valor={observaciones} alCambiar={establecerObservaciones} /></Stack></details>
         {comparacion?.diferenciaCentavos === 0 && <Alert severity="success">Los saldos coinciden. No se generará un ajuste.</Alert>}
         {comparacion && comparacion.diferenciaCentavos !== 0 && <>
           <Alert severity="info">Si falta una operación real, registrala primero y luego actualizá el saldo. Un ajuste documenta la diferencia y se mantiene separado de ingresos y gastos.</Alert>
