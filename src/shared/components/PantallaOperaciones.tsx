@@ -112,7 +112,7 @@ export function PantallaOperaciones<Entidad extends RegistroOperacion, Carga>({ 
       <Stack direction="row" useFlexGap spacing={1} sx={{ flexWrap: 'wrap' }}><Button disabled={pendiente} onClick={abrir}>Ver detalle / Editar</Button><Button color="error" disabled={pendiente} onClick={pedirEliminar}>Eliminar</Button></Stack>
     </Stack></CardContent></Card>;
   }
-  if (nuevo || seleccion) return <Stack spacing={2}><CabeceraPagina titulo={`${seleccion ? 'Detalle de' : 'Nuevo'} ${singular}`} acciones={<Button onClick={volver}>Volver al listado</Button>} />{formulario(seleccion?.carga, guardar, completado)}</Stack>;
+  if (nuevo || seleccion) return <Stack spacing={2}><CabeceraPagina titulo={`${seleccion ? 'Detalle de' : 'Nuevo'} ${singular}`} regreso={{ alPulsar: volver, etiqueta: "Volver al listado", deshabilitado: pendiente }} />{formulario(seleccion?.carga, guardar, completado)}</Stack>;
   return <Stack spacing={2}>
     <CabeceraPagina titulo={titulo} acciones={<Button variant="contained" onClick={crear} disabled={pendiente}>Agregar {singular}</Button>} />
     {confirmacion && <Alert severity="success">{confirmacion}</Alert>}{error && <Alert severity="error" action={<Button onClick={reintentar}>Reintentar</Button>}>{error}</Alert>}

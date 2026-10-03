@@ -9,7 +9,6 @@ import AccountBalanceWallet from '@mui/icons-material/AccountBalanceWallet';
 import Backup from '@mui/icons-material/Backup';
 import Info from '@mui/icons-material/Info';
 import { useState } from 'react';
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -55,7 +54,7 @@ export function PaginaAjustes() {
     {(['Configuración', 'Catálogos', 'Datos', 'Información'] as const).map(/** Separa accesos por finalidad sin introducir configuraciones que todavía no existen. */ function mostrarGrupo(grupo) { return <Stack key={grupo} spacing={1}><Typography variant="h6">{grupo}</Typography><Paper variant="outlined"><List aria-label={grupo}>{secciones.filter(/** Elige destinos del grupo actual. */ function pertenece(destino) { return destino.grupo === grupo; }).map(mostrarAcceso)}</List></Paper></Stack>; })}
   </Stack>;
   return <Stack spacing={3}>
-    <CabeceraPagina titulo={secciones.find(buscarSeccion)?.titulo ?? 'Ajustes'} acciones={<Button onClick={volver}>Volver a Ajustes</Button>} />
+    <CabeceraPagina titulo={secciones.find(buscarSeccion)?.titulo ?? 'Ajustes'} regreso={{ alPulsar: volver, etiqueta: "Volver a Ajustes" }} />
     {seccion === 'actividades' ? <CatalogoActividades /> : seccion === 'categorias' ? <CatalogoCategoriasGasto /> : seccion === 'medios' ? <CatalogoMediosPago /> : seccion === 'billeteras' ? <CatalogoBilleteras /> : seccion === 'apariencia' ? <SelectorModoTema /> : seccion === 'informacion' ? <InformacionAplicacion /> : <RespaldoDatos />}
   </Stack>;
 }

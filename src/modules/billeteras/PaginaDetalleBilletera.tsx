@@ -78,7 +78,7 @@ export function PaginaDetalleBilletera() {
     return { id: movimiento.id, titulo: visual.nombre, detalle: `${fecha}${movimiento.descripcion ? ` · ${movimiento.descripcion}` : ''}`, importe: `${movimiento.importeCentavos > 0 ? '+' : ''}${formatearImporte(crearImporte(movimiento.importeCentavos, datos!.billetera.moneda))}`, icono, tono };
   }
   return <Stack spacing={2}>
-    <CabeceraPagina titulo={datos?.billetera.nombre ?? 'Detalle de billetera'} acciones={<Button component="a" href="#/billeteras">Volver a billeteras</Button>} />
+    <CabeceraPagina titulo={datos?.billetera.nombre ?? 'Detalle de billetera'} regreso={{ href: "#/billeteras", etiqueta: "Volver a billeteras" }} />
     {error && <Alert severity="error" action={<Button onClick={actualizar}>Reintentar</Button>}>{error}</Alert>}
     {cargando ? <CircularProgress aria-label="Cargando saldo y movimientos" /> : !error && datos && <>
       <TarjetaResumen titulo={`${datos.billetera.nombre} · Saldo actual`} principal alturaMinima={152} valor={formatearImporte(crearImporte(datos.saldoCentavos, datos.billetera.moneda))} icono={<IconoCatalogo identificador={datos.billetera.icono} />} tono={datos.saldoCentavos < 0 ? 'negativo' : 'positivo'} detalle={`Última conciliación: ${datos.billetera.conciliadoEn ? new Date(datos.billetera.conciliadoEn).toLocaleString('es-AR') : 'Sin conciliaciones'} · ${datos.billetera.activo ? 'Activa' : 'Inactiva'}`} />

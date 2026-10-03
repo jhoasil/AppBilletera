@@ -59,7 +59,7 @@ export function PaginaConciliacion({ alConfirmar = confirmarConciliacion }: Prop
     finally { establecerPendiente(false); }
   }
   return <Stack spacing={2} sx={{ maxWidth: tokensVisuales.anchoFormulario, width: '100%' }}>
-    <CabeceraPagina titulo={`Conciliar ${datos?.billetera.nombre ?? 'billetera'}`} acciones={<Button component="a" href={`#/billetera?id=${id}`} disabled={pendiente}>Volver</Button>} />
+    <CabeceraPagina titulo={`Conciliar ${datos?.billetera.nombre ?? 'billetera'}`} regreso={{ href: `#/billetera?id=${id}`, etiqueta: "Volver a billetera", deshabilitado: pendiente }} />
     {error && <Alert severity="error" action={<Button onClick={actualizar} disabled={pendiente}>Actualizar saldo</Button>}>{error}</Alert>}
     {!datos ? !error && <CircularProgress aria-label="Consultando saldo" /> : <Stack component="form" onSubmit={confirmar} spacing={2}>
       <Paper variant="outlined" sx={{ minHeight: 96, p: 2 }}><Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}><IconoCatalogo identificador={datos.billetera.icono} /><Typography variant="h6">{datos.billetera.nombre} · {datos.billetera.moneda}</Typography></Stack><Typography variant="body2" color="text.secondary">Saldo calculado · solo lectura</Typography><Typography sx={{ fontSize: 24, fontWeight: 700, overflowWrap: 'anywhere' }}>{formatearImporte(crearImporte(datos.saldoCentavos, datos.billetera.moneda))}</Typography></Paper>

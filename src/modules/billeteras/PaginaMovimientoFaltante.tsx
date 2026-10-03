@@ -85,7 +85,7 @@ export function PaginaMovimientoFaltante() {
     } catch (causa) { return <Alert severity="error">{causa instanceof Error ? causa.message : 'No se pudo calcular el impacto.'}</Alert>; }
   }
   return <Stack spacing={2} sx={{ maxWidth: tokensVisuales.anchoFormulario, width: '100%' }}>
-    <CabeceraPagina titulo="Registrar movimiento faltante" acciones={<Button disabled={guardando} component="a" href={`#/conciliacion?id=${encodeURIComponent(id)}&real=${encodeURIComponent(real)}`}>Volver a conciliación</Button>} />
+    <CabeceraPagina titulo="Registrar movimiento faltante" regreso={{ href: `#/conciliacion?id=${encodeURIComponent(id)}&real=${encodeURIComponent(real)}`, etiqueta: "Volver a conciliación", deshabilitado: guardando }} />
     {error && <Alert severity="error" action={<Button onClick={reintentar}>Reintentar</Button>}>{error}</Alert>}
     {!datos || !inicial ? !error && <CircularProgress aria-label="Preparando movimiento faltante" /> : diferencia === 0 ? <Alert severity="success">Los saldos ya coinciden. Volvé a conciliación; no hace falta registrar otra operación.</Alert> : <>
       <Alert severity="info" sx={{ p: 1.5 }}>La billetera {datos.billetera.nombre} presenta una diferencia de {importe(diferencia)}. Podés registrar la operación real omitida para corregir el saldo. Este flujo no genera un ajuste adicional.</Alert>

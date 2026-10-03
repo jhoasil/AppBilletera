@@ -67,7 +67,7 @@ export function PaginaTransferencia() {
   try { if (importe.trim() && seleccionada) { const centavos = interpretarImporte(importe); if (centavos <= 0) throw new Error('Indicá un importe mayor a cero.'); total = formatearImporte(crearImporte(centavos, seleccionada.moneda)); } }
   catch (causa) { errorImporte = causa instanceof Error ? causa.message : 'Importe inválido.'; }
   return <Stack spacing={2} sx={{ maxWidth: tokensVisuales.anchoFormulario, width: '100%' }}>
-    <CabeceraPagina titulo="Transferencia entre billeteras" acciones={<Button component="a" href="#/billeteras">Volver a billeteras</Button>} />
+    <CabeceraPagina titulo="Transferencia entre billeteras" regreso={{ href: "#/billeteras", etiqueta: "Volver a billeteras" }} />
     {error && <Alert severity="error" action={<Button onClick={reintentar}>Actualizar billeteras</Button>}>{error}</Alert>}{confirmacion && <Alert severity="success">{confirmacion}</Alert>}
     {!billeteras ? !error && <CircularProgress aria-label="Cargando billeteras" /> : <Stack component="form" onSubmit={guardar} spacing={2}>
       <Stack component="fieldset" disabled={pendiente} spacing={2} sx={{ border: 0, p: 0, m: 0, minWidth: 0 }}>

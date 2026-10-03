@@ -1,4 +1,6 @@
-import type { PropsWithChildren } from 'react';
+import { useState, type PropsWithChildren } from 'react';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import { ContextoCabecera, type CabeceraContextual } from './ContextoCabecera';
 import HomeOutlined from '@mui/icons-material/HomeOutlined';
 import AddCircleOutlined from '@mui/icons-material/AddCircleOutlined';
 import RemoveCircleOutlined from '@mui/icons-material/RemoveCircleOutlined';
@@ -41,6 +43,7 @@ type PropiedadesEstructura = PropsWithChildren<{ paginaActual: Pagina }>;
 /** Adapta la navegación al ancho disponible sin duplicar páginas ni sus contenidos. */
 export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstructura) {
   const tema = useTheme();
+  const [cabecera, establecerCabecera] = useState<CabeceraContextual | null>(null);
   /** Crea un enlace lateral que identifica el destino activo para lectores de pantalla. */
   function mostrarDestinoLateral(destino: (typeof destinosLaterales)[number]) {
     return (
@@ -75,9 +78,17 @@ export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstru
   }
 
   return (
-    <Box sx={{ minHeight: '100dvh' }}>
+    <ContextoCabecera.Provider value={establecerCabecera}><Box sx={{ minHeight: '100dvh' }}>
       <AppBar position="fixed" sx={{ zIndex: tema.zIndex.drawer + 1, borderBottom: 1, borderColor: 'divider', pt: 'env(safe-area-inset-top)', pl: 'env(safe-area-inset-left)', pr: 'env(safe-area-inset-right)' }}>
         <Toolbar sx={{ gap: 1 }}>
+          {/* En móvil el retorno contextual sustituye la marca, sin añadir otra barra fija. */}
+          {cabecera && <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 1, minWidth: 0, flex: 1 }}>
+            <IconButton {...(cabecera.href ? { component: 'a', href: cabecera.href } : { onClick: cabecera.alVolver })} disabled={cabecera.deshabilitado} aria-label={cabecera.etiqueta}><ArrowBack /></IconButton>
+            <Typography component="h1" variant="h6" sx={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{cabecera.titulo}</Typography>
+          </Box>}
+          <Box sx={{ display: cabecera ? { xs: 'none', md: 'flex' } : 'flex', alignItems: 'center', gap: 1, flex: 1 }}>
+          <AccountBalanceWalletOutlined color="primary" />
+
           <Typography
             component="a" href="#/inicio" variant="h6"
             sx={{ flexGrow: 1, color: 'text.primary', textDecoration: 'none' }}
@@ -94,6 +105,7 @@ export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstru
           >
             <SettingsOutlined />
           </IconButton>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -129,6 +141,6 @@ export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstru
           {destinosPrincipales.map(mostrarDestinoInferior)}
         </BottomNavigation>
       </Paper>
-    </Box>
+    </Box></ContextoCabecera.Provider>
   );
 }
