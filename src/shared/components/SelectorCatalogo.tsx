@@ -1,4 +1,6 @@
 import { useId } from 'react';
+import Box from '@mui/material/Box';
+import { IconoCatalogo } from './IconoCatalogo';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 
@@ -6,6 +8,8 @@ import TextField from '@mui/material/TextField';
 export interface OpcionCatalogo {
   id: string;
   nombre: string;
+  icono?: string | null;
+  color?: string | null;
   deshabilitada?: boolean;
 }
 
@@ -35,7 +39,7 @@ export function SelectorCatalogo({
 
   /** Presenta cada opción respetando su disponibilidad para nuevas selecciones. */
   function mostrarOpcion(opcion: OpcionCatalogo) {
-    return <MenuItem key={opcion.id} value={opcion.id} disabled={opcion.deshabilitada}>{opcion.nombre}</MenuItem>;
+    return <MenuItem key={opcion.id} value={opcion.id} disabled={opcion.deshabilitada}><Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, maxWidth: '100%', overflowWrap: 'anywhere' }}>{opcion.icono && <IconoCatalogo identificador={opcion.icono} color={opcion.color ?? null} />}{opcion.nombre}</Box></MenuItem>;
   }
 
   return (

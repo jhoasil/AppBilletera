@@ -9,6 +9,7 @@ interface PropiedadesCampoImporte {
   alCambiar: (valor: string) => void;
   simbolo?: string;
   ayuda?: string;
+  compacto?: boolean;
   error?: string;
   deshabilitado?: boolean;
   obligatorio?: boolean;
@@ -17,7 +18,7 @@ interface PropiedadesCampoImporte {
 /** Facilita la escritura de un importe con teclado decimal sin convertir ni calcular dinero. */
 export function CampoImporte({
   etiqueta, valor, alCambiar, simbolo = '$', ayuda, error,
-  deshabilitado = false, obligatorio = false,
+  deshabilitado = false, obligatorio = false, compacto = false,
 }: PropiedadesCampoImporte) {
   const identificador = useId();
 
@@ -29,7 +30,7 @@ export function CampoImporte({
   return (
     <TextField id={identificador} label={etiqueta} value={valor} onChange={cambiarTexto}
       sx={{ '& input': { fontSize: 18, fontWeight: 600, fontVariantNumeric: 'tabular-nums' } }} type="text" disabled={deshabilitado} required={obligatorio}
-      error={Boolean(error)} helperText={error || ayuda || ' '}
+      error={Boolean(error)} helperText={error || ayuda || (compacto ? undefined : ' ')}
       slotProps={{
         htmlInput: { inputMode: 'decimal' },
         input: { startAdornment: <InputAdornment position="start">{simbolo}</InputAdornment> },
