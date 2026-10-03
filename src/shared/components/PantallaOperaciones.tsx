@@ -30,12 +30,12 @@ export interface ServicioABM<Entidad extends RegistroOperacion, Carga> {
 }
 /** Configuración del listado reutilizable con formulario específico de cada operación. */
 interface PropiedadesPantallaOperaciones<Entidad extends RegistroOperacion, Carga> {
-  titulo: string; singular: string; servicio: ServicioABM<Entidad, Carga>;
+  titulo: string; singular: string; detalle?: (entidad: Entidad) => ReactNode; tono?: 'ingreso' | 'gasto'; servicio: ServicioABM<Entidad, Carga>;
   formulario: (inicial: Carga | undefined, guardar: (carga: Carga) => Promise<void>, completar: () => void) => ReactNode;
 }
 
 /** Presenta listado paginado, detalle editable y confirmación de borrado lógico con filtros de período. */
-export function PantallaOperaciones<Entidad extends RegistroOperacion, Carga>({ titulo, singular, servicio, formulario }: PropiedadesPantallaOperaciones<Entidad, Carga>) {
+export function PantallaOperaciones<Entidad extends RegistroOperacion, Carga>({ titulo, singular, servicio, formulario, detalle, tono }: PropiedadesPantallaOperaciones<Entidad, Carga>) {
   const cargaDirecta = useParametroRuta('nuevo');
   const [pagina, establecerPagina] = useState(0);
   const [revision, establecerRevision] = useState(0);
@@ -106,9 +106,9 @@ export function PantallaOperaciones<Entidad extends RegistroOperacion, Carga>({ 
     }
     /** Solicita confirmación visual para invalidar la operación completa. */
     function pedirEliminar() { establecerAEliminar(entidad); }
-    return <Card key={entidad.id}><CardContent><Stack spacing={1}>
-      <Typography variant="h6">{entidad.descripcion || singular}</Typography><Typography color="text.secondary">{entidad.fecha}</Typography>
-      <Typography variant="h6">{formatearImporte(crearImporte(entidad.importeCentavos, entidad.moneda))}</Typography>
+    return <Card key={entidad.id} sx={{ minHeight: 88 }}><CardContent><Stack spacing={1}>
+      <Typography variant="h6">{detalle ? detalle(entidad) : entidad.descripcion || singular}</Typography>{detalle && entidad.descripcion && <Typography>{entidad.descripcion}</Typography>}<Typography color="text.secondary">{new Date(`${entidad.fecha}T12:00:00`).toLocaleDateString('es-AR')}</Typography>
+      <Typography variant="h6" sx={{ fontSize: 20, fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: tono === 'ingreso' ? 'success.main' : tono === 'gasto' ? 'error.main' : 'text.primary' }}>{tono === 'ingreso' ? '+' : tono === 'gasto' ? '-' : ''}{formatearImporte(crearImporte(entidad.importeCentavos, entidad.moneda))}</Typography>
       <Stack direction="row" spacing={1}><Button disabled={pendiente} onClick={abrir}>Ver detalle / Editar</Button><Button color="error" disabled={pendiente} onClick={pedirEliminar}>Eliminar</Button></Stack>
     </Stack></CardContent></Card>;
   }
