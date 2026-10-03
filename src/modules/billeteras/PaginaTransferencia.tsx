@@ -6,7 +6,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { cargarBilleterasConSaldo } from '../../app/data/cargarBilleterasConSaldo';
 import Paper from '@mui/material/Paper';
-import ArrowDownward from '@mui/icons-material/ArrowDownward';
+import SwapHoriz from '@mui/icons-material/SwapHoriz';
+import { calcularImpactoTransferencia } from '../../core/money/calcularImpactoTransferencia';
 import { IconoCatalogo } from '../../shared/components/IconoCatalogo';
 import { tokensVisuales } from '../../app/theme/tokens';
 import { servicioTransferencias } from '../../app/data/servicioTransferencias';
@@ -63,6 +64,13 @@ export function PaginaTransferencia() {
     } catch (causa) { establecerError(causa instanceof Error ? causa.message : 'No se pudo registrar la transferencia.'); }
     finally { establecerPendiente(false); }
   }
+  let impacto: ReturnType<typeof calcularImpactoTransferencia> | null = null;
+  // Solo se proyectan billeteras compatibles: la UI recibe el resultado exacto del dominio.
+  try {
+    const saldoOrigen = billeteras?.find(esOrigen);
+    const saldoDestino = billeteras?.find(function buscarSaldo(elemento) { return elemento.billetera.id === destino; });
+    if (importe.trim() && saldoOrigen && saldoDestino) impacto = calcularImpactoTransferencia(crearImporte(saldoOrigen.saldoCentavos, saldoOrigen.billetera.moneda), crearImporte(saldoDestino.saldoCentavos, saldoDestino.billetera.moneda), crearImporte(interpretarImporte(importe), seleccionada?.moneda));
+  } catch { impacto = null; }
   let total = ''; let errorImporte = '';
   try { if (importe.trim() && seleccionada) { const centavos = interpretarImporte(importe); if (centavos <= 0) throw new Error('Indicá un importe mayor a cero.'); total = formatearImporte(crearImporte(centavos, seleccionada.moneda)); } }
   catch (causa) { errorImporte = causa instanceof Error ? causa.message : 'Importe inválido.'; }
@@ -76,9 +84,13 @@ export function PaginaTransferencia() {
         <CampoImporte etiqueta={`Monto (${seleccionada?.moneda ?? 'seleccioná el origen'})`} valor={importe} alCambiar={establecerImporte} error={errorImporte} ayuda="Importe positivo, sin separadores de miles." obligatorio />
         <CampoTextoCatalogo etiqueta="Fecha" valor={fecha} alCambiar={establecerFecha} tipo="date" obligatorio />
         <CampoTextoCatalogo etiqueta="Descripción (opcional)" valor={descripcion} alCambiar={establecerDescripcion} />
-        {total && seleccionada && receptora && <Paper variant="outlined" aria-live="polite" sx={{ minHeight: 128, p: 2, bgcolor: 'action.hover' }}><Stack spacing={1} sx={{ alignItems: 'center' }}><IconoCatalogo identificador={seleccionada.icono} /><Typography>{seleccionada.nombre}</Typography><Typography sx={{ fontSize: 24, fontWeight: 700 }} color="info.main">Salida: -{total}</Typography><ArrowDownward aria-hidden="true" /><IconoCatalogo identificador={receptora.icono} /><Typography>{receptora.nombre}</Typography><Typography sx={{ fontSize: 24, fontWeight: 700 }} color="info.main">Entrada: +{total}</Typography></Stack></Paper>}
+        {total && seleccionada && receptora && impacto && <Paper variant="outlined" aria-live="polite" sx={{ p: 2 }}><Stack spacing={2}>
+          <Typography variant="subtitle1">Vista previa del movimiento</Typography>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}><IconoCatalogo identificador={seleccionada.icono} color={seleccionada.color} contenedor /><Stack sx={{ flex: 1, minWidth: 0 }}><Typography sx={{ fontWeight: 600 }}>{seleccionada.nombre}</Typography><Typography variant="caption" color="text.secondary">Saldo después: {formatearImporte(impacto.origen)}</Typography><Typography color="error.main" sx={{ fontWeight: 700 }}>Salida: -{total}</Typography></Stack></Stack>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}><IconoCatalogo identificador={receptora.icono} color={receptora.color} contenedor /><Stack sx={{ flex: 1, minWidth: 0 }}><Typography sx={{ fontWeight: 600 }}>{receptora.nombre}</Typography><Typography variant="caption" color="text.secondary">Saldo después: {formatearImporte(impacto.destino)}</Typography><Typography color="success.main" sx={{ fontWeight: 700 }}>Entrada: +{total}</Typography></Stack></Stack>
+        </Stack></Paper>}
         <Alert severity="info">Una transferencia mueve dinero entre tus billeteras y no modifica tus ingresos, gastos ni ganancia. Ambas deben tener la misma moneda.</Alert>
-      </Stack><Button fullWidth type="submit" variant="contained" loading={pendiente} disabled={!origen || !destino || Boolean(errorImporte) || !importe.trim()}>Transferir</Button>
+      </Stack><Button startIcon={<SwapHoriz />} fullWidth type="submit" variant="contained" loading={pendiente} disabled={!origen || !destino || Boolean(errorImporte) || !importe.trim()}>Transferir</Button>
     </Stack>}
   </Stack>;
 }
