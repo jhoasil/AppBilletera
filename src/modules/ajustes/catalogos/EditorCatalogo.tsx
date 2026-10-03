@@ -116,15 +116,16 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
       finally { establecerPendiente(false); }
     }
     return <Card key={entidad.id} sx={{ p: 0 }}><CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 }, minHeight: alturaTarjeta ?? 88 }}>
-      <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', minWidth: 0 }}>
+      {/* En 320 px las acciones bajan de fila para conservar nombres y chips completos. */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: `${tamanoIcono}px minmax(0, 1fr) auto`, gap: 1.5, alignItems: 'center', '@media (max-width:359px)': { gridTemplateColumns: `${tamanoIcono}px minmax(0, 1fr)` } }}>
         <IconoCatalogo identificador={entidad.icono} color={entidad.color} contenedor tamano={tamanoIcono} />
         <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}><Typography variant="subtitle1" sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>{entidad.nombre}</Typography>
           {detalle && <Box sx={{ color: 'text.secondary', fontSize: 14 }}>{detalle(entidad)}</Box>}
           <Chip size="small" sx={{ alignSelf: 'flex-start' }} label={entidad.activo ? 'Disponible' : 'No disponible'} color={entidad.activo ? 'success' : 'default'} variant="outlined" />
         </Stack>
-        <Stack sx={{ alignItems: 'center', flexShrink: 0 }}><Typography variant="caption">Disponible</Typography><Switch checked={entidad.activo} onChange={cambiarActivo} disabled={pendiente} slotProps={{ input: { 'aria-label': `${entidad.activo ? 'Desactivar' : 'Activar'} ${entidad.nombre}` } }} /></Stack>
-        <IconButton onClick={editar} disabled={pendiente} aria-label={`Consultar o editar ${entidad.nombre}`}><ChevronRight /></IconButton>
-      </Stack>
+        <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', '@media (max-width:359px)': { gridColumn: '2 / -1', justifyContent: 'space-between' } }}><Stack sx={{ alignItems: 'center', flexShrink: 0 }}><Typography variant="caption">Disponible</Typography><Switch checked={entidad.activo} onChange={cambiarActivo} disabled={pendiente} slotProps={{ input: { 'aria-label': `${entidad.activo ? 'Desactivar' : 'Activar'} ${entidad.nombre}` } }} /></Stack>
+        <IconButton onClick={editar} disabled={pendiente} aria-label={`Consultar o editar ${entidad.nombre}`}><ChevronRight /></IconButton></Stack>
+      </Box>
       {accionAdicional && <Box sx={{ mt: 1 }}>{accionAdicional(entidad, pendiente)}</Box>}
     </CardContent></Card>;
   }

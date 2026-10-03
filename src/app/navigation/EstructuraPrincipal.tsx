@@ -3,8 +3,8 @@ import { useState, type PropsWithChildren } from 'react';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import { ContextoCabecera, type CabeceraContextual } from './ContextoCabecera';
 import HomeOutlined from '@mui/icons-material/HomeOutlined';
-import AddCircleOutlined from '@mui/icons-material/AddCircleOutlined';
-import RemoveCircleOutlined from '@mui/icons-material/RemoveCircleOutlined';
+import ArrowDownward from '@mui/icons-material/ArrowDownward';
+import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import BarChartOutlined from '@mui/icons-material/BarChartOutlined';
 import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
@@ -28,8 +28,8 @@ import type { Pagina } from './usePaginaActual';
 const anchoLateral = 256;
 const destinosPrincipales = [
   { pagina: 'inicio', titulo: 'Inicio', icono: <HomeOutlined /> },
-  { pagina: 'ingresos', titulo: 'Ingresos', icono: <AddCircleOutlined /> },
-  { pagina: 'gastos', titulo: 'Gastos', icono: <RemoveCircleOutlined /> },
+  { pagina: 'ingresos', titulo: 'Ingresos', icono: <ArrowDownward /> },
+  { pagina: 'gastos', titulo: 'Gastos', icono: <ArrowUpward /> },
   { pagina: 'reportes', titulo: 'Reportes', icono: <BarChartOutlined /> },
 ] as const;
 const destinosLaterales = [

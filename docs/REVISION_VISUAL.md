@@ -1,6 +1,63 @@
 # Revisión visual
 
-## Revisión vigente — TAREA 066
+## Revisión vigente — TAREA 085
+
+Fecha: 03/10/2026. Alcance: composición de las TAREAS 067–085, según GUIA_VISUAL.md, sección 91, y PANTALLAS.md, sección 51.
+
+### Resultado y diferencias deliberadas
+
+Inicio, formularios de ingreso/gasto, listados, transferencia, billeteras, detalle, conciliación, movimiento faltante, los cuatro catálogos, Reportes, Ajustes y Apariencia comparten cabeceras, superficies y componentes. Los comentarios en español explican retornos, filas compactas, disponibilidad, proyecciones y separación financiera.
+
+- Móvil usa una sola cabecera contextual y cuatro destinos inferiores; escritorio mantiene el lateral.
+- Los resúmenes principales usan azul suave en claro y superficie elevada en oscuro; los saldos se presentan sobre fondo neutro.
+- Ingresos y gastos comparten filas con medio e importe, billetera real editable debajo, total exacto y botón semántico. Esta segunda línea se conserva aunque las referencias la omitan.
+- Los catálogos presentan icono y color configurados, información real, disponibilidad y edición contextual. Trabajo activo/finalizado/archivado tiene una etiqueta diferente de disponibilidad.
+- Los reportes alternan un desglose visible, identifican denominador y moneda, y separan patrimonio de transferencias, ajustes y resultado.
+- Las vistas previas de Apariencia son ejemplos identificados. Existe una única preferencia Sistema/Claro/Oscuro.
+- Se omiten comparativas, cantidades de movimientos, arrastre, descripciones de categorías, logos y preferencias sin soporte funcional. Los ajustes conservan violeta y texto explícito.
+
+### Observación manual en navegador local
+
+Se recorrió una pestaña temporal en localhost, con los catálogos disponibles, una billetera y sin operaciones financieras guardadas. No se guardaron formularios, cambios de catálogo, transferencias ni ajustes. Se ingresó un saldo declarado de 15 únicamente en el borrador de conciliación para observar impacto y retorno; no se persistió.
+
+| Ancho solicitado | Muestras observadas |
+| --- | --- |
+| 320 px | Inicio y Nuevo ingreso en Sistema; detalle, conciliación, movimiento faltante, categorías y medios en Sistema; Reportes en Oscuro |
+| 390 px | Actividades, edición cancelada y Ajustes en Sistema; Apariencia en Claro/Oscuro y selección Sistema; Inicio y Ajustes en Oscuro |
+| 430 px | Nuevo gasto y catálogo de Billeteras en Sistema |
+| 600 px | Transferencia y retorno desde conciliación en Sistema |
+| 768 px | Apariencia y las dos miniaturas en Sistema |
+| 1024 px | Listado de Billeteras y navegación lateral en Sistema |
+| 1440 px | Reportes, selección de desglose y patrimonio en Sistema |
+
+Sistema resolvía apariencia clara en esta sesión. Se observaron los tres botones y se alternaron Claro/Oscuro; se restauró Sistema, que era la elección inicial. No se simuló un cambio de tema del sistema operativo.
+
+Se observaron carga, vacíos, controles deshabilitados, foco al ingresar un importe y navegación con Tab en Apariencia. Los retornos del formulario al listado y de movimiento faltante a conciliación conservaron el contexto. La observación de ancho del documento no mostró desborde en los formularios y muestras revisadas después de las correcciones.
+
+### Correcciones de la revisión
+
+- En 320 px los controles del catálogo pasan debajo del nombre para evitar cortar chips y fragmentar nombres comunes.
+- Se eliminó la reserva de una línea vacía de ayuda en los selectores sin mensajes; las ayudas y errores reales siguen visibles.
+- La flecha hacia abajo representa entrada y la de arriba salida, también en navegación y movimientos.
+- El menú de operaciones ofrece edición y borrado; la confirmación de borrado lógico permanece separada.
+- Inicio conserva un título accesible sin repetirlo visualmente. Sus dimensiones ocultas usan píxeles explícitos para evitar desborde por el significado porcentual de width en Material UI.
+- El resumen oscuro utiliza la superficie elevada del tema, sin copiar un bloque azul saturado.
+
+### Revisión conceptual y límites
+
+Las combinaciones restantes de pantalla/ancho/tema se revisaron en código y mediante los tokens compartidos; la tabla no representa una matriz completa. Nombres extremos, muchas operaciones, distintos saldos y divisas, errores de persistencia y bloqueos durante escrituras se revisaron conceptualmente, sin generar registros artificiales.
+
+Transferencia mostró origen con saldo y destino/acción deshabilitados por falta de otra billetera compatible. La vista previa completa de ambos saldos se revisó en el código: calcularImpactoTransferencia reutiliza sumarImportes/restarImportes y comprueba monedas y rango seguro; no persiste proyecciones. No se afirma haber observado una transferencia completa en navegador.
+
+Áreas seguras, teclado virtual, dispositivos nativos, accesibilidad con lector de pantalla y cambio real del sistema operativo requieren revisión física posterior. El foco y el scroll de navegador observados no equivalen a esa validación.
+
+### Comprobaciones y cierre
+
+Tipos y compilación de producción correctos. Diff revisado y git diff --check sin errores. Cada tarea tiene su rama task_26/NNN_descripcion y commit; el bloque se integra mediante fast-forward en main. No se modificaron versión, tags ni se realizó push.
+
+Tests: no creados ni ejecutados. Las TAREAS 086–088 quedan pendientes y requieren autorización.
+
+## Antecedente — TAREA 066
 
 Fecha: 02/10/2026. Referencias: AGENTS.md, GUIA_VISUAL.md y PANTALLAS.md.
 

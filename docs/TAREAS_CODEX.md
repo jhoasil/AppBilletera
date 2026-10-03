@@ -3628,9 +3628,9 @@ Detenerse.
 
 # Nueva fase visual — TAREAS 67–85
 
-Estado: pendiente. Plan solicitado el 03/10/2026 a partir de las quince referencias visuales adjuntas. Las TAREAS 00–66 están completadas; no repetirlas ni reescribir su historia.
+Estado: completado el 03/10/2026 por autorización expresa del usuario para ejecutar las TAREAS 067–085 con sus ramas, commits y merge a main. Revisión y límites: REVISION_VISUAL.md. Las TAREAS 00–66 ya estaban completadas; no repetirlas ni reescribir su historia.
 
-Esta edición solo define trabajo futuro. No autoriza ejecutar ninguna tarea, crear tests, hacer push, generar tags ni preparar una release.
+El plan original definía trabajo futuro. La autorización posterior cubrió exclusivamente este bloque visual; las TAREAS 086–088 permanecen pendientes. No autoriza tests, push, tags ni release.
 
 ## Reglas del bloque
 

@@ -3075,7 +3075,8 @@ TAREAS 00–66
 → completadas
 
 TAREAS 67–85
-→ nueva composición visual según referencias; pendientes
+→ nueva composición visual según referencias; completadas el 03/10/2026
+→ revisión y límites en docs/REVISION_VISUAL.md
 
 TAREA 86
 → generar tests sin ejecutarlos, cuando sea autorizada

@@ -46,7 +46,7 @@ export function SelectorCatalogo({
     <TextField select id={identificador} label={etiqueta} value={valor}
       onChange={cambiarSeleccion} required={obligatorio}
       disabled={deshabilitado || opciones.length === 0} error={Boolean(error)}
-      helperText={error || ayuda || (opciones.length === 0 ? 'No hay opciones disponibles.' : ' ')}>
+      helperText={error || ayuda || (opciones.length === 0 ? 'No hay opciones disponibles.' : undefined)}>
       <MenuItem value="">Sin seleccionar</MenuItem>
       {opciones.map(mostrarOpcion)}
     </TextField>

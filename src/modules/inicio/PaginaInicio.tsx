@@ -50,6 +50,7 @@ export function PaginaInicio() {
   /** Formatea centavos enteros usando la moneda del registro. */
   function importe(centavos: number, moneda: string) { return formatearImporte(crearImporte(centavos, moneda)); }
   return <Stack spacing={2}>
+    <Typography component="h1" sx={{ position: 'absolute', width: '1px', height: '1px', p: 0, overflow: 'hidden', clipPath: 'inset(50%)', whiteSpace: 'nowrap' }}>Inicio</Typography>
     {/* La fecha contextual reemplaza el título repetido; Actualizar sigue disponible sin ocupar otra fila. */}
     <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}><Typography color="text.secondary">{new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}</Typography><IconButton onClick={actualizar} aria-label="Actualizar Inicio"><Refresh /></IconButton></Stack>
     {error && <Alert severity="error">{error}</Alert>}

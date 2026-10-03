@@ -104,15 +104,17 @@ export function PantallaOperaciones<Entidad extends RegistroOperacion, Carga>({ 
     catch (causa) { establecerError(mensaje(causa)); establecerAEliminar(null); }
     finally { establecerPendiente(false); }
   }
+  /** Recupera los detalles antes de editar; el menú y el título comparten la misma acción. */
+  async function abrirOperacion(entidad: Entidad) {
+    establecerPendiente(true); establecerError('');
+    try { establecerSeleccion(await servicio.obtener(entidad.id)); establecerNuevo(false); }
+    catch (causa) { establecerError(mensaje(causa)); }
+    finally { establecerPendiente(false); }
+  }
   /** Presenta fecha, total y accesos al detalle y al borrado lógico. */
   function mostrar(entidad: Entidad) {
-    /** Recupera detalles vigentes antes de abrir su consulta y edición. */
-    async function abrir() {
-      establecerPendiente(true); establecerError('');
-      try { establecerSeleccion(await servicio.obtener(entidad.id)); establecerNuevo(false); }
-      catch (causa) { establecerError(mensaje(causa)); }
-      finally { establecerPendiente(false); }
-    }
+    /** Abre una operación con su revisión vigente para conservar la edición controlada. */
+    function abrir() { void abrirOperacion(entidad); }
     // Una sola fila reserva el menú para acciones; eliminar siempre requiere confirmación.
     return <Card key={entidad.id}><CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 } }}>
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
@@ -130,7 +132,7 @@ export function PantallaOperaciones<Entidad extends RegistroOperacion, Carga>({ 
     <details><summary>Período: {filtros.desde || 'inicio'} — {filtros.hasta || 'hoy y futuros'}</summary><Stack sx={{ pt: 2 }} direction={{ xs: 'column', sm: 'row' }} spacing={1}><CampoTextoCatalogo etiqueta="Desde" valor={desde} alCambiar={establecerDesde} tipo="date" /><CampoTextoCatalogo etiqueta="Hasta" valor={hasta} alCambiar={establecerHasta} tipo="date" /><Button onClick={filtrar} disabled={pendiente}>Aplicar período</Button></Stack></details>
     {cargando ? <CircularProgress aria-label="Cargando operaciones" /> : resultado.elementos.length ? resultado.elementos.map(mostrar) : !error && <EstadoVacio titulo="Sin operaciones" descripcion="Agregá una operación o cambiá el período." />}
     <Stack direction="row" useFlexGap spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}><Button disabled={cargando || pendiente || pagina === 0} onClick={anterior}>Anterior</Button><Typography>Página {pagina + 1} · {resultado.total}</Typography><Button disabled={cargando || pendiente || (pagina + 1) * 20 >= resultado.total} onClick={siguiente}>Siguiente</Button></Stack>
-    <Menu anchorEl={menu?.ancla ?? null} open={Boolean(menu)} onClose={function cerrarMenu() { establecerMenu(null); }}><MenuItem onClick={function solicitarBorrado() { establecerAEliminar(menu?.entidad ?? null); establecerMenu(null); }}>Eliminar {singular}</MenuItem></Menu>
+    <Menu anchorEl={menu?.ancla ?? null} open={Boolean(menu)} onClose={function cerrarMenu() { establecerMenu(null); }}><MenuItem disabled={pendiente} onClick={function editarDesdeMenu() { if (menu) void abrirOperacion(menu.entidad); establecerMenu(null); }}>Ver detalle / Editar</MenuItem><MenuItem disabled={pendiente} onClick={function solicitarBorrado() { establecerAEliminar(menu?.entidad ?? null); establecerMenu(null); }}>Eliminar {singular}</MenuItem></Menu>
     <Dialog open={Boolean(aEliminar)} onClose={cancelarEliminacion} aria-labelledby="confirmar-borrado-operacion"><DialogTitle id="confirmar-borrado-operacion">Eliminar {singular}</DialogTitle><DialogContent>Se invalidarán la operación, sus detalles y sus movimientos de billetera. El historial se conservará.</DialogContent><DialogActions><Button onClick={cancelarEliminacion} disabled={pendiente}>Cancelar</Button><Button color="error" onClick={eliminar} loading={pendiente}>Eliminar</Button></DialogActions></Dialog>
   </Stack>;
 }
