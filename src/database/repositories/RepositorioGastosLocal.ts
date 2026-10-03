@@ -9,6 +9,7 @@ import { instanteDeFecha, totalLineas } from '../../core/services/validarCarga';
 import { baseLocal, prepararBaseLocal } from '../componerBaseLocal';
 import { convertirEntidad, convertirRegistro } from '../contracts/convertirRegistros';
 import type { ContextoDatos, RegistroDatos } from '../contracts/ContextoDatos';
+import { invalidarEfectosOperacion } from './invalidarEfectosOperacion';
 import { invalidarRegistros } from './invalidarRegistros';
 
 /** Persistencia de gastos con cabecera, distribuciones y movimientos negativos inseparables. */
@@ -73,7 +74,7 @@ export class RepositorioGastosLocal implements RepositorioGastos {
       if (gasto.actividadId) await exigirCatalogoActivo(contexto, 'actividades', gasto.actividadId, anterior?.actividad_id === gasto.actividadId);
       if (anterior) {
         await invalidarRegistros(contexto, 'gastos_medios_pago', 'por_gasto', RangoConsulta.unico(gasto.id), gasto.actualizadoEn);
-        await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', RangoConsulta.unico(['gasto', gasto.id]), gasto.actualizadoEn);
+        await invalidarEfectosOperacion(contexto, 'gasto', gasto.id, gasto.actualizadoEn);
       }
       await contexto.guardar('gastos', convertirRegistro(gasto), !anterior);
       for (const detalle of detalles) {
@@ -88,7 +89,7 @@ export class RepositorioGastosLocal implements RepositorioGastos {
         }
         await contexto.guardar('gastos_medios_pago', convertirRegistro(detalle), true);
         if (!detalle.billeteraId) continue;
-        const movimiento: MovimientoBilletera = { id: crypto.randomUUID(), billeteraId: detalle.billeteraId, tipo: 'GASTO', referenciaTipo: 'gasto', referenciaId: gasto.id, importeCentavos: -detalle.importeCentavos, fecha: fechaMovimiento, descripcion: gasto.descripcion, creadoEn: gasto.actualizadoEn, actualizadoEn: gasto.actualizadoEn, eliminadoEn: null };
+        const movimiento: MovimientoBilletera = { id: crypto.randomUUID(), billeteraId: detalle.billeteraId, tipo: 'GASTO', referenciaTipo: 'GASTO_MEDIO_PAGO', referenciaId: detalle.id, importeCentavos: -detalle.importeCentavos, fecha: fechaMovimiento, descripcion: gasto.descripcion, creadoEn: gasto.actualizadoEn, actualizadoEn: gasto.actualizadoEn, eliminadoEn: null };
         await contexto.guardar('movimientos_billetera', convertirRegistro(movimiento), true);
       }
     }
@@ -104,7 +105,7 @@ export class RepositorioGastosLocal implements RepositorioGastos {
       if (!registro || registro.eliminado_en !== null) return;
       if (actualizadoEnEsperado && registro.actualizado_en !== actualizadoEnEsperado) throw new Error('El gasto cambió; actualizá el listado antes de eliminar.');
       await invalidarRegistros(contexto, 'gastos_medios_pago', 'por_gasto', RangoConsulta.unico(id), eliminadoEn);
-      await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', RangoConsulta.unico(['gasto', id]), eliminadoEn);
+      await invalidarEfectosOperacion(contexto, 'gasto', id, eliminadoEn);
       await contexto.guardar('gastos', { ...registro, actualizado_en: eliminadoEn, eliminado_en: eliminadoEn });
     }
     return baseLocal.ejecutarTransaccion({ recursos: ['gastos', 'gastos_medios_pago', 'movimientos_billetera', 'actividades', 'categorias_gasto', 'medios_pago', 'billeteras'], modo: 'escritura' }, eliminar);

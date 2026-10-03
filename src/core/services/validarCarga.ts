@@ -14,6 +14,7 @@ export function totalLineas(lineas: readonly LineaCobro[], moneda: string): numb
   for (const linea of lineas) {
     if (!Number.isSafeInteger(linea.importeCentavos) || linea.importeCentavos <= 0) throw new Error('Cada detalle debe tener un importe entero positivo.');
     if (!linea.medioPagoId) throw new Error('Seleccioná el medio de cada detalle.');
+    if (!linea.billeteraId) throw new Error('Seleccioná la billetera real de cada detalle con importe.');
     total += BigInt(linea.importeCentavos);
   }
   if (total <= 0n || total > BigInt(Number.MAX_SAFE_INTEGER)) throw new Error('El total debe ser positivo y estar dentro del rango admitido.');

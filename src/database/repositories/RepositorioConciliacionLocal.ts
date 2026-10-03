@@ -25,7 +25,7 @@ export class RepositorioConciliacionLocal implements RepositorioConciliacion {
       const auditoria = { creadoEn: instante, actualizadoEn: instante, eliminadoEn: null };
       if (diferencia !== 0) {
         const ajuste: AjusteBilletera = { id: crypto.randomUUID(), billeteraId: datos.billeteraId, fecha: instante, saldoCalculadoCentavos: saldo, saldoRealCentavos: datos.saldoRealCentavos, diferenciaCentavos: diferencia, motivo: datos.motivo, observaciones: datos.observaciones || null, ...auditoria };
-        const movimiento: MovimientoBilletera = { id: crypto.randomUUID(), billeteraId: datos.billeteraId, tipo: diferencia > 0 ? 'AJUSTE_POSITIVO' : 'AJUSTE_NEGATIVO', referenciaTipo: 'ajuste', referenciaId: ajuste.id, importeCentavos: diferencia, fecha: instante, descripcion: datos.motivo, ...auditoria };
+        const movimiento: MovimientoBilletera = { id: crypto.randomUUID(), billeteraId: datos.billeteraId, tipo: diferencia > 0 ? 'AJUSTE_POSITIVO' : 'AJUSTE_NEGATIVO', referenciaTipo: 'AJUSTE', referenciaId: ajuste.id, importeCentavos: diferencia, fecha: instante, descripcion: datos.motivo, ...auditoria };
         await contexto.guardar('ajustes_billetera', convertirRegistro(ajuste), true);
         await contexto.guardar('movimientos_billetera', convertirRegistro(movimiento), true);
       }

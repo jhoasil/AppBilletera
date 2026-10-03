@@ -18,6 +18,8 @@ Cuando una decisión cambie de forma intencional, deben revisarse también los d
 
 # Decisiones vigentes
 
+En la TAREA 051 el usuario autorizó conservar los casos históricos ambiguos como **legado pendiente de revisión**. No se inventan billeteras ni asociaciones entre detalles y movimientos. La migración V2 transforma solamente relaciones inequívocas; los nuevos ingresos y gastos requieren billetera real y referencias a sus detalles. Esta excepción permite conservar y restaurar legado, sin habilitar nuevas operaciones con información financiera incompleta.
+
 | Decisión | Motivo |
 | --- | --- |
 | Una única base de código para Web, PWA, Android, iOS e iPadOS | Compartir pantallas, lógica y reglas de negocio, encapsulando diferencias específicas de plataforma mediante adaptadores. |

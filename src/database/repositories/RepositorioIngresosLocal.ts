@@ -9,6 +9,7 @@ import { instanteDeFecha, totalLineas } from '../../core/services/validarCarga';
 import { baseLocal, prepararBaseLocal } from '../componerBaseLocal';
 import { convertirEntidad, convertirRegistro } from '../contracts/convertirRegistros';
 import type { ContextoDatos, RegistroDatos } from '../contracts/ContextoDatos';
+import { invalidarEfectosOperacion } from './invalidarEfectosOperacion';
 import { invalidarRegistros } from './invalidarRegistros';
 
 /** Persistencia de ingresos con cabecera, distribuciones y movimientos positivos inseparables. */
@@ -72,7 +73,7 @@ export class RepositorioIngresosLocal implements RepositorioIngresos {
       await exigirCatalogoActivo(contexto, 'actividades', ingreso.actividadId, anterior?.actividad_id === ingreso.actividadId);
       if (anterior) {
         await invalidarRegistros(contexto, 'ingresos_medios_pago', 'por_ingreso', RangoConsulta.unico(ingreso.id), ingreso.actualizadoEn);
-        await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', RangoConsulta.unico(['ingreso', ingreso.id]), ingreso.actualizadoEn);
+        await invalidarEfectosOperacion(contexto, 'ingreso', ingreso.id, ingreso.actualizadoEn);
       }
       await contexto.guardar('ingresos', convertirRegistro(ingreso), !anterior);
       for (const detalle of detalles) {
@@ -87,7 +88,7 @@ export class RepositorioIngresosLocal implements RepositorioIngresos {
         }
         await contexto.guardar('ingresos_medios_pago', convertirRegistro(detalle), true);
         if (!detalle.billeteraId) continue;
-        const movimiento: MovimientoBilletera = { id: crypto.randomUUID(), billeteraId: detalle.billeteraId, tipo: 'INGRESO', referenciaTipo: 'ingreso', referenciaId: ingreso.id, importeCentavos: detalle.importeCentavos, fecha: fechaMovimiento, descripcion: ingreso.descripcion, creadoEn: ingreso.actualizadoEn, actualizadoEn: ingreso.actualizadoEn, eliminadoEn: null };
+        const movimiento: MovimientoBilletera = { id: crypto.randomUUID(), billeteraId: detalle.billeteraId, tipo: 'INGRESO', referenciaTipo: 'INGRESO_MEDIO_PAGO', referenciaId: detalle.id, importeCentavos: detalle.importeCentavos, fecha: fechaMovimiento, descripcion: ingreso.descripcion, creadoEn: ingreso.actualizadoEn, actualizadoEn: ingreso.actualizadoEn, eliminadoEn: null };
         await contexto.guardar('movimientos_billetera', convertirRegistro(movimiento), true);
       }
     }
@@ -103,7 +104,7 @@ export class RepositorioIngresosLocal implements RepositorioIngresos {
       if (!registro || registro.eliminado_en !== null) return;
       if (actualizadoEnEsperado && registro.actualizado_en !== actualizadoEnEsperado) throw new Error('El ingreso cambió; actualizá el listado antes de eliminar.');
       await invalidarRegistros(contexto, 'ingresos_medios_pago', 'por_ingreso', RangoConsulta.unico(id), eliminadoEn);
-      await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', RangoConsulta.unico(['ingreso', id]), eliminadoEn);
+      await invalidarEfectosOperacion(contexto, 'ingreso', id, eliminadoEn);
       await contexto.guardar('ingresos', { ...registro, actualizado_en: eliminadoEn, eliminado_en: eliminadoEn });
     }
     return baseLocal.ejecutarTransaccion({ recursos: ['ingresos', 'ingresos_medios_pago', 'movimientos_billetera', 'actividades', 'medios_pago', 'billeteras'], modo: 'escritura' }, eliminar);

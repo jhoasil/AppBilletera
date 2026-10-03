@@ -21,7 +21,7 @@ export async function validarRegistro(contexto: Pick<ContextoDatos, 'obtener'>, 
         case 'instante': valido = typeof valor === 'string' && !Number.isNaN(Date.parse(valor)) && new Date(valor).toISOString() === valor; break;
         case 'texto': valido = typeof valor === 'string'; break;
       }
-      if (!valido || (columna.valoresPermitidos && !columna.valoresPermitidos.includes(String(valor)))) throw new Error(`Valor inválido en ${tabla}.${columna.nombre}.`);
+      if (!valido || (columna.valoresPermitidos && !columna.valoresPermitidos.includes(String(valor)) && !(tabla === 'movimientos_billetera' && columna.nombre === 'referencia_tipo' && ['INGRESO_MEDIO_PAGO', 'GASTO_MEDIO_PAGO', 'TRANSFERENCIA', 'AJUSTE'].includes(String(valor))))) throw new Error(`Valor inválido en ${tabla}.${columna.nombre}.`);
       if (columna.referencia && !(await contexto.obtener(columna.referencia, String(valor)))) throw new Error(`La referencia ${columna.nombre} no existe.`);
     }
     for (const restriccion of definicion.restricciones ?? []) {

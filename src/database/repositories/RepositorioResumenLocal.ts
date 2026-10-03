@@ -31,14 +31,14 @@ export class RepositorioResumenLocal implements RepositorioResumen {
         async function agregar(registro: RegistroDatos) {
           if (registro.eliminado_en !== null) return;
           const moneda = String(registro.moneda); const total = importes.get(moneda) ?? { ingresos: 0n, gastos: 0n };
-          total[tabla] += BigInt(Number(registro.total_centavos)); importes.set(moneda, total);
+          total[tabla] += BigInt(Number(registro.importe_centavos)); importes.set(moneda, total);
           await desglosar(registro);
         }
         /** Lee cada operación del índice y agrega sus grupos sin acumular el historial en memoria. */
         async function desglosar(registro: RegistroDatos) {
           if (registro.eliminado_en !== null) return;
           const id = String(registro.id);
-          const moneda = String(registro.moneda); const total = BigInt(Number(registro.total_centavos));
+          const moneda = String(registro.moneda); const total = BigInt(Number(registro.importe_centavos));
           await agrupar('actividad', String(registro.actividad_id ?? ''), moneda, total, tabla);
           if (tabla === 'gastos') await agrupar('categoria', String(registro.categoria_id), moneda, total, tabla);
           const medios = new Map<string, bigint>();

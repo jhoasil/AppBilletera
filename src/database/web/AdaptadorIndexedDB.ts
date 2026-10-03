@@ -3,6 +3,7 @@ import type { MigracionBaseLocal, OpcionesTransaccion } from '../contracts/Adapt
 import type { ContextoMigracionEsquema, DefinicionTabla } from '../migrations/EsquemaBaseDatos';
 import type { ContextoDatos } from '../contracts/ContextoDatos';
 import { ContextoIndexedDB } from './ContextoIndexedDB';
+import { alinearModeloFinanciero } from '../migrations/v2';
 
 /** Implementa el puerto Web con eventos nativos y confirmación efectiva de transacciones. */
 export class AdaptadorIndexedDB implements AdaptadorWeb<ContextoDatos, ContextoMigracionEsquema> {
@@ -48,12 +49,14 @@ export class AdaptadorIndexedDB implements AdaptadorWeb<ContextoDatos, ContextoM
           }
         }
         try {
-          const resultado = migracion.aplicar({ crearTablas });
-          if (resultado !== undefined) { void resultado.catch(ignorarErrorPosterior); throw new Error('Las migraciones IndexedDB deben aplicar el esquema de forma síncrona.'); }
+          /** Espera exclusivamente solicitudes del mismo contexto versionchange para conservar su atomicidad. */
+          async function alinear() { await alinearModeloFinanciero(new ContextoIndexedDB(solicitud.transaction!)); }
+          const resultado = migracion.aplicar({ crearTablas, alinearModeloFinanciero: alinear });
+          if (resultado !== undefined) void resultado.catch(abortarMigracion);
         } catch (error) { errorMigracion = error; solicitud.transaction?.abort(); }
       }
-      /** Consume un rechazo de una migración asíncrona ya rechazada por incompatibilidad. */
-      function ignorarErrorPosterior() {}
+      /** Revierte datos y versión si una solicitud de la transformación falla. */
+      function abortarMigracion(error: unknown) { errorMigracion = error; solicitud.transaction?.abort(); }
       /** Cierra conexiones obsoletas para liberar futuras actualizaciones de esquema. */
       function completar() {
         const base = solicitud.result;

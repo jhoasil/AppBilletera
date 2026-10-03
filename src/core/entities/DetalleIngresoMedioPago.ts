@@ -4,7 +4,7 @@ import type { EntidadAuditada, Identificador } from './EntidadAuditada';
 export interface DetalleIngresoMedioPago extends EntidadAuditada {
   ingresoId: Identificador;
   medioPagoId: Identificador;
-  /** Destino real del dinero; null si el detalle no tiene una billetera asociada. */
+  /** Billetera histórica real; null se conserva solo en legado pendiente de revisión. */
   billeteraId: Identificador | null;
   /** Entero positivo en centavos, en la moneda del ingreso; no persistir líneas de cero. */
   importeCentavos: number;

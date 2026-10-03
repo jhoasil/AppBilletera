@@ -2103,6 +2103,14 @@ La persistencia agrega una segunda defensa cuando sea posible.
 
 # 46. Versionado del esquema
 
+La migración `src/database/migrations/v2.ts` alinea las referencias históricas dentro de la misma transacción que confirma la versión, tanto en IndexedDB como en SQLite. No modifica V1 ni cambia importes, identidades, fechas o auditoría. Un vínculo entre movimiento y detalle se transforma solamente cuando es inequívoco en ambos sentidos.
+
+Por autorización del usuario en la TAREA 051, los detalles anteriores con `billetera_id = null` y las referencias de cabecera ambiguas permanecen como **legado pendiente de revisión**. No se consulta la billetera predeterminada para completarlos, no se inventan movimientos ni se corrigen saldos automáticamente. El legado se identifica en los respaldos por los detalles sin billetera o las referencias anteriores `ingreso`/`gasto` (y cualquier transferencia o ajuste que no pueda normalizarse). No se incorpora una pantalla de revisión en esta tarea.
+
+Los contratos conservan la nulabilidad física exclusivamente para compatibilidad histórica. Los servicios y ambos contextos transaccionales rechazan nuevas escrituras monetarias sin billetera o con referencias anteriores; solo permiten conservar filas preexistentes sin cambiar su contenido financiero o restaurar un respaldo íntegramente validado. Los respaldos anteriores utilizan la misma transformación V2 antes de compararse con los datos instalados.
+
+La unicidad de efectos vigentes se valida dentro de la transacción mediante el índice `por_referencia`, considerando `referencia_tipo`, `referencia_id` y `tipo`. La edición y el borrado lógico invalidan tanto referencias por detalle como referencias de legado. Las revisiones eliminadas se conservan; no bloquean una nueva revisión de transferencia. Un saldo inicial anterior, incluso eliminado, impide crear un segundo saldo inicial para esa billetera.
+
 El esquema local debe evolucionar mediante migraciones:
 
 ```text

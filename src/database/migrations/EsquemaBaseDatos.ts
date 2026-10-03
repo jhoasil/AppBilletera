@@ -43,4 +43,6 @@ export interface DefinicionTabla {
 export interface ContextoMigracionEsquema {
   /** Crea el conjunto de tablas en orden y aplica restricciones, sin confirmar por separado. */
   crearTablas(tablas: readonly DefinicionTabla[]): void | Promise<void>;
+  /** Actualiza referencias históricas inequívocas sin inventar billeteras ni eliminar datos. */
+  alinearModeloFinanciero(): Promise<void>;
 }

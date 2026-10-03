@@ -2,6 +2,8 @@ import type { SQLiteDBConnection } from '@capacitor-community/sqlite';
 import type { ContextoDatos, RegistroDatos } from '../contracts/ContextoDatos';
 import type { RangoConsulta, ClaveConsulta } from '../contracts/RangoConsulta';
 import { validarRegistro } from '../contracts/validarRegistro';
+import { validarCompatibilidadLegado } from '../contracts/validarCompatibilidadLegado';
+import { validarEfectoMovimiento } from '../contracts/validarEfectoMovimiento';
 import type { NombreTabla } from '../migrations/EsquemaBaseDatos';
 import { tablasV1 } from '../migrations/v1';
 
@@ -49,9 +51,11 @@ export class ContextoSQLite implements ContextoDatos {
     }
   }
   /** Comparte la validación declarativa y escribe con parámetros, preservando identidad y FK históricas. */
-  async guardar(tabla: NombreTabla, registro: RegistroDatos, insertar = false) {
+  async guardar(tabla: NombreTabla, registro: RegistroDatos, insertar = false, preservarLegado = false) {
     if (!this.escritura) throw new Error('Esta transacción es de solo lectura.');
     const definicion = this.definicion(tabla); await validarRegistro(this, tabla, registro);
+    await validarCompatibilidadLegado(this, tabla, registro, preservarLegado);
+    if (tabla === 'movimientos_billetera') await validarEfectoMovimiento(this, registro);
     const columnas = definicion.columnas.map(/** Obtiene la columna declarada para conservar el orden de los valores al guardar. */ function nombre(columna) { return columna.nombre; }); const valores = columnas.map(/** Convierte booleanos al entero SQLite y conserva intactos dinero y fechas. */ function valor(nombre) { const valor = registro[nombre]; return typeof valor === 'boolean' ? Number(valor) : valor; });
     const actualizacion = columnas.filter(/** Excluye la identidad de la actualización para preservar el UUID existente. */ function excluir(nombre) { return nombre !== 'id'; }).map(/** Construye una asignación de columna conocida para actualizar sin reemplazar el registro. */ function asignar(nombre) { return `${nombre}=excluded.${nombre}`; }).join(',');
     await this.conexion.run(`INSERT INTO ${tabla} (${columnas.join(',')}) VALUES (${columnas.map(/** Genera un marcador SQL para vincular valores sin interpolarlos en la sentencia. */ function parametro() { return '?'; }).join(',')})${insertar ? '' : ` ON CONFLICT(id) DO UPDATE SET ${actualizacion}`}`, valores, false);

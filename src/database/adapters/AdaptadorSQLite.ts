@@ -3,6 +3,8 @@ import type { AdaptadorBaseLocal, MigracionBaseLocal, OpcionesTransaccion } from
 import type { ContextoDatos } from '../contracts/ContextoDatos';
 import type { ContextoMigracionEsquema, DefinicionTabla } from '../migrations/EsquemaBaseDatos';
 import { ContextoSQLite } from './ContextoSQLite';
+import { alinearModeloFinanciero } from '../migrations/v2';
+import { tablasV1 } from '../migrations/v1';
 
 /** Motor nativo SQLite con versión lógica propia y transacciones explícitas compartidas por todas las operaciones. */
 export class AdaptadorSQLite implements AdaptadorBaseLocal<ContextoDatos, ContextoMigracionEsquema> {
@@ -30,7 +32,9 @@ export class AdaptadorSQLite implements AdaptadorBaseLocal<ContextoDatos, Contex
         for (const indice of tabla.indices ?? []) await conexion.execute(`CREATE INDEX ${tabla.nombre}_${indice.nombre} ON ${tabla.nombre} (${indice.columnas.join(',')});`, false);
       }
     }
-    try { await migracion.aplicar({ crearTablas }); await conexion.run("INSERT INTO _metadatos (id,valor) VALUES ('version_esquema',?) ON CONFLICT(id) DO UPDATE SET valor=excluded.valor", [migracion.version], false); await conexion.commitTransaction(); }
+    /** Ejecuta la transformación compartida dentro de la transacción de versión SQLite. */
+    async function alinear() { await alinearModeloFinanciero(new ContextoSQLite(conexion, tablasV1.map(/** Delimita los recursos existentes de la migración. */ function nombre(tabla) { return tabla.nombre; }), true)); }
+    try { await migracion.aplicar({ crearTablas, alinearModeloFinanciero: alinear }); await conexion.run("INSERT INTO _metadatos (id,valor) VALUES ('version_esquema',?) ON CONFLICT(id) DO UPDATE SET valor=excluded.valor", [migracion.version], false); await conexion.commitTransaction(); }
     catch (error) { await conexion.rollbackTransaction(); throw error; }
   }
   /** Ejecuta sobre una conexión y confirma únicamente al terminar; los métodos internos usan transaction=false. */

@@ -1,6 +1,8 @@
 import type { RegistroDatos } from '../contracts/ContextoDatos';
 import type { NombreTabla } from '../migrations/EsquemaBaseDatos';
 import { validarRegistro } from '../contracts/validarRegistro';
+import { validarCompatibilidadLegado } from '../contracts/validarCompatibilidadLegado';
+import { validarEfectoMovimiento } from '../contracts/validarEfectoMovimiento';
 import type { ContextoDatos } from '../contracts/ContextoDatos';
 import type { RangoConsulta } from '../contracts/RangoConsulta';
 
@@ -111,8 +113,10 @@ export class ContextoIndexedDB implements ContextoDatos {
   }
 
   /** Valida y guarda; insertar exige un id nuevo, actualizar permite conservar el id existente. */
-  async guardar(tabla: NombreTabla, registro: RegistroDatos, insertar = false): Promise<void> {
+  async guardar(tabla: NombreTabla, registro: RegistroDatos, insertar = false, preservarLegado = false): Promise<void> {
     await validarRegistro(this, tabla, registro);
+    await validarCompatibilidadLegado(this, tabla, registro, preservarLegado);
+    if (tabla === 'movimientos_billetera') await validarEfectoMovimiento(this, registro);
     const almacen = this.transaccion.objectStore(tabla);
     await esperarSolicitud(insertar ? almacen.add(registro) : almacen.put(registro));
   }

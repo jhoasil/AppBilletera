@@ -1,4 +1,5 @@
 import type { DatosRespaldo, RepositorioRespaldo } from '../../core/repositories/RepositorioRespaldo';
+import { alinearRespaldo } from '../contracts/alinearRespaldo';
 import { validarIntegridadRespaldo } from '../contracts/validarIntegridadRespaldo';
 import { tablasV1 } from '../migrations/v1';
 import { baseLocal, prepararBaseLocal } from '../componerBaseLocal';
@@ -30,15 +31,12 @@ export class RepositorioRespaldoLocal implements RepositorioRespaldo {
       }
     }
     for (const tabla of tablasV1) for (const fila of datos[tabla.nombre]!) for (const columna of tabla.columnas) if (columna.referencia && fila[columna.nombre] !== null && !registros.get(columna.referencia)?.has(String(fila[columna.nombre]))) throw new Error(`Referencia incompleta en ${tabla.nombre}.${columna.nombre}.`);
-    for (const tipo of ['ingresos', 'gastos'] as const) for (const padre of datos[tipo]!) {
-      let total = 0n; for (const detalle of datos[`${tipo}_medios_pago`]!) if (detalle[`${tipo === 'ingresos' ? 'ingreso' : 'gasto'}_id`] === padre.id && detalle.eliminado_en === null) total += BigInt(Number(detalle.importe_centavos));
-      if (padre.eliminado_en === null && total !== BigInt(Number(padre.total_centavos))) throw new Error(`Los detalles de ${tipo} no coinciden con el total.`);
-    }
     for (const movimiento of datos.movimientos_billetera!) {
-      const referencias: Record<string, string> = { ingreso: 'ingresos', gasto: 'gastos', transferencia: 'transferencias_billeteras', ajuste: 'ajustes_billetera' };
+      const referencias: Record<string, string> = { ingreso: 'ingresos', gasto: 'gastos', transferencia: 'transferencias_billeteras', ajuste: 'ajustes_billetera', INGRESO_MEDIO_PAGO: 'ingresos_medios_pago', GASTO_MEDIO_PAGO: 'gastos_medios_pago', TRANSFERENCIA: 'transferencias_billeteras', AJUSTE: 'ajustes_billetera' };
       if ((movimiento.referencia_tipo === null) !== (movimiento.referencia_id === null) || (movimiento.referencia_tipo !== null && !registros.get(referencias[String(movimiento.referencia_tipo)] ?? '')?.has(String(movimiento.referencia_id)))) throw new Error('Un movimiento tiene una referencia inválida.');
     }
     await validarIntegridadRespaldo(datos);
+    datos = await alinearRespaldo(datos);
     await prepararBaseLocal();
     /** Guarda en orden de dependencias; el contexto valida tipos, dinero y restricciones también al importar. */
     async function escribir(contexto: ContextoDatos) {
@@ -46,7 +44,16 @@ export class RepositorioRespaldoLocal implements RepositorioRespaldo {
       for (const tabla of tablasV1) for (const registro of datos[tabla.nombre]!) { const existente = await contexto.obtener(tabla.nombre, String(registro.id)); if (existente) { if (!mismosDatos(existente, registro)) throw new Error('El respaldo contiene una identidad con datos diferentes. Importalo en una instalación vacía o conservá ambos respaldos.'); } else pendientes.push({ tabla: tabla.nombre, registro }); }
       // Billeteras precede a medios de pago, que pueden referenciar una billetera predeterminada.
       const orden = ['actividades', 'categorias_gasto', 'billeteras', 'medios_pago', 'ingresos', 'gastos', 'ingresos_medios_pago', 'gastos_medios_pago', 'transferencias_billeteras', 'ajustes_billetera', 'movimientos_billetera'];
-      for (const tabla of orden) for (const pendiente of pendientes) if (pendiente.tabla === tabla) await contexto.guardar(pendiente.tabla, pendiente.registro, true);
+      for (const tabla of orden) for (const pendiente of pendientes) if (pendiente.tabla === tabla) await contexto.guardar(pendiente.tabla, pendiente.registro, true, true);
+      // La unión también debe ser coherente: dos respaldos válidos por separado pueden solapar efectos.
+      const combinados: DatosRespaldo = {};
+      for (const tabla of tablasV1) {
+        const filas: RegistroDatos[] = [];
+        /** Conserva la instantánea resultante únicamente durante la importación expresa. */
+        function agregar(registro: RegistroDatos) { filas.push(registro); }
+        await contexto.recorrer(tabla.nombre, agregar); combinados[tabla.nombre] = filas;
+      }
+      await validarIntegridadRespaldo(combinados);
     }
     return baseLocal.ejecutarTransaccion({ recursos: nombres, modo: 'escritura' }, escribir);
   }

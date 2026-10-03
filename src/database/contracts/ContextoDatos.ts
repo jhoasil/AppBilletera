@@ -17,6 +17,6 @@ export interface ContextoDatos {
   recorrerAsincrono(tabla: NombreTabla, visitar: (registro: RegistroDatos) => Promise<void>, indice?: string, rango?: RangoConsulta): Promise<void>;
   /** Ordena por fecha descendente y UUID ascendente para paginación estable. */
   recorrerPorFecha(tabla: NombreTabla, indice: string, rango: RangoConsulta | undefined, visitar: (registro: RegistroDatos) => void): Promise<void>;
-  /** Valida columnas, restricciones y referencias antes de persistir. */
-  guardar(tabla: NombreTabla, registro: RegistroDatos, insertar?: boolean): Promise<void>;
+  /** Valida columnas y referencias; preservarLegado se reserva a respaldos íntegramente validados. */
+  guardar(tabla: NombreTabla, registro: RegistroDatos, insertar?: boolean, preservarLegado?: boolean): Promise<void>;
 }

@@ -3,7 +3,7 @@ import { BaseLocal } from './BaseLocal';
 import { AdaptadorSQLite } from './adapters/AdaptadorSQLite';
 import type { ContextoDatos } from './contracts/ContextoDatos';
 import type { ContextoMigracionEsquema } from './migrations/EsquemaBaseDatos';
-import { migracionesBaseLocal } from './migrations/v1';
+import { migracionesBaseLocal } from './migrations/v2';
 import { AdaptadorIndexedDB } from './web/AdaptadorIndexedDB';
 
 /** Instancia compartida por servicios; nunca se importa desde componentes de presentación. */

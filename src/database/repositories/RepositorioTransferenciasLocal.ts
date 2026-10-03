@@ -55,10 +55,13 @@ export class RepositorioTransferenciasLocal implements RepositorioTransferencias
       const origen = await exigirCatalogoActivo(contexto, 'billeteras', transferencia.billeteraOrigenId, anterior?.billetera_origen_id === transferencia.billeteraOrigenId);
       const destino = await exigirCatalogoActivo(contexto, 'billeteras', transferencia.billeteraDestinoId, anterior?.billetera_destino_id === transferencia.billeteraDestinoId);
       if (origen.moneda !== destino.moneda || origen.moneda !== transferencia.moneda) throw new Error('Las dos billeteras deben tener la misma moneda; no se realizan conversiones.');
-      if (anterior) await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', RangoConsulta.unico(['transferencia', transferencia.id]), transferencia.actualizadoEn);
+      if (anterior) {
+        await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', RangoConsulta.unico(['TRANSFERENCIA', transferencia.id]), transferencia.actualizadoEn);
+        await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', RangoConsulta.unico(['transferencia', transferencia.id]), transferencia.actualizadoEn);
+      }
       await contexto.guardar('transferencias_billeteras', convertirRegistro(transferencia), !anterior);
       const auditoria = { creadoEn: transferencia.actualizadoEn, actualizadoEn: transferencia.actualizadoEn, eliminadoEn: null };
-      const comun = { ...auditoria, referenciaTipo: 'transferencia' as const, referenciaId: transferencia.id, fecha, descripcion: transferencia.descripcion };
+      const comun = { ...auditoria, referenciaTipo: 'TRANSFERENCIA' as const, referenciaId: transferencia.id, fecha, descripcion: transferencia.descripcion };
       const salida: MovimientoBilletera = { ...comun, id: crypto.randomUUID(), billeteraId: transferencia.billeteraOrigenId, tipo: 'TRANSFERENCIA_SALIDA', importeCentavos: -transferencia.importeCentavos };
       const entrada: MovimientoBilletera = { ...comun, id: crypto.randomUUID(), billeteraId: transferencia.billeteraDestinoId, tipo: 'TRANSFERENCIA_ENTRADA', importeCentavos: transferencia.importeCentavos };
       await contexto.guardar('movimientos_billetera', convertirRegistro(salida), true);
@@ -74,6 +77,7 @@ export class RepositorioTransferenciasLocal implements RepositorioTransferencias
     async function eliminar(contexto: ContextoDatos) {
       const registro = await contexto.obtener('transferencias_billeteras', id);
       if (!registro || registro.eliminado_en !== null) return;
+      await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', RangoConsulta.unico(['TRANSFERENCIA', id]), eliminadoEn);
       await invalidarRegistros(contexto, 'movimientos_billetera', 'por_referencia', RangoConsulta.unico(['transferencia', id]), eliminadoEn);
       await contexto.guardar('transferencias_billeteras', { ...registro, actualizado_en: eliminadoEn, eliminado_en: eliminadoEn });
     }
