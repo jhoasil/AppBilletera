@@ -15,8 +15,6 @@ import IconButton from '@mui/material/IconButton';
 import Refresh from '@mui/icons-material/Refresh';
 import TrendingUp from '@mui/icons-material/TrendingUp';
 import Add from '@mui/icons-material/Add';
-import ArrowDownward from '@mui/icons-material/ArrowDownward';
-import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import SwapHoriz from '@mui/icons-material/SwapHoriz';
 import ListAlt from '@mui/icons-material/ListAlt';
 import { estadosFinancieros, tokensVisuales } from '../../app/theme/tokens';
@@ -65,11 +63,12 @@ export function PaginaInicio() {
           <Box sx={{ px: 1, borderRight: '1px solid', borderColor: 'divider', '@media (max-width:359px)': { borderRight: 0, borderBottom: '1px solid', borderColor: 'divider', pb: 1 } }}><Typography sx={{ fontSize: 20, fontWeight: 700, color: 'success.main', fontVariantNumeric: 'tabular-nums', overflowWrap: 'anywhere' }}>+{importe(total.ingresosCentavos, total.moneda)}</Typography><Typography variant="body2" color="text.secondary">Ingresos</Typography></Box>
           <Box sx={{ px: 1 }}><Typography sx={{ fontSize: 20, fontWeight: 700, color: 'error.main', fontVariantNumeric: 'tabular-nums', overflowWrap: 'anywhere' }}>-{importe(total.gastosCentavos, total.moneda)}</Typography><Typography variant="body2" color="text.secondary">Gastos</Typography></Box>
         </Box>} />
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, '@media (min-width:360px)': { gridTemplateColumns: '1fr 1fr' }, gap: 1.5 }}>
-          <TarjetaResumen titulo="Ingresos" valor={importe(total.ingresosCentavos, total.moneda)} tono="positivo" suave disposicion="acceso" icono={<ArrowDownward />} accion={<Button fullWidth variant="contained" startIcon={<Add />} component="a" href="#/ingresos?nuevo=1" color="success" sx={/** Oscurece el verde en claro para que el texto blanco conserve contraste. */ function botonIngreso(tema) { return { px: 1, fontSize: 13, '& .MuiButton-startIcon': { mr: 0.5 }, bgcolor: tema.palette.mode === 'light' ? 'success.dark' : 'success.main', color: tema.palette.mode === 'light' ? 'common.white' : 'success.contrastText', '&:hover': { bgcolor: tema.palette.mode === 'light' ? 'success.dark' : 'success.light' } }; }}>Agregar ingreso</Button>} />
-          <TarjetaResumen titulo="Gastos" valor={importe(total.gastosCentavos, total.moneda)} tono="negativo" suave disposicion="acceso" icono={<ArrowUpward />} accion={<Button fullWidth variant="contained" startIcon={<Add />} component="a" href="#/gastos?nuevo=1" color="error" sx={/** Conserva el contraste del texto también al señalar el botón en oscuro. */ function botonGasto(tema) { return { px: 1, fontSize: 13, '& .MuiButton-startIcon': { mr: 0.5 }, '&:hover': { bgcolor: tema.palette.mode === 'dark' ? 'error.light' : 'error.dark' } }; }}>Agregar gasto</Button>} />
-        </Box>
       </Stack>; })}
+      {/* Los totales aparecen solo en el resumen; las acciones se ofrecen una vez, incluso con varias monedas. */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', '@media (min-width:360px)': { gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' }, gap: 1.5 }}>
+        <Button fullWidth variant="contained" startIcon={<Add />} component="a" href="#/ingresos?nuevo=1" color="success" sx={/** Oscurece el verde en claro para que el texto blanco conserve contraste. */ function botonIngreso(tema) { return { px: 1, fontSize: 13, '& .MuiButton-startIcon': { mr: 0.5 }, bgcolor: tema.palette.mode === 'light' ? 'success.dark' : 'success.main', color: tema.palette.mode === 'light' ? 'common.white' : 'success.contrastText', '&:hover': { bgcolor: tema.palette.mode === 'light' ? 'success.dark' : 'success.light' } }; }}>Agregar ingreso</Button>
+        <Button fullWidth variant="contained" startIcon={<Add />} component="a" href="#/gastos?nuevo=1" color="error" sx={/** Conserva el contraste del texto también al señalar el botón en oscuro. */ function botonGasto(tema) { return { px: 1, fontSize: 13, '& .MuiButton-startIcon': { mr: 0.5 }, '&:hover': { bgcolor: tema.palette.mode === 'dark' ? 'error.light' : 'error.dark' } }; }}>Agregar gasto</Button>
+      </Box>
       <Paper variant="outlined" sx={{ p: 1.5 }}><Stack spacing={1}>
         <Typography component="h2" variant="h3" sx={{ fontWeight: 700 }}>Mi dinero</Typography>
         {/* Las mini tarjetas solo distribuyen saldos ya agregados; no suman ni mezclan monedas. */}

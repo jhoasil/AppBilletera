@@ -6,6 +6,10 @@ Fecha: 03/10/2026. Alcance: ajuste adicional de Inicio autorizado por el usuario
 
 ### Cambios y comparación
 
+Corrección posterior autorizada el 03/10/2026: las tarjetas inferiores repetían los mismos ingresos y gastos de hoy. Se sustituyen por dos botones de registro, conservando todos los importes en el resumen superior. Las acciones quedan fuera del recorrido por monedas para evitar duplicarlas. Se mantienen rutas, contraste y altura táctil; los botones se apilan por debajo de 360 px. Las capturas y mediciones de la revisión inicial que siguen documentan el estado previo a esta simplificación.
+
+Esta corrección se observó en Oscuro a 390 y 320 px CSS: acciones en dos columnas y apiladas, respectivamente, sin desbordamiento horizontal. [Captura local actualizada](../tmp/tarea-086/inicio-botones-sin-redundancia.jpg), excluida de Git. Validación de tipos correcta; diff revisado y git diff --check sin errores. Sin cambios financieros ni tests creados o ejecutados.
+
 - Roboto variable latina incluida localmente, con licencia y fuente incorporadas al precache de producción. Se observó la fuente aplicada en navegador; no se realizó una prueba de desconexión física.
 - Marca con mayor peso, icono de billetera sólido y Ajustes a la derecha. Inicio conserva el acceso a Billeteras en Mi dinero. El título accesible oculto queda fuera del Stack para evitar separación adicional antes de la fecha.
 - Ganancia con etiqueta/cifra a la izquierda e icono de tendencia a la derecha. Importes inferiores destacados y centrados; en 320 px pasan a dos filas para conservar los centavos.

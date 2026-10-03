@@ -4282,7 +4282,7 @@ Revisar diff y ejecutar `git diff --check`. No crear ni ejecutar tests. Ejecutar
 
 ## Estado
 
-Completada el 03/10/2026. Tipografía local, cabecera, resumen, accesos rápidos, billeteras y movimientos ajustados; comparación manual y límites registrados en REVISION_VISUAL.md. Tipos y compilación correctos. Tests: no creados ni ejecutados.
+Completada el 03/10/2026. Tipografía local, cabecera, resumen, accesos rápidos, billeteras y movimientos ajustados; comparación manual y límites registrados en REVISION_VISUAL.md. Corrección posterior autorizada: sustituir las tarjetas rápidas por Agregar ingreso y Agregar gasto, mostrando los totales únicamente en el resumen superior. Esta decisión prevalece sobre el punto 4 de la referencia original. Tipos y compilación correctos. Tests: no creados ni ejecutados.
 
 ## Objetivo y referencias
 
