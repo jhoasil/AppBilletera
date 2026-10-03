@@ -1,3 +1,6 @@
+import Stack from '@mui/material/Stack';
+import Chip from '@mui/material/Chip';
+import Typography from '@mui/material/Typography';
 import type { Actividad } from '../../../core/entities/Actividad';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -14,7 +17,10 @@ function crearActividad(): Actividad {
 }
 
 /** Resume el tipo y estado para consultar rápidamente la actividad. */
-function detalle(actividad: Actividad) { return `${actividad.tipo === 'trabajo_temporal' ? 'Trabajo temporal' : actividad.tipo} · ${actividad.estado} · ${actividad.fechaInicio ?? 'Sin inicio'} / ${actividad.fechaFin ?? 'Sin fin'} · ${actividad.activo ? 'Disponible' : 'Inactiva'}`; }
+function detalle(actividad: Actividad) { return <Stack spacing={0.5}><Typography variant="body2">{actividad.tipo === 'trabajo_temporal' ? 'Trabajo temporal' : actividad.tipo}</Typography><Chip size="small" sx={{ alignSelf: 'flex-start' }} label={actividad.estado === 'activo' ? 'Activa' : actividad.estado === 'finalizado' ? 'Finalizado' : 'Archivado'} variant="outlined" /></Stack>; }
+
+/** Incluye nombre y tipo para buscar sin recorrer operaciones financieras. */
+function textoBusqueda(actividad: Actividad) { return `${actividad.nombre} ${actividad.tipo}`; }
 
 /** Presenta los campos de actividad, fechas, estado y selectores visuales. */
 function campos(actividad: Actividad, actualizar: (cambios: Partial<Actividad>) => void) {
@@ -46,5 +52,5 @@ function campos(actividad: Actividad, actualizar: (cambios: Partial<Actividad>) 
 
 /** Administra actividades reutilizando su identidad para ingresos, gastos y trabajos. */
 export function CatalogoActividades() {
-  return <EditorCatalogo singular="actividad" servicio={servicioActividades} crearNuevo={crearActividad} campos={campos} detalle={detalle} />;
+  return <EditorCatalogo singular="actividad" etiquetaCrear="Nueva actividad" alturaTarjeta={88} tamanoIcono={48} textoBusqueda={textoBusqueda} servicio={servicioActividades} crearNuevo={crearActividad} campos={campos} detalle={detalle} />;
 }

@@ -8,10 +8,12 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import { listarCatalogo } from '../../../app/data/datosCargaRapida';
 import { BotonAccion } from '../../../shared/components/BotonAccion';
 import { EstadoVacio } from '../../../shared/components/EstadoVacio';
 import { ServicioCatalogo, type EntidadCatalogo } from '../../../core/services/ServicioCatalogo';
@@ -24,13 +26,17 @@ export interface PropiedadesEditorCatalogo<Entidad extends EntidadCatalogo> {
   servicio: ServicioCatalogo<Entidad>;
   crearNuevo: () => Entidad;
   campos: (entidad: Entidad, actualizar: (cambios: Partial<Entidad>) => void) => ReactNode;
-  detalle?: (entidad: Entidad) => string;
+  detalle?: (entidad: Entidad) => ReactNode;
+  etiquetaCrear?: string;
+  alturaTarjeta?: number;
+  tamanoIcono?: number;
+  textoBusqueda?: (entidad: Entidad) => string;
   guardarPersonalizado?: (entidad: Entidad) => Promise<void>;
   accionAdicional?: (entidad: Entidad, deshabilitado: boolean) => ReactNode;
 }
 
 /** Presenta un ABM paginado con errores visibles y controles deshabilitados durante escrituras. */
-export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, servicio, crearNuevo, campos, detalle, guardarPersonalizado, accionAdicional }: PropiedadesEditorCatalogo<Entidad>) {
+export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, servicio, crearNuevo, campos, detalle, guardarPersonalizado, accionAdicional, etiquetaCrear, alturaTarjeta, tamanoIcono = 48, textoBusqueda }: PropiedadesEditorCatalogo<Entidad>) {
   const [elementos, establecerElementos] = useState<readonly Entidad[]>([]);
   const [total, establecerTotal] = useState(0);
   const [pagina, establecerPagina] = useState(0);
@@ -41,6 +47,14 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
   const [errorFormulario, establecerErrorFormulario] = useState('');
   const [borrador, establecerBorrador] = useState<Entidad | null>(null);
   const formularioId = useId();
+  const [busqueda, establecerBusqueda] = useState('');
+  /** Busca solamente metadatos de catálogo y reinicia la página para no ocultar coincidencias. */
+  function buscar(valor: string) { establecerBusqueda(valor); establecerPagina(0); }
+  /** Compara nombre y los campos visibles sin distinguir mayúsculas. */
+  function coincide(entidad: Entidad) { return (textoBusqueda?.(entidad) ?? entidad.nombre).toLocaleLowerCase('es').includes(busqueda.trim().toLocaleLowerCase('es')); }
+  const filtrados = textoBusqueda ? elementos.filter(coincide) : elementos;
+  const visibles = textoBusqueda ? filtrados.slice(pagina * 20, (pagina + 1) * 20) : filtrados;
+  const totalVisible = textoBusqueda ? filtrados.length : total;
 
   /** Carga una página e ignora respuestas obsoletas al cambiar de destino o paginación. */
   function cargar() {
@@ -50,12 +64,14 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
     function completar(resultado: { elementos: readonly Entidad[]; total: number }) { if (vigente) { establecerElementos(resultado.elementos); establecerTotal(resultado.total); establecerCargando(false); } }
     /** Presenta un error de lectura con posibilidad de reintentar. */
     function fallar(causa: unknown) { if (vigente) { establecerError(mensajeError(causa)); establecerCargando(false); } }
-    void servicio.listar(pagina).then(completar, fallar);
+    /** Carga únicamente catálogos pequeños cuando hay búsqueda; conserva las páginas de otros listados. */
+    async function consultar() { if (!textoBusqueda) return servicio.listar(pagina); const registros = await listarCatalogo(servicio); return { elementos: registros, total: registros.length }; }
+    void consultar().then(completar, fallar);
     /** Cancela únicamente la actualización visual; la lectura del motor termina normalmente. */
     function cancelar() { vigente = false; }
     return cancelar;
   }
-  useEffect(cargar, [servicio, pagina, revision]);
+  useEffect(cargar, [servicio, textoBusqueda ? 0 : pagina, revision]);
   /** Extrae un mensaje legible de errores de servicio. */
   function mensajeError(causa: unknown) { return causa instanceof Error ? causa.message : 'No se pudo completar la operación.'; }
   /** Fuerza una lectura actualizada sin borrar datos. */
@@ -95,23 +111,28 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
       catch (causa) { establecerError(mensajeError(causa)); }
       finally { establecerPendiente(false); }
     }
-    return <Card key={entidad.id}><CardContent><Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ alignItems: { sm: 'center' } }}>
-      <IconoCatalogo identificador={entidad.icono} />
-      <Stack sx={{ flex: 1 }}><Typography variant="h6">{entidad.nombre}</Typography>
-        <Typography variant="body2" color="text.secondary">{detalle?.(entidad) ?? (entidad.activo ? 'Activo' : 'Inactivo')}</Typography></Stack>
-      <Button onClick={editar} disabled={pendiente} aria-label={`Consultar o editar ${entidad.nombre}`}>Editar</Button>
-      {accionAdicional?.(entidad, pendiente)}
-      <FormControlLabel label={entidad.activo ? 'Activo' : 'Inactivo'} control={<Switch checked={entidad.activo} onChange={cambiarActivo} disabled={pendiente} slotProps={{ input: { 'aria-label': `Activar ${entidad.nombre}` } }} />} />
-    </Stack></CardContent></Card>;
+    return <Card key={entidad.id} sx={{ p: 0 }}><CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 }, minHeight: alturaTarjeta ?? 88 }}>
+      <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', minWidth: 0 }}>
+        <Box sx={{ width: tamanoIcono, height: tamanoIcono, flexShrink: 0, display: 'grid', placeItems: 'center', bgcolor: 'action.hover', borderRadius: 1.5 }}><IconoCatalogo identificador={entidad.icono} /></Box>
+        <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}><Typography variant="subtitle1" sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>{entidad.nombre}</Typography>
+          {detalle && <Box sx={{ color: 'text.secondary', fontSize: 14 }}>{detalle(entidad)}</Box>}
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}><Chip size="small" label={entidad.activo ? 'Activa' : 'Inactiva'} variant="outlined" />
+          {entidad.color && <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}><Box component="span" sx={{ width: 12, height: 12, bgcolor: entidad.color, borderRadius: '50%', border: '1px solid', borderColor: 'divider' }} />Color {entidad.color}</Typography>}</Stack>
+        </Stack>
+        <Switch checked={entidad.activo} onChange={cambiarActivo} disabled={pendiente} slotProps={{ input: { 'aria-label': `${entidad.activo ? 'Desactivar' : 'Activar'} ${entidad.nombre}` } }} />
+      </Stack>
+      <Stack direction="row" useFlexGap spacing={1} sx={{ flexWrap: 'wrap' }}><Button onClick={editar} disabled={pendiente} aria-label={`Consultar o editar ${entidad.nombre}`}>Editar</Button>{accionAdicional?.(entidad, pendiente)}</Stack>
+    </CardContent></Card>;
   }
   return <Stack spacing={2}>
-    <BotonAccion etiqueta={`Crear ${singular}`} alPulsar={crear} deshabilitado={pendiente} />
+    <BotonAccion etiqueta={etiquetaCrear ?? `Crear ${singular}`} alPulsar={crear} deshabilitado={pendiente} />
+    {textoBusqueda && <CampoTextoCatalogo etiqueta={`Buscar ${singular}`} valor={busqueda} alCambiar={buscar} />}
     {error && <Alert severity="error" action={<Button onClick={recargar}>Reintentar</Button>}>{error}</Alert>}
-    {cargando ? <CircularProgress aria-label="Cargando catálogo" /> : elementos.length ? elementos.map(mostrarEntidad) : !error && <EstadoVacio titulo="Sin registros" descripcion="Creá el primer registro de este catálogo." />}
+    {cargando ? <CircularProgress aria-label="Cargando catálogo" /> : visibles.length ? visibles.map(mostrarEntidad) : !error && <EstadoVacio titulo={busqueda ? "Sin coincidencias" : "Sin registros"} descripcion={busqueda ? "Probá con otro nombre o tipo." : "Creá el primer registro de este catálogo."} />}
     <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
       <Button onClick={anterior} disabled={pagina === 0 || cargando || pendiente}>Anterior</Button>
-      <Typography variant="body2">Página {pagina + 1} · {total} registros</Typography>
-      <Button onClick={siguiente} disabled={(pagina + 1) * 20 >= total || cargando || pendiente}>Siguiente</Button>
+      <Typography variant="body2">Página {pagina + 1} · {totalVisible} registros</Typography>
+      <Button onClick={siguiente} disabled={(pagina + 1) * 20 >= totalVisible || cargando || pendiente}>Siguiente</Button>
     </Stack>
     <Dialog open={Boolean(borrador)} onClose={cerrar} fullWidth maxWidth="sm" aria-labelledby={`${formularioId}-titulo`}>
       <DialogTitle id={`${formularioId}-titulo`}>{borrador?.id ? 'Editar' : 'Crear'} {singular}</DialogTitle>
