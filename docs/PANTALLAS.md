@@ -2912,3 +2912,20 @@ MODELO_DATOS.md
 GUIA_VISUAL.md
 PANTALLAS.md
 ```
+---
+
+# 51. Composición y retornos — referencias del 03/10/2026
+
+Esta precisión conserva las acciones y reglas financieras anteriores; los tamaños se encuentran en GUIA_VISUAL.md, sección 91.
+
+- Inicio muestra fecha, resultado diario, accesos de ingreso/gasto, billeteras y movimientos; no necesita repetir el título Inicio debajo de la marca.
+- Ingreso y gasto conservan campos y servicios actuales; billetera real por línea siempre visible y editable, aunque una lámina la omita.
+- Formularios de ingreso/gasto vuelven a su listado; transferencia al listado de billeteras; detalle al listado; conciliación al detalle; movimiento faltante a conciliación conservando billetera y saldo real.
+- Subpantallas de Ajustes vuelven a su menú mediante estado local; no depender de history.back ni crear otro flujo por plataforma.
+- Billeteras muestra patrimonio por moneda sin comparativas ficticias. Detalle separa saldo actual del período del listado.
+- Conciliación mantiene dos decisiones expresas: operación real faltante o ajuste documentado. Una diferencia cero permite confirmar coincidencia sin ajuste.
+- Catálogos mantienen edición y disponibilidad; medios distingue Activo de Carga rápida. La billetera predeterminada solo sugiere nuevas operaciones.
+- Reportes alterna actividad, categoría y medio, conserva resultado y patrimonio separados y mantiene los rangos existentes. No muestra variación contra un período que no fue consultado.
+- Apariencia conserva una sola elección Sistema/Claro/Oscuro y presenta miniaturas demostrativas identificadas como ejemplo. No añadir switches contradictorios ni controles sin soporte.
+
+La TAREA 066 verificó la base existente con muestras manuales y revisión conceptual. Las TAREAS 067–085 refinan las diferencias de composición; no representan autorización de funcionalidades nuevas ni de tests.

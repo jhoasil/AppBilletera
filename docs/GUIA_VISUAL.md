@@ -2800,3 +2800,34 @@ Antes de agregar una nueva medida, color, radio o sombra:
 4. documentarlo.
 
 La consistencia visual tiene prioridad sobre personalizaciones aisladas.
+---
+
+# 91. Composición vigente de las referencias — TAREA 067
+
+Esta sección precisa la composición de las pantallas desde la revisión del 03/10/2026. Mantiene los tokens de los capítulos anteriores y sustituye únicamente sus alternativas de composición cuando difieran.
+
+## Cabeceras
+
+Una sola cabecera contextual en móvil: identidad AppBilletera en destinos principales; regreso explícito y título en formularios, detalle y subpantallas. No repetir una barra de marca encima de otra barra de regreso. En escritorio conservar navegación lateral y un encabezado de contenido.
+
+## Superficies y jerarquía
+
+El resumen principal usa una superficie azul suave en claro y elevada en oscuro, texto del tema y cifra 32–36 px. El azul saturado se reserva principalmente para acciones. Las tarjetas de saldo usan superficies neutrales, sin reinterpretar el saldo como ganancia.
+
+Inicio mantiene fecha localizada, franja de ingresos/gastos, accesos rápidos semánticos, hasta tres mini billeteras y cuatro o cinco movimientos agrupados. En 320 px se permite apilar; desde 360 px pueden usarse dos columnas cuando el texto cabe.
+
+## Filas y formularios
+
+Catálogos: contenedor de icono de 40–48 px con el color configurado, nombre, información secundaria necesaria y edición contextual. Eliminar hexadecimales y botones repetidos del listado; el editor conserva todos los campos. Separar estado de trabajo, disponibilidad y carga rápida con etiquetas inequívocas.
+
+Carga rápida: icono/nombre a la izquierda e importe a la derecha; segunda línea con billetera real editable. Nunca ocultar el destino del dinero para imitar una imagen. Agrupar campos de identidad/fecha/descripción y medios/total en superficies relacionadas.
+
+Reportes: indicadores con iconos, selector de desglose, filas de importe/porcentaje/barra y patrimonio separado. Cada porcentaje identifica su denominador y moneda.
+
+## Adaptación y exclusiones
+
+Mantener 390 × 844 px como referencia y revisar 320, 430, 600, 768, 1024 y 1440 px. Formularios limitados a 600 px, controles táctiles y un único scroll de pantalla; conservar áreas seguras y foco visible.
+
+La implementación ya posee paletas, medidas, consultas financieras, modos Sistema/Claro/Oscuro y estados básicos. La nueva fase refina composición, densidad, cabeceras e iconos; no rehace estos mecanismos.
+
+Las imágenes tienen diferencias entre sí. Se conservan paleta normativa, cuatro destinos inferiores, entrada positiva, salida negativa y ajuste violeta. No copiar logos comerciales ni cifras de muestra. Color de acento configurable, descripción de categorías, comparativas, cantidad de movimientos, arrastre y notificaciones quedan fuera hasta una tarea funcional autorizada.
