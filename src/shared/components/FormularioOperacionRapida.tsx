@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Close from '@mui/icons-material/Close';
+import Check from '@mui/icons-material/Check';
 import Save from '@mui/icons-material/Save';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -166,6 +167,6 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
     </Stack>
     {resumenImpacto && !errorImportes && resumenImpacto(moneda, lineas.map(/** Prepara distribuciones positivas para la vista previa delegada al dominio. */ function convertir(linea) { return { medioPagoId: linea.medioPagoId, billeteraId: linea.billeteraId || null, importeCentavos: interpretarCampoRapido(linea.importe) }; }).filter(/** Excluye líneas vacías de la vista previa, igual que en el guardado. */ function positiva(linea) { return linea.importeCentavos > 0; }))}
     {!alGuardar && <Alert severity="info">La persistencia se conectará en la siguiente tarea.</Alert>}
-    <Button startIcon={<Save />} fullWidth type="submit" variant="contained" color={tipo === 'ingreso' ? 'success' : 'error'} loading={pendiente} disabled={!alGuardar || Boolean(errorImportes) || total === 0}>Guardar {tipo}</Button>
+    <Button startIcon={tipo === 'gasto' ? <Check /> : <Save />} fullWidth type="submit" variant="contained" color={tipo === 'ingreso' ? 'success' : 'error'} loading={pendiente} disabled={!alGuardar || Boolean(errorImportes) || total === 0}>Guardar {tipo}</Button>
   </Stack>;
 }

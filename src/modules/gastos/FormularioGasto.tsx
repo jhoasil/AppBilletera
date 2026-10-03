@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import type { LineaCobro } from '../../core/services/CargaIngreso';
 import { useMemo } from 'react';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { FormularioOperacionRapida, type CargaOperacion } from '../../shared/components/FormularioOperacionRapida';
 import type { CargaGasto } from '../../core/services/CargaGasto';
 
@@ -16,5 +15,6 @@ export function FormularioGasto({ alGuardar, inicial, alCompletar, resumenImpact
   const datosIniciales = useMemo(preparar, [inicial]);
   /** Convierte la selección vacía a null sin modificar las distribuciones monetarias. */
   async function guardar(carga: CargaOperacion) { if (alGuardar) await alGuardar({ ...carga, actividadId: carga.actividadId || null }); }
-  return <Stack spacing={2}><Typography variant="body2" color="text.secondary">Indicá la categoría y descripción del gasto. Asociá una actividad cuando corresponda; cada importe saldrá de la billetera que selecciones.</Typography><FormularioOperacionRapida tipo="gasto" {...(resumenImpacto ? { resumenImpacto } : {})} {...(datosIniciales ? { inicial: datosIniciales } : {})} {...(alGuardar ? { alGuardar: guardar } : {})} {...(alCompletar ? { alCompletar } : {})} /></Stack>;
+  // Los campos y ayudas del formulario compartido explican el destino sin repetir una introducción.
+  return <Stack spacing={2}><FormularioOperacionRapida tipo="gasto" {...(resumenImpacto ? { resumenImpacto } : {})} {...(datosIniciales ? { inicial: datosIniciales } : {})} {...(alGuardar ? { alGuardar: guardar } : {})} {...(alCompletar ? { alCompletar } : {})} /></Stack>;
 }
