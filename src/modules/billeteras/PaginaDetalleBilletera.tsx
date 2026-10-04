@@ -1,3 +1,4 @@
+import { nombreTipoBilletera } from '../../core/entities/TipoBilletera';
 import { useEffect, useState } from 'react';
 import SwapHoriz from '@mui/icons-material/SwapHoriz';
 import FactCheck from '@mui/icons-material/FactCheck';
@@ -83,7 +84,7 @@ export function PaginaDetalleBilletera() {
     <CabeceraPagina titulo={datos?.billetera.nombre ?? 'Detalle de billetera'} icono={datos?.billetera.icono ?? null} color={datos?.billetera.color ?? null} regreso={{ href: "#/billeteras", etiqueta: "Volver a billeteras" }} />
     {error && <Alert severity="error" action={<Button onClick={actualizar}>Reintentar</Button>}>{error}</Alert>}
     {cargando ? <CircularProgress aria-label="Cargando saldo y movimientos" /> : !error && datos && <>
-      <TarjetaResumen titulo={`${datos.billetera.nombre} · Saldo actual`} principal suave alturaMinima={152} valor={formatearImporte(crearImporte(datos.saldoCentavos, datos.billetera.moneda))} icono={<IconoCatalogo identificador={datos.billetera.icono} color={datos.billetera.color} contenedor />} tono={datos.saldoCentavos < 0 ? 'negativo' : 'positivo'} detalle={`Última conciliación: ${datos.billetera.conciliadoEn ? new Date(datos.billetera.conciliadoEn).toLocaleString('es-AR') : 'Sin conciliaciones'} · ${datos.billetera.activo ? 'Activa' : 'Inactiva'}`} />
+      <TarjetaResumen titulo={`${datos.billetera.nombre} · Saldo actual`} principal suave alturaMinima={152} valor={formatearImporte(crearImporte(datos.saldoCentavos, datos.billetera.moneda))} icono={<IconoCatalogo identificador={datos.billetera.icono} color={datos.billetera.color} contenedor />} tono={datos.saldoCentavos < 0 ? 'negativo' : 'positivo'} detalle={`${nombreTipoBilletera(datos.billetera.tipo)} · Última conciliación: ${datos.billetera.conciliadoEn ? new Date(datos.billetera.conciliadoEn).toLocaleString('es-AR') : 'Sin conciliaciones'} · ${datos.billetera.activo ? 'Activa' : 'Inactiva'}`} />
       <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', '@media (min-width:360px)': { gridTemplateColumns: '1fr 1fr' }, gap: 1.5 }}><Button startIcon={<SwapHoriz />} component="a" href={`#/transferencias?origen=${id}`} variant="contained" disabled={!datos.billetera.activo}>Transferir</Button><Button startIcon={<FactCheck />} component="a" href={`#/conciliacion?id=${id}`} variant="outlined" disabled={!datos.billetera.activo}>Conciliar</Button></Box>
       <Button onClick={actualizar}>Actualizar saldo y movimientos</Button>
       {/* Los filtros pertenecen al historial; el saldo superior conserva su consulta independiente. */}

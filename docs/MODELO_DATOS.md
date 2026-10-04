@@ -2218,3 +2218,9 @@ Toda operación financiera debe poder responder posteriormente:
 Si una modificación del modelo impide responder alguna de estas preguntas, debe revisarse antes de implementarla.
 
 La trazabilidad y la integridad financiera tienen prioridad sobre simplificaciones de almacenamiento.
+
+## Clasificación de billeteras — TAREA 93 (04/10/2026)
+
+Los tipos vigentes son `efectivo` (billetes y monedas físicos) y `digital` (bancos, billeteras virtuales y cuentas digitales de cobro). Son metadatos de la ubicación del dinero, independientes del medio de pago y de su moneda. Nuevas escrituras de catálogo usan solo estos valores.
+
+Por compatibilidad el campo sigue siendo texto: los tipos antiguos reconocibles se interpretan con una función común y se normalizan cuando se guarda la billetera. Los tipos libres desconocidos se conservan y requieren clasificación explícita; no se adivinan por el nombre. La lectura no modifica datos ni auditoría y los respaldos históricos siguen siendo válidos. Reclasificar no genera movimientos, conversiones o variaciones de saldo.

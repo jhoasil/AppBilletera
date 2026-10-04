@@ -4458,3 +4458,13 @@ Estado: completada el 04/10/2026. Documentada antes de implementar. Referencias 
 Alcance: catálogos con cabecera, búsqueda, filtros antes de paginar, disponibilidad y edición; medios con billetera sugerida y chip de carga rápida; billeteras con saldos reales y totales separados por moneda. Formularios en página con opciones visuales de icono/color, vista previa y guardar/cancelar. Nueva billetera mantiene creación atómica del movimiento inicial; edición nunca cambia saldo directamente. Nuevo gasto reorganiza Fecha/Categoría, Actividad/Descripción y Observaciones/Moneda en filas, apiladas en anchos pequeños; total rojo y guardar azul conforme a la referencia más reciente. Conservar medios adicionales, validaciones, centavos e historia. No copiar cifras ni logos ficticios.
 
 Validación: tipos, compilación, revisión visual sin escrituras financieras, diff y diff --check. Sin tests, push ni migraciones. Rama task_26/092_refinar_medios_billeteras_gasto; commit style(ajustes): refina medios, billeteras y carga de gasto.
+
+# TAREA 93 — Billeteras de efectivo y dinero digital
+
+Estado: completada el 04/10/2026. Autorizada por el usuario después de TAREA 92. Rama task_26/093_clasificar_billeteras_efectivo_digital.
+
+Dos tipos para altas y edición: efectivo (dinero físico) y digital (bancos, billeteras virtuales y cuentas digitales de cobro). Selector cerrado y explicación, etiquetas y filtros en Ajustes y listado patrimonial. El filtro se aplica antes de paginar y de sumar saldos en el repositorio. No cambia moneda, UUID, movimientos, importes ni preferencias de medios.
+
+Compatibilidad: resolver tipos antiguos conocidos (caja/efectivo → efectivo; banco/app/transferencia/virtual/digital → digital) mediante una regla común, sin reescribir historia al abrir la app. Al guardar, persistir el tipo canónico. Un tipo libre desconocido se muestra como pendiente de clasificación y requiere elegir uno de los dos tipos al editar; no inferirlo del nombre, icono o saldo. Respaldos anteriores permanecen legibles; no modificar migraciones distribuidas.
+
+Validación: tipos y compilación, revisión manual de filtros y selector sin guardar datos, diff y diff --check. Tests no autorizados. Commit independiente y merge a main al finalizar por instrucción del usuario; sin push.

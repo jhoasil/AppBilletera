@@ -2965,3 +2965,7 @@ Referencia 6ccf4b0b: menú agrupado con Catálogos, Preferencias y Respaldo y da
 ## Ajuste de catálogos y Gasto — TAREA 92
 
 Las referencias del 04/10/2026 sustituyen la composición anterior de estos catálogos: búsqueda y filtros, tarjetas con disponibilidad, formularios en página y vista previa. Medios distingue billetera sugerida de la histórica. Billeteras presenta patrimonio actual separado por moneda y saldo inicial como movimiento. Gasto usa filas Fecha/Categoría, Actividad/Descripción y Observaciones/Moneda, con apilado en pantallas estrechas; guardar azul y resumen rojo. Los valores de ejemplo no son datos de la aplicación.
+
+## Billeteras: efectivo y digital — TAREA 93
+
+El selector de tipo ofrece únicamente Efectivo y Dinero digital. Digital incluye bancos, billeteras virtuales y cuentas de cobro. Ambas listas (Ajustes y saldos) permiten filtrar por estos grupos; el listado patrimonial muestra el total del grupo seleccionado, por moneda, incluyendo activos e inactivos. Los tipos antiguos conocidos se presentan con sus etiquetas vigentes. Los desconocidos muestran Clasificar billetera y permanecen en Todas hasta su revisión. Esta decisión sustituye los tipos libres de TAREA 92.

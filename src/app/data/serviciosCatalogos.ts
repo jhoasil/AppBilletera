@@ -1,3 +1,4 @@
+import { ServicioBilleteras } from '../../core/services/ServicioBilleteras';
 import type { MedioPago } from '../../core/entities/MedioPago';
 import type { Billetera } from '../../core/entities/Billetera';
 import type { CategoriaGasto } from '../../core/entities/CategoriaGasto';
@@ -15,11 +16,11 @@ const repositorioBilleteras: RepositorioBilleteras = new RepositorioCatalogoLoca
 
 /** Valida clasificación y código monetario sin almacenar un saldo en la billetera. */
 function validarBilletera(billetera: Billetera) {
-  if (!billetera.tipo.trim()) throw new Error('Indicá el tipo de billetera.');
+  if (billetera.tipo !== 'efectivo' && billetera.tipo !== 'digital') throw new Error('Indicá el tipo de billetera.');
   if (!/^[A-Z]{3}$/.test(billetera.moneda)) throw new Error('La moneda debe tener tres letras mayúsculas, por ejemplo ARS.');
 }
 
-export const servicioBilleteras = new ServicioCatalogo(repositorioBilleteras, validarBilletera);
+export const servicioBilleteras = new ServicioBilleteras(repositorioBilleteras, validarBilletera);
 
 /** Valida preferencias propias del medio antes de persistirlas. */
 function validarMedio(medio: MedioPago) {

@@ -1,3 +1,4 @@
+import { clasificarTipoBilletera, nombreTipoBilletera, tiposBilletera } from '../../../core/entities/TipoBilletera';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
@@ -30,10 +31,10 @@ function crearBilletera(): Billetera {
 }
 
 /** Resume la ubicación y moneda del dinero para consultar el catálogo. */
-function detalle(billetera: Billetera) { return <Stack spacing={0.5}><Chip size="small" label={billetera.tipo === "efectivo" ? "Caja" : billetera.tipo === "banco" ? "Banco" : billetera.tipo === "app" ? "App" : billetera.tipo} sx={{ alignSelf: "flex-start" }} /><Typography color="text.secondary">{billetera.moneda}</Typography></Stack>; }
+function detalle(billetera: Billetera) { return <Stack spacing={0.5}><Chip size="small" label={nombreTipoBilletera(billetera.tipo)} sx={{ alignSelf: "flex-start" }} /><Typography color="text.secondary">{billetera.moneda}</Typography></Stack>; }
 
 /** Busca nombre, tipo y moneda exclusivamente en metadatos de catálogo. */
-function textoBusqueda(billetera: Billetera) { return `${billetera.nombre} ${billetera.tipo} ${billetera.moneda}`; }
+function textoBusqueda(billetera: Billetera) { return `${billetera.nombre} ${nombreTipoBilletera(billetera.tipo)} ${billetera.tipo} ${billetera.moneda}`; }
 
 /** Edita únicamente propiedades de billetera; los saldos provienen de movimientos. */
 function campos(billetera: Billetera, actualizar: (cambios: Partial<Billetera>) => void) {
@@ -45,10 +46,11 @@ function campos(billetera: Billetera, actualizar: (cambios: Partial<Billetera>) 
   function icono(valor: string) { actualizar({ icono: valor }); }
   /** Cambia el metadato de color opcional. */
   function color(valor: string) { actualizar({ color: valor || null }); }
-  const tipos = ['efectivo', 'banco', 'app', billetera.tipo].filter(/** Conserva tipos personalizados sin duplicarlos. */ function unico(valor, indice, valores) { return valores.indexOf(valor) === indice; }).map(/** Ofrece clasificaciones existentes. */ function opcion(id) { return { id, nombre: id === 'efectivo' ? 'Caja' : id === 'banco' ? 'Banco' : id === 'app' ? 'App' : id }; });
-  return <><Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 2 }}><SelectorCatalogo etiqueta="Tipo" etiquetaExterior valor={billetera.tipo} alCambiar={tipo} opciones={tipos} obligatorio />
+  return <><Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 2 }}><SelectorCatalogo etiqueta="Tipo" etiquetaExterior valor={clasificarTipoBilletera(billetera.tipo) ?? ''} alCambiar={tipo} opciones={tiposBilletera} obligatorio />
     <SelectorCatalogo etiqueta="Moneda" etiquetaExterior valor={billetera.moneda} alCambiar={moneda} obligatorio opciones={[...new Set(['ARS', 'USD', billetera.moneda])].map(/** Conserva códigos existentes junto a las monedas habituales. */ function opcion(id) { return { id, nombre: id }; })} /></Box>
-    <details><summary>Tipo o moneda personalizados</summary><Stack spacing={1} sx={{ pt: 1 }}><CampoTextoCatalogo etiqueta="Tipo personalizado" valor={billetera.tipo} alCambiar={tipo} obligatorio /><CampoTextoCatalogo etiqueta="Código de moneda" valor={billetera.moneda} alCambiar={moneda} obligatorio /></Stack></details>
+    <Typography variant="body2" color="text.secondary">Efectivo: billetes y monedas. Dinero digital: bancos, billeteras virtuales y cuentas digitales de cobro.</Typography>
+    {!clasificarTipoBilletera(billetera.tipo) && <Alert severity="warning">El tipo anterior «{billetera.tipo || 'sin tipo'}» requiere clasificación. Elegí uno de los dos tipos antes de guardar.</Alert>}
+    <details><summary>Otra moneda</summary><Stack spacing={1} sx={{ pt: 1 }}><CampoTextoCatalogo etiqueta="Código de moneda" valor={billetera.moneda} alCambiar={moneda} obligatorio /></Stack></details>
     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 2 }}><Box component="details" sx={{ minWidth: 0 }}><summary><IconoCatalogo identificador={billetera.icono} color={billetera.color} contenedor /> Icono</summary><SelectorIcono compacto valor={billetera.icono} alCambiar={icono} /></Box><Box component="details" sx={{ minWidth: 0 }}><summary><Box component="span" sx={{ display: 'inline-block', verticalAlign: 'middle', width: 32, height: 32, bgcolor: billetera.color ?? 'primary.main', borderRadius: '50%' }} /> Color</summary><SelectorColor compacto valor={billetera.color} alCambiar={color} /></Box></Box>
     {billetera.id && <Alert severity="info">El saldo proviene de movimientos. Para corregirlo usá Conciliar desde el detalle de la billetera.</Alert>}</>;
 
@@ -69,7 +71,7 @@ export function CatalogoBilleteras({ alVolver }: { alVolver?: () => void }) {
   /** Formatea el saldo consultado de una billetera, sin reconstruirlo en React. */
   function saldo(billetera: Billetera) { const registro = patrimonio?.billeteras.find(/** Localiza la identidad persistida. */ function coincide(registro) { return registro.billetera.id === billetera.id; }); return <Typography sx={{ fontWeight: 700, fontSize: 14 }}>{registro ? formatearImporte(crearImporte(registro.saldoCentavos, registro.billetera.moneda)) : '—'}</Typography>; }
   /** Filtra metadatos antes de paginar; el patrimonio siempre indica su alcance global. */
-  function filtrar(billetera: Billetera, filtro: string) { return filtro === 'Todas' || (filtro === 'Activas' ? billetera.activo : billetera.moneda === filtro); }
+  function filtrar(billetera: Billetera, filtro: string) { return filtro === 'Todas' || (filtro === 'Efectivo' ? clasificarTipoBilletera(billetera.tipo) === 'efectivo' : filtro === 'Digital' ? clasificarTipoBilletera(billetera.tipo) === 'digital' : filtro === 'Activas' ? billetera.activo : billetera.moneda === filtro); }
   /** Previsualiza atributos e importe válido sin producir un movimiento. */
   function previsualizar(billetera: Billetera) {
     let importeVista = 'Importe pendiente';
@@ -109,7 +111,7 @@ export function CatalogoBilleteras({ alVolver }: { alVolver?: () => void }) {
   function registrado() { establecerRevision(revision + 1); establecerConfirmacion('Saldo inicial registrado como movimiento trazable.'); establecerBilleteraSaldo(null); }
   return <Stack spacing={2}>
     {confirmacion && <Alert severity="success">{confirmacion}</Alert>}
-    <EditorCatalogo {...(alVolver ? { alVolver } : {})} titulo="Billeteras" filtros={["Todas", "Activas", ...new Set(["ARS", "USD", ...(patrimonio?.totales.map(/** Conserva monedas existentes en los filtros. */ function moneda(total) { return total.moneda; }) ?? [])])]} coincideFiltro={filtrar} resumen={resumen} valorDestacado={saldo} vistaPrevia={previsualizar} singular="billetera" etiquetaCrear="Nueva billetera" alturaTarjeta={88} tamanoIcono={48} textoBusqueda={textoBusqueda} servicio={servicioBilleteras} crearNuevo={crear} campos={camposConSaldo} detalle={detalle} guardarPersonalizado={guardar} accionAdicional={accion} />
+    <EditorCatalogo {...(alVolver ? { alVolver } : {})} titulo="Billeteras" filtros={["Todas", "Efectivo", "Digital", "Activas", ...new Set(["ARS", "USD", ...(patrimonio?.totales.map(/** Conserva monedas existentes en los filtros. */ function moneda(total) { return total.moneda; }) ?? [])])]} coincideFiltro={filtrar} resumen={resumen} valorDestacado={saldo} vistaPrevia={previsualizar} singular="billetera" etiquetaCrear="Nueva billetera" alturaTarjeta={88} tamanoIcono={48} textoBusqueda={textoBusqueda} servicio={servicioBilleteras} crearNuevo={crear} campos={camposConSaldo} detalle={detalle} guardarPersonalizado={guardar} accionAdicional={accion} />
     <DialogoSaldoInicial billetera={billeteraSaldo} alCerrar={cerrar} alRegistrar={registrado} />
   </Stack>;
 }

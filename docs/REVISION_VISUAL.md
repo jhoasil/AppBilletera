@@ -236,3 +236,9 @@ Menú agrupado, iconos semánticos, indicador del tema, carga rápida enlazada a
 Completada. Listas con filtros previos a la paginación, editores en página, selección visual y vista previa. Patrimonio actual obtenido del servicio existente, separado por moneda y etiquetado como global. Gasto con tres filas de campos, moneda visible, total rojo y guardar azul; opciones adicionales siguen accesibles. Datos y escrituras financieras conservados.
 
 Comprobaciones: pnpm compilar (incluye tipos) correcto; revisión manual de navegación, filtro Carga rápida y USD, formularios y vista previa sin guardar datos; pantallas móviles estrechas y escritorio sin desbordamiento horizontal observado. No se verificaron guardados mediante UI ni plataformas nativas. Tests: no creados ni ejecutados. Capturas locales ignoradas en tmp/tarea-092. Se preservan iconos Material y centavos, sin copiar logos ni valores ficticios de las referencias.
+
+## TAREA 93 — Dos tipos de billeteras (04/10/2026)
+
+Completada. Efectivo y Dinero digital son las únicas opciones de alta/edición; clasificación compartida en catálogo, lista patrimonial y detalle. Filtros antes de paginar y sumar en el repositorio común a ambos motores. Los tipos antiguos conocidos se resuelven sin escrituras; al guardar se normalizan. Tipos ambiguos requieren selección explícita.
+
+Validación: pnpm compilar correcto (incluye TypeScript). Revisión manual: Todas mostró 5 billeteras y $6.363.031,25; Efectivo, 2 y $1.881.229,25; Dinero digital, 3 y $4.481.802,00, todos ARS. Catálogo Digital mostró las mismas tres identidades. Selector ofreció Efectivo/Dinero digital y la vista previa respondió a la selección; se canceló sin guardar. No se modificaron registros ni se ejecutaron tests. Escrituras y motores nativos no verificados por UI. Evidencia local ignorada en tmp/tarea-093/digital.png.
