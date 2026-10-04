@@ -2859,3 +2859,7 @@ Corrección de bordes solicitada: las listas de medios de Ingreso y Gasto utiliz
 ## Listas de Ingresos y Gastos — TAREA 89
 
 Referencia aprobada el 03/10/2026: cabecera horizontal con Agregar semántico, filtros Todos/Este mes/Mes anterior/Personalizar, resumen por moneda, búsqueda y filtros de catálogo. Agrupar tarjetas por mes con subtotales completos del filtro, aunque la página contenga solo parte del mes. Tarjetas con icono configurado, nombre histórico, fecha, descripción y total a la derecha; debajo chips con medio, billetera realmente utilizada e importe exacto. Radios de tarjeta explícitos de 16 px. Mantener accesos al detalle y eliminación confirmada, temas y navegación.
+
+## Reportes — TAREA 90
+
+La referencia del 03/10/2026 autoriza cinco pestañas: Resumen, Ingresos, Gastos, Actividades y Billeteras; selector de mes en cabecera, manteniendo los rangos existentes. Resumen con tarjetas semánticas, patrimonio actual separado, transferencias y ajustes separados, gráfico mensual combinado y movimientos recientes. Ingresos/Gastos muestran desglose, evolución mensual y distribución por medio mediante anillo con leyenda exacta; Actividades conserva rentabilidad. Radios explícitos 16 px y colores normativos. Los gráficos tienen alternativa textual, moneda y denominador; no trasladar cifras ni porcentajes ficticios. Las comparativas autorizadas en esta tarea requieren consultar la base real.

@@ -4413,3 +4413,26 @@ Sin datos ficticios, migraciones, cambios de escrituras, formatos monetarios, fo
 Rama: task_26/089_refinar_listas_ingresos_gastos.
 Commit: style(operaciones): refina listas de ingresos y gastos.
 Detenerse tras el commit, sin merge automático de esta tarea.
+
+---
+
+# TAREA 90 — Refinar Reportes según la referencia
+
+## Estado
+
+Completada el 04/10/2026. TAREA 89 integrada en main por fast-forward; documentada antes del código. Tipos y compilación correctos; revisión y límites en REVISION_VISUAL.md. Tests: no creados ni ejecutados.
+
+## Alcance
+
+Referencias d6807e48-81e0-4fff-9e71-47c713e91c07 (sistema visual) y fe93adbb-fa14-41f7-bd98-15481b37e615 (Reportes). Cabecera con período accesible, pestañas Resumen, Ingresos, Gastos, Actividades y Billeteras. Conservar Hoy, Semana, Mes, Año y Personalizado, agregando selección de otro mes. Resumen: ingresos/gastos en dos tarjetas, ganancia en tarjeta ancha, patrimonio actual y movimientos internos separados; evolución mensual combinada y movimientos recientes. Ingresos: barras por actividad, evolución y distribución por medio de cobro. Gastos: barras por categoría, evolución y distribución por medio de pago. Actividades mantiene rentabilidad con gastos asociados y sin actividad separados; Billeteras conserva patrimonio actual y transferencias/ajustes del período.
+
+## Reglas
+
+Gráficos basados en agregaciones reales, separados por moneda, con etiquetas y valores exactos accesibles. Evolución: seis meses de calendario hasta el mes del fin seleccionado, claramente identificados; no representa automáticamente el rango personalizado. Comparaciones: mes anterior para Mes, año anterior para Año, período inmediatamente anterior de igual duración para otros rangos; mostrar ausencia de base comparable si el importe anterior es cero o negativo. Las comparativas antes excluidas quedan autorizadas exclusivamente dentro de esta tarea. No inventar porcentajes, logos o cifras de las imágenes. Mantener flechas semánticas vigentes, centavos, radios de 16 px, paleta normativa y contrastes.
+
+Transferencias y ajustes no se suman a resultado; el bloque interno muestra transferencias, ajustes positivos y negativos por separado, sin un total combinado ambiguo. Patrimonio es actual, independiente del período. Movimientos recientes identificados como tales, sin presentarlos como exclusivamente del período; conservar accesos reales. Consultas agregadas en servicios/repositorios, sin cargar la historia en React ni modificar escrituras o migraciones. Comentarios/JSDoc en español.
+
+## Validación y Git
+
+Revisión manual a 320/390 px y escritorio según disponibilidad, sin modificar datos; registrar diferencias y límites. Tipos, compilación, revisión de git diff y git diff --check. No crear ni ejecutar tests, push, tags o release.
+Rama task_26/090_refinar_reportes. Commit style(reportes): refina panel y desgloses financieros. Detenerse tras commit; sin merge automático de TAREA 90.

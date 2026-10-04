@@ -1,94 +1,138 @@
+import { useEffect, useState } from 'react';
 import ArrowDownward from '@mui/icons-material/ArrowDownward';
 import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import BarChart from '@mui/icons-material/BarChart';
-import { cargarDatosIngreso } from '../../app/data/datosCargaRapida';
+import CalendarMonth from '@mui/icons-material/CalendarMonth';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import Box from '@mui/material/Box';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import LinearProgress from '@mui/material/LinearProgress';
-import { IconoCatalogo } from '../../shared/components/IconoCatalogo';
-import { EstadoVacio } from '../../shared/components/EstadoVacio';
-import { porcentajeReporte } from '../../core/services/porcentajeReporte';
-import { useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
-import { ResumenPatrimonial } from './ResumenPatrimonial';
-import { CabeceraPagina } from '../../shared/components/CabeceraPagina';
-import { TarjetaResumen } from '../../shared/components/TarjetaResumen';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import LinearProgress from '@mui/material/LinearProgress';
+import { alpha } from '@mui/material/styles';
+import { IconoCatalogo } from '../../shared/components/IconoCatalogo';
+import { EstadoVacio } from '../../shared/components/EstadoVacio';
 import { CampoTextoCatalogo } from '../../shared/components/CampoTextoCatalogo';
-import { servicioResumen } from '../../app/data/servicioResumen';
-import { periodoReporte, type TipoPeriodoReporte } from '../../core/services/periodoReporte';
-import type { ResumenPeriodo } from '../../core/repositories/RepositorioResumen';
+import { presentacionMovimiento } from '../../shared/components/presentacionMovimiento';
+import { porcentajeReporte } from '../../core/services/porcentajeReporte';
+import { variacionReporte } from '../../core/services/ServicioPanelReportes';
+import { servicioPanelReportes } from '../../app/data/servicioPanelReportes';
+import { useCatalogosOperaciones } from '../../app/data/useCatalogosOperaciones';
+import { periodoReporte, fechaCalendario, type TipoPeriodoReporte } from '../../core/services/periodoReporte';
 import { crearImporte } from '../../core/money/Importe';
 import { formatearImporte } from '../../shared/money/formatearImporte';
+import { ResumenPatrimonial } from './ResumenPatrimonial';
+import { GraficoEvolucion } from './GraficoEvolucion';
+import { DistribucionMedios } from './DistribucionMedios';
 
-/** Consulta resúmenes agregados por período y conserva separados los resultados de distintas monedas. */
+const pestañas = ['Resumen', 'Ingresos', 'Gastos', 'Actividades', 'Billeteras'] as const;
+type PestañaReportes = typeof pestañas[number];
+type DatosPanel = Awaited<ReturnType<typeof servicioPanelReportes.consultar>>;
+
+/** Presenta resultado, evolución y patrimonio separados en cinco vistas del mismo período. */
 export function PaginaReportes() {
-  const [desglose, establecerDesglose] = useState<'actividad' | 'categoria' | 'medio'>('actividad');
-  const [catalogos, establecerCatalogos] = useState<Awaited<ReturnType<typeof cargarDatosIngreso>> | null>(null);
-  /** Los iconos se resuelven por identidad; los nombres e importes históricos provienen del reporte. */
-  function cargarIconos() {
-    let vigente = true;
-    void cargarDatosIngreso().then(function recibir(resultado) { if (vigente) establecerCatalogos(resultado); }).catch(function ignorar() { /* El reporte sigue disponible con iconos genéricos si falla este enriquecimiento visual. */ });
-    return function cancelar() { vigente = false; };
-  }
-  useEffect(cargarIconos, []);
-  const [tipo, establecerTipo] = useState<TipoPeriodoReporte>('Mes'); const [desde, establecerDesde] = useState(''); const [hasta, establecerHasta] = useState('');
-  const [periodo, establecerPeriodo] = useState(periodoReporte('Mes', '', ''));
-  const [datos, establecerDatos] = useState<ResumenPeriodo | null>(null); const [error, establecerError] = useState('');
-  /** Obtiene únicamente las agregaciones y descarta respuestas de filtros anteriores. */
-  function cargar() { let vigente = true; establecerError(''); establecerDatos(null);
-    /** Publica una consulta vigente. */
-    function completar(resultado: ResumenPeriodo) { if (vigente) establecerDatos(resultado); }
-    /** Explica errores de rango o persistencia. */
+  const { catalogos, error: errorCatalogos } = useCatalogosOperaciones();
+  const [pestaña, establecerPestaña] = useState<PestañaReportes>('Resumen');
+  const [selector, establecerSelector] = useState(false);
+  const [tipo, establecerTipo] = useState<TipoPeriodoReporte>('Mes');
+  const [mes, establecerMes] = useState(fechaCalendario(new Date()).slice(0, 7));
+  const [desde, establecerDesde] = useState(''); const [hasta, establecerHasta] = useState('');
+  const [periodo, establecerPeriodo] = useState({ ...periodoReporte('Mes', '', ''), tipo: 'Mes' as TipoPeriodoReporte });
+  const [datos, establecerDatos] = useState<DatosPanel | null>(null); const [error, establecerError] = useState('');
+  const [errorPeriodo, establecerErrorPeriodo] = useState(''); const [revision, establecerRevision] = useState(0);
+  /** Consulta datos reales agregados y descarta respuestas de rangos anteriores. */
+  function cargar() {
+    let vigente = true; establecerDatos(null); establecerError('');
+    /** Publica el panel cuando continúa vigente la selección. */
+    function recibir(resultado: DatosPanel) { if (vigente) establecerDatos(resultado); }
+    /** Presenta fallos de lectura o rango sin mostrar cifras anteriores como actuales. */
     function fallar(causa: unknown) { if (vigente) establecerError(causa instanceof Error ? causa.message : 'No se pudo consultar el reporte.'); }
-    /** Incluye la validación síncrona dentro de la promesa de lectura. */
-    function consultar() { return servicioResumen.consultar(periodo.desde, periodo.hasta); }
-    void Promise.resolve().then(consultar).then(completar, fallar);
-    /** Evita publicar resultados de una pantalla abandonada. */
+    void servicioPanelReportes.consultar(periodo.desde, periodo.hasta, periodo.tipo).then(recibir, fallar);
+    /** Evita publicar consultas tras cambiar de período o abandonar la página. */
     function cancelar() { vigente = false; } return cancelar;
   }
-  useEffect(cargar, [periodo]);
-  /** Aplica el período elegido sin realizar cálculos financieros en presentación. */
-  function aplicar() { try { establecerPeriodo(periodoReporte(tipo, desde, hasta)); establecerError(''); } catch (causa) { establecerError(causa instanceof Error ? causa.message : 'Revisá el período.'); } }
-  /** Prepara un importe exacto para su presentación. */
-  function importe(centavos: number, moneda: string) { return formatearImporte(crearImporte(centavos, moneda)); }
+  useEffect(cargar, [periodo, revision]);
+  /** Formatea importes exactos para la vista, sin sumar ni convertir monedas. */
+  function dinero(centavos: number, moneda: string) { return formatearImporte(crearImporte(centavos, moneda)); }
+  /** Muestra un mes calendario legible en la cabecera y la base comparativa. */
+  function nombreMes(fecha: string) { const nombre = new Date(`${fecha.slice(0, 7)}-01T12:00:00`).toLocaleDateString('es-AR', { month: 'long', year: 'numeric' }); return nombre.charAt(0).toUpperCase() + nombre.slice(1); }
+  /** Confirma el rango elegido; un error mantiene intacto el reporte vigente. */
+  function aplicar() {
+    try {
+      let rango = periodoReporte(tipo, desde, hasta);
+      if (tipo === 'Mes') {
+        if (!/^\d{4}-\d{2}$/.test(mes) || Number(mes.slice(5)) < 1 || Number(mes.slice(5)) > 12) throw new Error('Seleccioná un mes válido.');
+        const fecha = new Date(`${mes}-01T12:00:00`);
+        rango = { desde: `${mes}-01`, hasta: fechaCalendario(new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0)) };
+      }
+      for (const fecha of [rango.desde, rango.hasta]) if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha) || new Date(`${fecha}T12:00:00Z`).toISOString().slice(0, 10) !== fecha) throw new Error('Seleccioná fechas válidas.');
+      if (rango.desde > rango.hasta) throw new Error('El inicio del período no puede superar su fin.');
+      establecerPeriodo({ ...rango, tipo }); establecerSelector(false); establecerErrorPeriodo('');
+    } catch (causa) { establecerErrorPeriodo(causa instanceof Error ? causa.message : 'Revisá el período.'); }
+  }
+  /** Abre controles con el rango vigente, evitando reaplicar un borrador cancelado. */
+  function abrirSelector() { establecerTipo(periodo.tipo); establecerDesde(periodo.desde); establecerHasta(periodo.hasta); establecerMes(periodo.hasta.slice(0, 7)); establecerErrorPeriodo(''); establecerSelector(true); }
+  /** Cierra el borrador del período sin modificar los datos mostrados. */
+  function cancelarSelector() { establecerSelector(false); }
+  /** Reintenta las lecturas del rango vigente sin escrituras. */
+  function reintentar() { establecerRevision(revision + 1); }
+  /** Abre el bloque de patrimonio para consultar saldos y movimientos internos. */
+  function abrirBilleteras() { establecerPestaña('Billeteras'); }
+  /** Presenta comparación válida o explica la ausencia de una base interpretable. */
+  function comparacion(actual: number, anterior: number) {
+    const porcentaje = variacionReporte(actual, anterior);
+    const referencia = datos ? periodo.tipo === 'Mes' ? nombreMes(datos.anterior.desde) : `${datos.anterior.desde} — ${datos.anterior.hasta}` : '';
+    return <Typography variant="caption" sx={{ display: 'block', mt: 0.75, color: 'text.secondary' }}>{porcentaje === null ? 'Sin base comparable' : `${porcentaje > 0 ? '+' : ''}${porcentaje.toLocaleString('es-AR')}%`} · vs. {referencia}</Typography>;
+  }
+  /** Presenta las tarjetas de resultado por moneda con base real consultada. */
+  function indicadores() {
+    return datos?.actual.totales.map(/** Mantiene cada moneda en su propio conjunto de tarjetas. */ function moneda(total) {
+      const base = datos.base.totales.find(/** Obtiene la base de la misma moneda. */ function seleccionar(registro) { return registro.moneda === total.moneda; });
+      return <Box key={total.moneda} sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 1.5, '@media (max-width: 359px)': { gridTemplateColumns: '1fr' } }}>
+        {[{ titulo: 'Ingresos', valor: total.ingresosCentavos, base: base?.ingresosCentavos ?? 0, color: 'success' as const, icono: <ArrowDownward /> }, { titulo: 'Gastos', valor: total.gastosCentavos, base: base?.gastosCentavos ?? 0, color: 'error' as const, icono: <ArrowUpward /> }].map(/** Presenta ingreso y gasto con etiquetas e iconos semánticos vigentes. */ function tarjeta(registro) { return <Paper key={registro.titulo} variant="outlined" sx={{ p: 1.5, bgcolor: /** Deriva superficies de la paleta vigente. */ function fondo(tema) { return alpha(tema.palette[registro.color].main, 0.1); } }}><Stack direction="row" sx={{ alignItems: 'center', gap: 1, flexWrap: 'wrap' }}><Box sx={{ display: 'grid', placeItems: 'center', width: 40, height: 40, borderRadius: '50%', color: `${registro.color}.main`, bgcolor: /** Usa una tonalidad del mismo estado para el icono. */ function fondo(tema) { return alpha(tema.palette[registro.color].main, 0.14); } }}>{registro.icono}</Box><Box sx={{ minWidth: 0, flex: '1 1 100px' }}><Typography variant="body2">{registro.titulo} · {total.moneda}</Typography><Typography sx={{ fontWeight: 700, fontSize: 24, color: `${registro.color}.main`, overflowWrap: 'anywhere' }}>{dinero(registro.valor, total.moneda)}</Typography>{comparacion(registro.valor, registro.base)}</Box></Stack></Paper>; })}
+        <Paper variant="outlined" sx={{ gridColumn: '1 / -1', p: 2, bgcolor: /** Separa el resultado neto mediante superficie azul suave. */ function fondo(tema) { return alpha(tema.palette.primary.main, 0.08); } }}><Stack direction="row" sx={{ gap: 1.5, alignItems: 'center' }}><BarChart sx={{ fontSize: 36, color: 'primary.main' }} /><Box sx={{ minWidth: 0 }}><Typography>Ganancia neta · {total.moneda}</Typography><Typography sx={{ fontSize: 32, fontWeight: 700, color: total.gananciaCentavos < 0 ? 'error.main' : 'success.main', overflowWrap: 'anywhere' }}>{dinero(total.gananciaCentavos, total.moneda)}</Typography>{comparacion(total.gananciaCentavos, base?.gananciaCentavos ?? 0)}</Box></Stack></Paper>
+      </Box>;
+    });
+  }
+  /** Presenta participación por actividad/categoría o rentabilidad, sin recalcular agregados. */
+  function desglose(modo: 'ingresos' | 'gastos' | 'actividad') {
+    if (!datos) return null;
+    const grupo = modo === 'gastos' ? 'categoria' : 'actividad'; const campo = modo === 'gastos' ? 'gastosCentavos' : 'ingresosCentavos';
+    const filas = datos.actual.desgloses.filter(/** Selecciona registros reales del desglose vigente. */ function seleccionar(fila) { return fila.tipo === grupo && (modo === 'actividad' || fila[campo] > 0); }).sort(/** Ordena por participación descendente y nombre estable. */ function ordenar(a, b) { return b[campo] - a[campo] || a.nombre.localeCompare(b.nombre, 'es-AR'); });
+    return <Paper variant="outlined" sx={{ p: 2 }}><Stack spacing={1.5}><Typography variant="h6">{modo === 'gastos' ? 'Gastos por categoría' : modo === 'ingresos' ? 'Ingresos por actividad' : 'Rentabilidad por actividad'}</Typography>{modo === 'actividad' && <Typography variant="body2" color="text.secondary">La ganancia descuenta solo los gastos asociados; los gastos sin actividad se muestran separados.</Typography>}{!filas.length && <Typography color="text.secondary">Sin operaciones en este desglose.</Typography>}{filas.map(/** Presenta nombre, importe, proporción y barra con el denominador de la misma moneda. */ function fila(registro) {
+      const catalogo = (grupo === 'categoria' ? catalogos.categorias : catalogos.actividades).find(/** Resuelve metadatos por identidad sin cambiar nombres agregados. */ function identidad(entidad) { return entidad.id === registro.id; });
+      const total = datos.actual.totales.find(/** Obtiene el total correspondiente a esta divisa. */ function moneda(total) { return total.moneda === registro.moneda; });
+      const porcentaje = porcentajeReporte(registro[campo], total?.[campo] ?? 0);
+      return <Stack key={`${registro.id}/${registro.moneda}`} direction="row" sx={{ gap: 1, alignItems: 'flex-start' }}><IconoCatalogo identificador={catalogo?.icono ?? null} color={catalogo?.color ?? null} contenedor /><Box sx={{ flex: 1, minWidth: 0 }}><Stack direction="row" sx={{ justifyContent: 'space-between', gap: 1, flexWrap: 'wrap' }}><Typography sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>{registro.nombre}</Typography><Typography sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>{modo === 'actividad' ? 'Ingresos: ' : ''}{dinero(registro[campo], registro.moneda)}</Typography><Typography variant="caption" color="text.secondary">{porcentaje}%</Typography></Stack><LinearProgress variant="determinate" value={porcentaje} color={modo === 'gastos' ? 'error' : 'success'} aria-label={`${porcentaje}% del ${modo === 'gastos' ? 'gasto' : 'ingreso'} del período en ${registro.moneda}: ${registro.nombre}`} sx={{ mt: 0.75, height: 8, borderRadius: '8px' }} />{modo === 'actividad' && <Typography variant="body2" sx={{ mt: 1, overflowWrap: 'anywhere' }}>Gastos: {dinero(registro.gastosCentavos, registro.moneda)} · Neto: {dinero(registro.gananciaCentavos, registro.moneda)}</Typography>}</Box></Stack>;
+    })}</Stack></Paper>;
+  }
+  /** Presenta los últimos movimientos globales, con fecha y moneda de su billetera. */
+  function recientes() { return <Paper variant="outlined" sx={{ p: 2 }}><Stack direction="row" sx={{ justifyContent: 'space-between', gap: 1 }}><Typography variant="h6">Últimos movimientos</Typography><Button component="a" href="#/billeteras">Ver todos</Button></Stack><Typography variant="caption" color="text.secondary">Movimientos recientes de todas las billeteras, independientemente del período.</Typography>{datos?.actual.movimientos.map(/** Conserva tipo, signo e identidad del movimiento para abrir su billetera. */ function movimiento(registro) { const visual = presentacionMovimiento(registro.tipo); const billetera = catalogos.billeteras.find(/** Resuelve la divisa sin usar una preferencia predeterminada. */ function identidad(entidad) { return entidad.id === registro.billeteraId; }); return <Button key={registro.id} component="a" href={`#/billetera?id=${registro.billeteraId}`} sx={{ width: '100%', justifyContent: 'flex-start', gap: 1, py: 1.5, borderBottom: '1px solid', borderColor: 'divider', textAlign: 'left', textTransform: 'none', flexWrap: 'wrap' }}><Box sx={{ color: visual.color }}>{visual.icono}</Box><Box sx={{ flex: 1, minWidth: 0, color: 'text.primary', overflowWrap: 'anywhere' }}><Typography>{registro.descripcion || visual.nombre}</Typography><Typography variant="caption" color="text.secondary">{visual.nombre} · {new Date(registro.fecha).toLocaleDateString('es-AR')}</Typography></Box><Typography sx={{ color: visual.color, fontWeight: 700, overflowWrap: 'anywhere' }}>{billetera ? `${registro.importeCentavos > 0 ? '+' : ''}${dinero(registro.importeCentavos, billetera.moneda)}` : 'Moneda sin resolver'}</Typography></Button>; })}{!datos?.actual.movimientos.length && <Typography sx={{ mt: 1 }} color="text.secondary">Sin movimientos recientes.</Typography>}</Paper>; }
   return <Stack spacing={2}>
-    <CabeceraPagina titulo="Reportes" />
-    <Stack direction="row" useFlexGap spacing={1} sx={{ flexWrap: 'wrap' }}><ToggleButtonGroup exclusive value={tipo === 'Personalizado' ? null : tipo} aria-label="Período del reporte" onChange={/** Aplica una selección válida sin cambiar cálculos financieros. */ function elegir(_evento, valor: TipoPeriodoReporte | null) { if (valor && valor !== 'Personalizado') { establecerTipo(valor); establecerPeriodo(periodoReporte(valor, '', '')); } }} sx={{ flexWrap: 'wrap' }}>{(['Hoy', 'Semana', 'Mes', 'Año'] as const).map(/** Identifica cada período con texto y selección visible. */ function opcion(valor) { return <ToggleButton key={valor} value={valor}>{valor}</ToggleButton>; })}</ToggleButtonGroup><Button sx={{ minHeight: 44 }} variant={tipo === 'Personalizado' ? 'contained' : 'text'} onClick={/** Abre el rango libre sin consultar hasta confirmarlo. */ function personalizar() { establecerTipo('Personalizado'); }}>Personalizado</Button></Stack>
-    {tipo === 'Personalizado' && <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}><CampoTextoCatalogo etiqueta="Desde" valor={desde} alCambiar={establecerDesde} tipo="date" /><CampoTextoCatalogo etiqueta="Hasta" valor={hasta} alCambiar={establecerHasta} tipo="date" /><Button onClick={aplicar}>Consultar</Button></Stack>}
-    <Typography color="text.secondary">{new Date(`${periodo.desde}T12:00:00`).toLocaleDateString('es-AR')} — {new Date(`${periodo.hasta}T12:00:00`).toLocaleDateString('es-AR')}</Typography>
-    {error && <Alert severity="error">{error}</Alert>}
-    {!datos ? !error && <CircularProgress aria-label="Consultando reportes" /> : <>
-      {datos.totales.map(/** Presenta importes agregados por persistencia con su moneda y etiquetas de resultado. */ function presentar(total) { return <Box key={total.moneda} sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))', md: 'repeat(3, minmax(0, 1fr))' }, gap: 2 }}><TarjetaResumen titulo="Ingresos" icono={<ArrowDownward />} valor={importe(total.ingresosCentavos, total.moneda)} tono="positivo" /><TarjetaResumen titulo="Gastos" icono={<ArrowUpward />} valor={importe(total.gastosCentavos, total.moneda)} tono="negativo" /><TarjetaResumen titulo="Ganancia neta" icono={<BarChart />} valor={importe(total.gananciaCentavos, total.moneda)} tono="destacado" /></Box>; })}
-      {datos.totales.length === 0 && <EstadoVacio titulo="Sin operaciones en este período" descripcion="Elegí otro rango para consultar tus ingresos y gastos." />}
-      <ToggleButtonGroup exclusive value={desglose} aria-label="Desglose del reporte" onChange={function cambiarDesglose(_evento, valor: 'actividad' | 'categoria' | 'medio' | null) { if (valor) establecerDesglose(valor); }} sx={{ flexWrap: 'wrap' }}><ToggleButton value="actividad">Por actividad</ToggleButton><ToggleButton value="categoria">Por categoría</ToggleButton><ToggleButton value="medio">Por medio de pago</ToggleButton></ToggleButtonGroup>
-      {[desglose].map(/** Mantiene cada desglose en su propia superficie y conserva agrupación por moneda. */ function seccion(grupo) {
-        const filas = datos.desgloses.filter(/** Selecciona agregados ya preparados por persistencia. */ function seleccionar(fila) { return fila.tipo === grupo; });
-        return <Paper key={grupo} variant="outlined" sx={{ p: 2 }}><Stack spacing={2}>
-          <Typography variant="h6">{grupo === 'actividad' ? 'Rentabilidad por actividad' : grupo === 'categoria' ? 'Gastos por categoría' : 'Por medio de pago'}</Typography>
-          {grupo === 'actividad' && <Typography variant="body2" color="text.secondary">La ganancia descuenta únicamente gastos asociados. Los gastos sin actividad se presentan separados.</Typography>}
-          {!filas.length && <Typography color="text.secondary">Sin movimientos en este desglose.</Typography>}
-          {filas.map(/** Presenta nombre, importes exactos y proporciones sin mezclar monedas ni sumar historial en React. */ function presentar(fila) {
-            const registros = grupo === 'actividad' ? catalogos?.actividades : grupo === 'categoria' ? catalogos?.categorias : catalogos?.medios;
-            const catalogo = registros?.find(function identidad(registro) { return registro.id === fila.id; });
-            const total = datos.totales.find(/** Resuelve el denominador agregado de la misma moneda. */ function moneda(candidato) { return candidato.moneda === fila.moneda; });
-            const ingreso = porcentajeReporte(fila.ingresosCentavos, total?.ingresosCentavos ?? 0);
-            const gasto = porcentajeReporte(fila.gastosCentavos, total?.gastosCentavos ?? 0);
-            return <Stack key={`${fila.id}/${fila.moneda}`} spacing={1} sx={{ minHeight: 72, py: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}><IconoCatalogo identificador={catalogo?.icono ?? (grupo === 'actividad' ? 'work_outline' : grupo === 'categoria' ? 'category' : 'payments')} color={catalogo?.color ?? null} contenedor /><Typography sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>{fila.nombre} · {fila.moneda}</Typography></Stack>
-              {grupo !== 'categoria' && <><Typography variant="body2">Ingresos: {importe(fila.ingresosCentavos, fila.moneda)} · {ingreso}% del ingreso del período</Typography><LinearProgress variant="determinate" value={ingreso} color="success" aria-label={`Participación de ingresos de ${fila.nombre}`} sx={{ height: 8, borderRadius: 999 }} /></>}
-              <Typography variant="body2">Gastos: {importe(fila.gastosCentavos, fila.moneda)} · {gasto}% del gasto del período</Typography><LinearProgress variant="determinate" value={gasto} color="error" aria-label={`Participación de gastos de ${fila.nombre}`} sx={{ height: 8, borderRadius: 999 }} />
-              {grupo === 'actividad' && <Typography sx={{ fontSize: 20, fontWeight: 700, overflowWrap: 'anywhere' }}>Ganancia neta: {importe(fila.gananciaCentavos, fila.moneda)}</Typography>}
-            </Stack>;
-          })}
-        </Stack></Paper>;
-      })}
-      <ResumenPatrimonial desde={periodo.desde} hasta={periodo.hasta} />
-    </>}
+    <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 1, flexWrap: 'wrap' }}><Typography component="h1" variant="h2">Reportes</Typography><Button variant="outlined" startIcon={<CalendarMonth />} endIcon={<ExpandMore />} onClick={abrirSelector} aria-label="Seleccionar período de reportes" sx={{ color: 'text.primary', borderColor: 'divider' }}>{periodo.tipo === 'Mes' ? nombreMes(periodo.desde) : periodo.tipo === 'Personalizado' ? 'Personalizado' : periodo.tipo}</Button></Stack>
+    <Tabs value={pestaña} variant="scrollable" scrollButtons="auto" aria-label="Secciones de reportes" onChange={/** Cambia la vista conservando el período financiero vigente. */ function elegir(_evento, valor: PestañaReportes) { establecerPestaña(valor); }} sx={{ minHeight: 44, '& .MuiTabs-indicator': { display: 'none' }, '& .MuiTab-root': { minWidth: 0, minHeight: 44, px: { xs: 0.75, sm: 1.25 }, borderRadius: '24px', fontSize: 12, textTransform: 'none', bgcolor: 'action.hover', mr: 0.5 }, '& .MuiTab-root.Mui-selected': { bgcolor: 'primary.main', color: 'primary.contrastText' } }}>{pestañas.map(/** Asocia cada pestaña con su panel accesible. */ function tab(valor) { return <Tab key={valor} value={valor} label={valor} id={`reporte-tab-${valor}`} aria-controls={`reporte-panel-${valor}`} />; })}</Tabs>
+    <Typography variant="caption" color="text.secondary">Período: {periodo.desde} — {periodo.hasta}</Typography>
+    {errorCatalogos && <Alert severity="warning">{errorCatalogos}</Alert>}{error && <Alert severity="error" action={<Button onClick={reintentar}>Reintentar</Button>}>{error}</Alert>}
+    {!datos && !error && <CircularProgress aria-label="Consultando reportes" />}
+    {datos && <Stack spacing={2} role="tabpanel" id={`reporte-panel-${pestaña}`} aria-labelledby={`reporte-tab-${pestaña}`}>
+      {pestaña === 'Resumen' && <>{indicadores()}<ResumenPatrimonial desde={periodo.desde} hasta={periodo.hasta} compacto alAbrir={abrirBilleteras} /><GraficoEvolucion puntos={datos.evolucion} />{recientes()}</>}
+      {pestaña === 'Ingresos' && <>{desglose('ingresos')}<GraficoEvolucion puntos={datos.evolucion} modo="ingresos" /><DistribucionMedios datos={datos.actual} tipo="ingresos" /></>}
+      {pestaña === 'Gastos' && <>{desglose('gastos')}<GraficoEvolucion puntos={datos.evolucion} modo="gastos" /><DistribucionMedios datos={datos.actual} tipo="gastos" /></>}
+      {pestaña === 'Actividades' && desglose('actividad')}
+      {pestaña === 'Billeteras' && <ResumenPatrimonial desde={periodo.desde} hasta={periodo.hasta} />}
+      {!datos.actual.desgloses.some(/** Detecta ausencia real de operaciones sin ocultar patrimonio ni evolución. */ function movimiento(fila) { return fila.ingresosCentavos !== 0 || fila.gastosCentavos !== 0; }) && <EstadoVacio titulo="Sin operaciones en este período" descripcion="Elegí otro período para consultar ingresos y gastos; el patrimonio y la evolución permanecen independientes." />}
+    </Stack>}
+    <Dialog open={selector} onClose={cancelarSelector} aria-labelledby="titulo-periodo-reportes"><DialogTitle id="titulo-periodo-reportes">Período de reportes</DialogTitle><DialogContent><Stack spacing={2} sx={{ pt: 1 }}><ToggleButtonGroup exclusive value={tipo} aria-label="Tipo de período" onChange={/** Edita el borrador de rango sin consultar todavía. */ function elegir(_evento, valor: TipoPeriodoReporte | null) { if (valor) establecerTipo(valor); }} sx={{ flexWrap: 'wrap' }}>{(['Hoy', 'Semana', 'Mes', 'Año', 'Personalizado'] as const).map(/** Ofrece todos los rangos existentes. */ function opcion(valor) { return <ToggleButton key={valor} value={valor}>{valor}</ToggleButton>; })}</ToggleButtonGroup>{tipo === 'Mes' && <CampoTextoCatalogo etiqueta="Mes" valor={mes} alCambiar={establecerMes} tipo="month" />}{tipo === 'Personalizado' && <><CampoTextoCatalogo etiqueta="Desde" valor={desde} alCambiar={establecerDesde} tipo="date" /><CampoTextoCatalogo etiqueta="Hasta" valor={hasta} alCambiar={establecerHasta} tipo="date" /></>}{errorPeriodo && <Alert severity="error">{errorPeriodo}</Alert>}</Stack></DialogContent><DialogActions><Button onClick={cancelarSelector}>Cancelar</Button><Button variant="contained" onClick={aplicar}>Consultar</Button></DialogActions></Dialog>
   </Stack>;
 }
