@@ -1,12 +1,9 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Close from '@mui/icons-material/Close';
-import Check from '@mui/icons-material/Check';
 import Save from '@mui/icons-material/Save';
 import TrendingUp from '@mui/icons-material/TrendingUp';
 import ArrowDownward from '@mui/icons-material/ArrowDownward';
-import Add from '@mui/icons-material/Add';
 import DescriptionOutlined from '@mui/icons-material/DescriptionOutlined';
 import ChatBubbleOutlined from '@mui/icons-material/ChatBubbleOutlined';
 import Alert from '@mui/material/Alert';
@@ -51,9 +48,6 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
   const [revision, establecerRevision] = useState(0);
   const [pendiente, establecerPendiente] = useState(false);
   const [confirmacion, establecerConfirmacion] = useState('');
-  const [opcionesMediosAbiertas, establecerOpcionesMediosAbiertas] = useState(false);
-  /** Abre los medios disponibles y la moneda sin inventar opciones ni escribir datos. */
-  function abrirOpcionesMedios() { establecerOpcionesMediosAbiertas(true); }
   /** Carga catálogos y conserva datos históricos al abrir una edición. */
   function cargar() {
     let vigente = true; establecerErrorCarga('');
@@ -135,7 +129,7 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
   }
   /** Presenta el total exacto calculado por dominio dentro del bloque de cobros. */
   function mostrarTotalOperacion() {
-    return errorImportes ? <Alert severity="error">{errorImportes}</Alert> : <Box aria-live="polite" sx={/** Adapta el resumen semántico a ambas paletas sin alterar el importe. */ function apariencia(tema) { const estado = estadosFinancieros[tema.palette.mode === 'dark' ? 'oscuro' : 'claro'][tipo]; return { p: 2, borderRadius: 3, display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: estado.fondo, color: estado.texto }; }}>
+    return errorImportes ? <Alert severity="error">{errorImportes}</Alert> : <Box aria-live="polite" sx={/** Adapta el resumen semántico a ambas paletas sin alterar el importe. */ function apariencia(tema) { const estado = estadosFinancieros[tema.palette.mode === 'dark' ? 'oscuro' : 'claro'][tipo]; return { p: 2, borderRadius: '16px', display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: estado.fondo, color: estado.texto }; }}>
       <Box aria-hidden="true" sx={{ display: 'grid', placeItems: 'center', width: 48, height: 48, flexShrink: 0, borderRadius: '50%', bgcolor: tipo === 'ingreso' ? 'success.main' : 'error.main', color: tipo === 'ingreso' ? 'success.contrastText' : 'error.contrastText' }}>{tipo === 'ingreso' ? <TrendingUp sx={{ fontSize: 32 }} /> : <ArrowDownward sx={{ fontSize: 32 }} />}</Box>
       <Box sx={{ minWidth: 0 }}><Typography sx={{ fontWeight: 700, fontSize: 13, letterSpacing: 0.5 }}>{tipo === 'ingreso' ? 'TOTAL INGRESO' : 'TOTAL GASTO'}</Typography><Typography sx={{ fontSize: 32, fontWeight: 700, overflowWrap: 'anywhere', fontVariantNumeric: 'tabular-nums' }}>{formatearImporte(crearImporte(total, moneda))}</Typography></Box>
     </Box>;
@@ -164,18 +158,27 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
     {errorCarga && <Alert severity="error">{errorCarga}</Alert>}{error && <Alert severity="error">{error}</Alert>}{confirmacion && <Alert severity="success">{confirmacion}</Alert>}
     <Stack component="fieldset" disabled={pendiente} spacing={2} sx={{ border: 0, p: 0, m: 0, minWidth: 0 }}>
       <Paper variant="outlined" sx={{ p: 1.5 }}><Stack spacing={1.5}>
-      {tipo === 'gasto' && <SelectorCatalogo etiqueta="Categoría" valor={categoria} alCambiar={establecerCategoria} opciones={datos.categorias.filter(categoriaDisponible)} obligatorio etiquetaExterior />}
-      {/* Las etiquetas exteriores y los iconos son optativos para no rediseñar los otros formularios. */}
-      <SelectorCatalogo etiqueta={tipo === 'ingreso' ? 'Actividad' : 'Actividad (opcional)'} valor={actividad} alCambiar={establecerActividad} opciones={datos.actividades.filter(actividadDisponible)} obligatorio={tipo === 'ingreso'} etiquetaExterior />
-      {/* La fecha nativa ya incluye calendario; se evita duplicar iconos para compartir la fila en móvil. */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 1.5, '@media (min-width:390px)': { gridTemplateColumns: '160px minmax(0, 1fr)' } }}>
-      <CampoTextoCatalogo etiqueta="Fecha" valor={fecha} alCambiar={establecerFecha} tipo="date" obligatorio etiquetaExterior />
-      <CampoTextoCatalogo etiqueta="Descripción" valor={descripcion} alCambiar={establecerDescripcion} obligatorio={tipo === 'gasto'} etiquetaExterior icono={<DescriptionOutlined />} ejemplo={tipo === 'ingreso' ? 'Carrera matutina' : 'Carga de combustible'} />
-      </Box>
-      <CampoTextoCatalogo etiqueta="Observaciones (opcional)" valor={observaciones} alCambiar={establecerObservaciones} etiquetaExterior icono={<ChatBubbleOutlined />} ejemplo={tipo === 'ingreso' ? 'Ej. Zona centro, buen día' : 'Ej. Estación, ubicación'} />
+      {/* Gasto agrupa los campos según la última referencia; Ingreso conserva su composición. */}
+      {tipo === 'gasto' ? <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', gap: 1.5, '@media (min-width:390px)': { gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' } }}>
+        <CampoTextoCatalogo etiqueta="Fecha" valor={fecha} alCambiar={establecerFecha} tipo="date" obligatorio etiquetaExterior />
+        <SelectorCatalogo etiqueta="Categoría" valor={categoria} alCambiar={establecerCategoria} opciones={datos.categorias.filter(categoriaDisponible)} obligatorio etiquetaExterior />
+        <SelectorCatalogo etiqueta="Actividad (opcional)" valor={actividad} alCambiar={establecerActividad} opciones={datos.actividades.filter(actividadDisponible)} etiquetaExterior />
+        <CampoTextoCatalogo etiqueta="Descripción" valor={descripcion} alCambiar={establecerDescripcion} obligatorio etiquetaExterior icono={<DescriptionOutlined />} ejemplo="Carga de nafta" />
+        <Box sx={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: '1fr', gap: 1.5, '@media (min-width:390px)': { gridTemplateColumns: 'minmax(0, 1fr) 100px' } }}>
+          <CampoTextoCatalogo etiqueta="Observaciones (opcional)" valor={observaciones} alCambiar={establecerObservaciones} etiquetaExterior icono={<ChatBubbleOutlined />} ejemplo="Zona centro, estación" />
+          <SelectorCatalogo etiqueta="Moneda" valor={moneda} alCambiar={establecerMoneda} obligatorio etiquetaExterior opciones={[...new Set([moneda, 'ARS', ...datos.billeteras.map(/** Ofrece monedas reales sin modificar destinos históricos. */ function codigo(billetera) { return billetera.moneda; })])].map(/** Etiqueta códigos monetarios disponibles. */ function opcion(id) { return { id, nombre: id }; })} />
+        </Box>
+      </Box> : <>
+        <SelectorCatalogo etiqueta="Actividad" valor={actividad} alCambiar={establecerActividad} opciones={datos.actividades.filter(actividadDisponible)} obligatorio etiquetaExterior />
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 1.5, '@media (min-width:390px)': { gridTemplateColumns: '160px minmax(0, 1fr)' } }}>
+          <CampoTextoCatalogo etiqueta="Fecha" valor={fecha} alCambiar={establecerFecha} tipo="date" obligatorio etiquetaExterior />
+          <CampoTextoCatalogo etiqueta="Descripción" valor={descripcion} alCambiar={establecerDescripcion} etiquetaExterior icono={<DescriptionOutlined />} ejemplo="Carrera matutina" />
+        </Box>
+        <CampoTextoCatalogo etiqueta="Observaciones (opcional)" valor={observaciones} alCambiar={establecerObservaciones} etiquetaExterior icono={<ChatBubbleOutlined />} ejemplo="Ej. Zona centro, buen día" />
+      </>}
       </Stack></Paper>
       <Paper variant="outlined" sx={{ p: tipo === 'ingreso' ? 1.5 : 2 }}><Stack spacing={tipo === 'ingreso' ? 1 : 1.5}>
-      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 1 }}><Typography variant="h6">{tipo === 'ingreso' ? 'Medios de cobro' : 'Medios de pago'} · {moneda}</Typography>{tipo === 'gasto' && <IconButton aria-label="Agregar medio de pago" color="error" onClick={abrirOpcionesMedios}><Add /></IconButton>}</Stack>
+      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 1 }}><Typography variant="h6">{tipo === 'ingreso' ? 'Medios de cobro' : 'Medios de pago'} · {moneda}</Typography></Stack>
       {tipo === 'ingreso' ? <>
         <Typography variant="body2" color="text.secondary">Ingresá solamente los medios utilizados</Typography>
         <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: `${tokensVisuales.radioTarjeta}px`, overflow: 'hidden' }}>{lineas.map(mostrarLinea)}</Box>
@@ -184,15 +187,15 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
       </> : <>
         <Typography variant="body2" color="text.secondary">Ingresá solamente los medios utilizados</Typography>
         <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: `${tokensVisuales.radioTarjeta}px`, overflow: 'hidden' }}>{lineas.map(mostrarLinea)}</Box>
-        <Button onClick={abrirOpcionesMedios} startIcon={<Add />} variant="outlined" sx={{ borderStyle: 'dashed', justifyContent: 'flex-start' }}>Agregar otro medio de pago</Button>
-        {mostrarTotalOperacion()}
-        {/* Ambos accesos abren opciones reales; si todos los medios están presentes no se inventan otros. */}
-        <details open={opcionesMediosAbiertas} onToggle={/** Sincroniza la apertura por teclado o por los botones superiores. */ function alternarOpciones(evento) { establecerOpcionesMediosAbiertas(evento.currentTarget.open); }}><summary>Opciones de medios y moneda</summary><Stack spacing={1} sx={{ pt: 1 }}><CampoTextoCatalogo etiqueta="Moneda" valor={moneda} alCambiar={establecerMoneda} obligatorio /><Typography variant="body2" color="text.secondary">Vacío = 0. Usá coma o punto decimal, sin separadores de miles.</Typography>{datos.medios.every(/** Detecta si quedan medios activos disponibles para agregar. */ function incluido(medio) { return !medio.activo || lineas.some(/** Localiza una distribución ya presente. */ function coincide(linea) { return linea.medioPagoId === medio.id; }); }) && <Typography variant="body2">Todos los medios activos están incluidos. Podés configurarlos desde Ajustes.</Typography>}<Stack direction="row" sx={{ flexWrap: 'wrap' }}>{datos.medios.map(mostrarMedio)}{lineas.map(mostrarRetirada)}</Stack></Stack></details>
+        <Typography variant="body2" color="text.secondary">Vacío = 0. Usá coma o punto decimal, sin separadores de miles.</Typography>
+        {/* Los medios adicionales permanecen disponibles sin duplicar acciones en la carga habitual. */}
+        <details><summary>Agregar o quitar medios de pago</summary><Stack spacing={1} sx={{ pt: 1 }}><Typography variant="body2" color="text.secondary">Vacío = 0. Usá coma o punto decimal, sin separadores de miles.</Typography>{datos.medios.every(/** Detecta si quedan medios activos disponibles para agregar. */ function incluido(medio) { return !medio.activo || lineas.some(/** Localiza una distribución ya presente. */ function coincide(linea) { return linea.medioPagoId === medio.id; }); }) && <Typography variant="body2">Todos los medios activos están incluidos. Podés configurarlos desde Ajustes.</Typography>}<Stack direction="row" sx={{ flexWrap: 'wrap' }}>{datos.medios.map(mostrarMedio)}{lineas.map(mostrarRetirada)}</Stack></Stack></details>
       </>}
       </Stack></Paper>
     </Stack>
+    {tipo === 'gasto' && mostrarTotalOperacion()}
     {resumenImpacto && !errorImportes && resumenImpacto(moneda, lineas.map(/** Prepara distribuciones positivas para la vista previa delegada al dominio. */ function convertir(linea) { return { medioPagoId: linea.medioPagoId, billeteraId: linea.billeteraId || null, importeCentavos: interpretarCampoRapido(linea.importe) }; }).filter(/** Excluye líneas vacías de la vista previa, igual que en el guardado. */ function positiva(linea) { return linea.importeCentavos > 0; }))}
     {!alGuardar && <Alert severity="info">La persistencia se conectará en la siguiente tarea.</Alert>}
-    <Button startIcon={tipo === 'gasto' ? <Check /> : <Save />} fullWidth type="submit" variant="contained" color={tipo === 'ingreso' ? 'primary' : 'error'} loading={pendiente} disabled={!alGuardar || Boolean(errorImportes) || total === 0}>{etiquetaGuardar ?? `Guardar ${tipo}`}</Button>
+    <Button startIcon={tipo === 'ingreso' ? <Save /> : undefined} fullWidth type="submit" variant="contained" color="primary" loading={pendiente} disabled={!alGuardar || Boolean(errorImportes) || total === 0}>{etiquetaGuardar ?? `Guardar ${tipo}`}</Button>
   </Stack>;
 }

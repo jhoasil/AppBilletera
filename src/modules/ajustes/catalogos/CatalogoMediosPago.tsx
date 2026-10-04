@@ -1,3 +1,6 @@
+import Box from '@mui/material/Box';
+import Bolt from '@mui/icons-material/Bolt';
+import { IconoCatalogo } from '../../../shared/components/IconoCatalogo';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
@@ -21,7 +24,7 @@ function crearMedio(): MedioPago {
 }
 
 /** Administra medios y sus preferencias sin confundirlos con billeteras. */
-export function CatalogoMediosPago() {
+export function CatalogoMediosPago({ alVolver }: { alVolver?: () => void }) {
   const [billeteras, establecerBilleteras] = useState<readonly Billetera[]>([]);
   const [error, establecerError] = useState('');
   /** Resuelve nombres de destinos activos e inactivos conservando las preferencias existentes. */
@@ -45,7 +48,7 @@ export function CatalogoMediosPago() {
     function destino(billetera: Billetera) { return billetera.id === medio.billeteraPredeterminadaId; }
     const billetera = billeteras.find(destino);
     // El orden se edita en el diálogo; esta fila distingue destino sugerido y carga rápida.
-    return <Stack spacing={0.5}><Typography variant="body2">Billetera predeterminada: {billetera ? `${billetera.nombre}${billetera.activo ? '' : ' (inactiva)'}` : medio.billeteraPredeterminadaId ? 'No disponible' : 'Sin sugerencia'}</Typography>{medio.mostrarEnCargaRapida && <Chip label="Carga rápida" color="success" variant="outlined" size="small" sx={{ alignSelf: 'flex-start' }} />}</Stack>;
+    return <Stack spacing={0.5}><Typography variant="body2">Billetera: {billetera ? `${billetera.nombre}${billetera.activo ? '' : ' (inactiva)'}` : medio.billeteraPredeterminadaId ? 'No disponible' : 'Sin sugerencia'}</Typography>{medio.mostrarEnCargaRapida && <Chip icon={<Bolt />} label="Carga rápida" color="success" size="small" sx={{ alignSelf: 'flex-start', bgcolor: 'action.selected', color: 'success.main' }} />}</Stack>;
   }
   /** Busca el nombre visible del medio en el catálogo completo. */
   function textoBusqueda(medio: MedioPago) { return medio.nombre; }
@@ -66,12 +69,16 @@ export function CatalogoMediosPago() {
     if (medio.billeteraPredeterminadaId && !opciones.some(esDestino)) opciones.push({ id: medio.billeteraPredeterminadaId, nombre: seleccionada ? `${seleccionada.nombre} (inactiva)` : 'Billetera no disponible' });
     /** Identifica una opción ya seleccionada para conservar referencias inactivas al editar. */
     function esDestino(candidata: { id: string }) { return candidata.id === medio.billeteraPredeterminadaId; }
-    return <><SelectorIcono valor={medio.icono ?? 'payments'} alCambiar={icono} />
-      <SelectorColor valor={medio.color} alCambiar={color} />
-      <CampoTextoCatalogo etiqueta="Orden" valor={String(medio.orden)} alCambiar={orden} tipo="number" obligatorio />
-      <SelectorCatalogo etiqueta="Billetera predeterminada (opcional)" valor={medio.billeteraPredeterminadaId ?? ''} opciones={opciones} alCambiar={destino} />
+    return <><SelectorIcono compacto valor={medio.icono ?? 'payments'} alCambiar={icono} />
+      <SelectorColor compacto valor={medio.color} alCambiar={color} />
+      <CampoTextoCatalogo etiqueta="Orden" etiquetaExterior valor={String(medio.orden)} alCambiar={orden} tipo="number" obligatorio />
+      <SelectorCatalogo etiqueta="Billetera predeterminada (opcional)" etiquetaExterior valor={medio.billeteraPredeterminadaId ?? ''} opciones={opciones} alCambiar={destino} />
       <Alert severity="info">La billetera predeterminada solo sugiere el destino de nuevas operaciones. No cambia registros históricos.</Alert>
-      <FormControlLabel label="Mostrar en carga rápida" control={<Switch checked={medio.mostrarEnCargaRapida} onChange={rapidez} />} /></>;
+      <FormControlLabel label="Mostrar en carga rápida" control={<Switch color="success" checked={medio.mostrarEnCargaRapida} onChange={rapidez} />} /></>;
   }
-  return <>{error && <Alert severity="error">{error}</Alert>}<EditorCatalogo singular="medio de pago" etiquetaCrear="Nuevo medio de pago" masculino alturaTarjeta={96} tamanoIcono={48} textoBusqueda={textoBusqueda} servicio={servicioMedios} crearNuevo={crearMedio} campos={campos} detalle={detalle} /></>;
+  /** Filtra preferencias antes de paginar sin alterar disponibilidad. */
+  function filtrar(medio: MedioPago, filtro: string) { return filtro === 'Todas' || filtro === 'Todos' || (filtro === 'Carga rápida' ? medio.mostrarEnCargaRapida : medio.activo === (filtro === 'Activos')); }
+  /** Muestra el borrador sin persistir cambios ni resolver historia. */
+  function previsualizar(medio: MedioPago) { return <Stack direction="row" spacing={2}><IconoCatalogo identificador={medio.icono} color={medio.color} contenedor /><Box><Typography sx={{ fontWeight: 700 }}>{medio.nombre || 'Nombre del medio'}</Typography>{detalle(medio)}</Box></Stack>; }
+  return <>{error && <Alert severity="error">{error}</Alert>}<EditorCatalogo {...(alVolver ? { alVolver } : {})} titulo="Medios de pago" filtros={["Todos", "Carga rápida", "Activos", "Inactivos"]} coincideFiltro={filtrar} vistaPrevia={previsualizar} singular="medio de pago" etiquetaCrear="Nuevo medio de pago" masculino alturaTarjeta={96} tamanoIcono={48} textoBusqueda={textoBusqueda} servicio={servicioMedios} crearNuevo={crearMedio} campos={campos} detalle={detalle} /></>;
 }

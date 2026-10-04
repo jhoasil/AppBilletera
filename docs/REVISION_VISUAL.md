@@ -230,3 +230,9 @@ Revisión manual en Claro: Resumen en anchos solicitados 320/390 y escritorio 10
 ## TAREA 91 — Ajustes y Actividades, 04/10/2026
 
 Menú agrupado, iconos semánticos, indicador del tema, carga rápida enlazada al catálogo de medios y accesos a respaldo. Actividades agrega filtros antes de paginación, fechas/tipo, editor en página, selectores plegables y descripción multilínea. Validación manual en Claro móvil: abrir Actividades, consultar DiDi, cancelar sin escribir, filtrar Inactivas vacío, volver a Todas y Ajustes. Compilación y tipos correctos. No se probaron guardado, cambios de disponibilidad, importación/exportación, modo oscuro ni dispositivos nativos. No se implementan notificaciones, moneda global ni borrado físico. Datos preservados. Tests: no ejecutados.
+
+## TAREA 92 — Catálogos de medios/billeteras y Gasto (04/10/2026)
+
+Completada. Listas con filtros previos a la paginación, editores en página, selección visual y vista previa. Patrimonio actual obtenido del servicio existente, separado por moneda y etiquetado como global. Gasto con tres filas de campos, moneda visible, total rojo y guardar azul; opciones adicionales siguen accesibles. Datos y escrituras financieras conservados.
+
+Comprobaciones: pnpm compilar (incluye tipos) correcto; revisión manual de navegación, filtro Carga rápida y USD, formularios y vista previa sin guardar datos; pantallas móviles estrechas y escritorio sin desbordamiento horizontal observado. No se verificaron guardados mediante UI ni plataformas nativas. Tests: no creados ni ejecutados. Capturas locales ignoradas en tmp/tarea-092. Se preservan iconos Material y centavos, sin copiar logos ni valores ficticios de las referencias.

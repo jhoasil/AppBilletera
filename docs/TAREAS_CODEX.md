@@ -4450,3 +4450,11 @@ Estado: completada el 04/10/2026. Referencia 6ccf4b0b del usuario. Rama task_26/
 Alcance: menú con Catálogos primero, Preferencias y Respaldo; iconos semánticos, descripciones y superficies agrupadas. Actividades con cabecera Agregar, búsqueda, filtros Todas/Activas/Inactivas/Archivadas aplicados antes de paginar, tarjetas compactas con tipo y fechas. Editor en página con campos exteriores, color/icono plegables en dos columnas, fechas en fila, estado y disponibilidad independientes, Guardar cambios verde y Cancelar. Mantener tipos personalizados existentes. Desactivar conserva historia: no inventar eliminación física. No agregar notificaciones o moneda configurable inexistentes ni controles decorativos sin acción. Exportar/importar permanecen en el flujo validado de respaldo. Comentarios en español.
 
 Validación: compilación, revisión manual sin escribir datos, git diff y git diff --check. Tests: no ejecutados. Commit style(ajustes): refina menú y edición de actividades. Sin push ni merge automático.
+
+# TAREA 92 — Medios de pago, billeteras y formulario de gasto
+
+Estado: completada el 04/10/2026. Documentada antes de implementar. Referencias b8672e06, 7603fe10, f0a57374, 8554e5ef y ceee6b5a del usuario (04/10/2026).
+
+Alcance: catálogos con cabecera, búsqueda, filtros antes de paginar, disponibilidad y edición; medios con billetera sugerida y chip de carga rápida; billeteras con saldos reales y totales separados por moneda. Formularios en página con opciones visuales de icono/color, vista previa y guardar/cancelar. Nueva billetera mantiene creación atómica del movimiento inicial; edición nunca cambia saldo directamente. Nuevo gasto reorganiza Fecha/Categoría, Actividad/Descripción y Observaciones/Moneda en filas, apiladas en anchos pequeños; total rojo y guardar azul conforme a la referencia más reciente. Conservar medios adicionales, validaciones, centavos e historia. No copiar cifras ni logos ficticios.
+
+Validación: tipos, compilación, revisión visual sin escrituras financieras, diff y diff --check. Sin tests, push ni migraciones. Rama task_26/092_refinar_medios_billeteras_gasto; commit style(ajustes): refina medios, billeteras y carga de gasto.

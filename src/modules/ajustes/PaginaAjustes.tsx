@@ -64,9 +64,11 @@ export function PaginaAjustes() {
     <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center' }}><Typography component="h1" variant="h2">Ajustes</Typography><Settings color="action" /></Stack>
     {(['Catálogos', 'Preferencias', 'Respaldo y datos', 'Información'] as const).map(/** Separa accesos por finalidad sin introducir configuraciones que todavía no existen. */ function mostrarGrupo(grupo) { return <Stack key={grupo} spacing={1}><Box><Typography variant="h6">{grupo}</Typography><Typography variant="body2" color="text.secondary">{grupo === 'Catálogos' ? 'Administrá las opciones que usás en la app' : grupo === 'Preferencias' ? 'Configurá la app a tu gusto' : grupo === 'Respaldo y datos' ? 'Protegé tu información' : 'Acerca de la aplicación'}</Typography></Box><Paper variant="outlined"><List disablePadding aria-label={grupo}>{secciones.filter(/** Elige destinos del grupo actual. */ function pertenece(destino) { return destino.grupo === grupo; }).map(mostrarAcceso)}</List></Paper></Stack>; })}
   </Stack>;
+  if (seccion === 'medios' || seccion === 'carga') return <CatalogoMediosPago alVolver={volver} />;
+  if (seccion === 'billeteras') return <CatalogoBilleteras alVolver={volver} />;
   if (seccion === 'actividades') return <CatalogoActividades alVolver={volver} />;
   return <Stack spacing={2}>
     <CabeceraPagina titulo={secciones.find(buscarSeccion)?.titulo ?? 'Ajustes'} regreso={{ alPulsar: volver, etiqueta: "Volver a Ajustes" }} />
-    {seccion === 'categorias' ? <CatalogoCategoriasGasto /> : (seccion === 'medios' || seccion === 'carga') ? <CatalogoMediosPago /> : seccion === 'billeteras' ? <CatalogoBilleteras /> : seccion === 'apariencia' ? <SelectorModoTema /> : seccion === 'informacion' ? <InformacionAplicacion /> : <RespaldoDatos />}
+    {seccion === 'categorias' ? <CatalogoCategoriasGasto /> : seccion === 'apariencia' ? <SelectorModoTema /> : seccion === 'informacion' ? <InformacionAplicacion /> : <RespaldoDatos />}
   </Stack>;
 }

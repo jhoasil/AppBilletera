@@ -2961,3 +2961,7 @@ Continuación de TAREA 90 en su misma rama: acercar la composición a la referen
 ## Ajustes y Actividades — TAREA 91
 
 Referencia 6ccf4b0b: menú agrupado con Catálogos, Preferencias y Respaldo y datos; actividades con filtros de disponibilidad/archivo, búsqueda y alta superior. Editor en página, controles exteriores, fechas en fila adaptable, selectores de icono/color plegables, acciones verdes. Conservar tipos libres, estado y activo independientes. Desactivar sustituye eliminar para preservar historia. Solo accesos a funciones implementadas.
+
+## Ajuste de catálogos y Gasto — TAREA 92
+
+Las referencias del 04/10/2026 sustituyen la composición anterior de estos catálogos: búsqueda y filtros, tarjetas con disponibilidad, formularios en página y vista previa. Medios distingue billetera sugerida de la histórica. Billeteras presenta patrimonio actual separado por moneda y saldo inicial como movimiento. Gasto usa filas Fecha/Categoría, Actividad/Descripción y Observaciones/Moneda, con apilado en pantallas estrechas; guardar azul y resumen rojo. Los valores de ejemplo no son datos de la aplicación.
