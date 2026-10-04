@@ -2937,3 +2937,7 @@ Mantener el orden Actividad, Fecha, Descripción opcional, Observaciones opciona
 Por instrucción posterior del usuario, Fecha y Descripción comparten fila desde 390 px y se apilan en el ancho mínimo. Se compactan rellenos y medios de cobro, manteniendo las billeteras reales visibles y controles de al menos 48 px.
 
 Referencia final de ingreso: medios agrupados en una sola lista con selector de billetera real en texto bajo cada nombre e importe a la derecha. TOTAL INGRESO se integra en el bloque de cobros. Moneda y agregar/quitar medios se conservan en Opciones de medios y moneda. Descripción sigue siendo opcional, aunque la etiqueta se abrevie.
+
+## Refinamiento de Nuevo gasto — TAREA 088
+
+Categoría y descripción obligatorias, actividad y observaciones opcionales, fecha obligatoria. Etiquetas sobre los campos, con fecha y descripción apiladas. Cada tarjeta de medio de pago conserva importe exacto y billetera real editable en texto debajo. Más y Agregar otro medio de pago abren opciones de medios reales, moneda y retirada de distribuciones. TOTAL GASTO y Guardar gasto usan rojo semántico; no modificar cálculos, validaciones o persistencia para reproducir la referencia.

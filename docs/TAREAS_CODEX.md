@@ -4363,3 +4363,25 @@ Sin push ni merge automático. Detenerse al finalizar.
 ### Referencia final del usuario — 03/10/2026
 
 La nueva imagen codex-clipboard-1542c33c-2ae0-4297-87d5-2dabf41e7d6a.png sustituye la composición anterior del ingreso: lista única con separadores, icono/nombre y billetera real editable en texto debajo, importe a la derecha, subtítulo breve y bloque TOTAL INGRESO verde con icono de tendencia dentro de Medios de cobro. Fecha y Descripción siguen juntas cuando caben; Descripción sigue siendo opcional aunque su etiqueta se abrevie. Moneda, formato decimal y agregar/quitar medios quedan en opciones desplegables para despejar el formulario. No copiar importes, logos ni datos de la imagen; mantener selección de billetera accesible y errores. Implementar como corrección de la TAREA 87 en su rama existente, con commit adicional y sin tests, push ni merge.
+
+---
+
+# TAREA 88 — Refinar Nuevo gasto según la referencia
+
+## Estado
+
+Completada el 03/10/2026; documentada antes de modificar código. Tipos y compilación correctos; revisión y límites en REVISION_VISUAL.md. Tests: no creados ni ejecutados.
+
+## Objetivo y cambios
+
+Aplicar la columna Nuevo gasto de codex-clipboard-db9aec32-4512-47d1-82e6-def2f18d019d.png. Mantener cabecera y regreso. Mostrar etiquetas exteriores en Categoría obligatoria, Actividad opcional, Fecha obligatoria, Descripción obligatoria y Observaciones opcionales. Fecha y Descripción apiladas en Gasto como la referencia; no modificar la composición vigente de Ingreso.
+
+Medios de pago: tarjetas compactas con icono/nombre e importe, billetera real editable en texto debajo; subtotal exacto TOTAL GASTO rojo con flecha de salida; Guardar gasto rojo. Accesos visibles más y Agregar otro medio de pago abren opciones de medios reales disponibles, con quitar y moneda accesibles. No inventar medios, importes, logos o billeteras ni ocultar campos financieros necesarios.
+
+## Restricciones y validación
+
+Conservar última categoría/actividad disponibles, distribución histórica, moneda, dinero exacto, campos vacíos como cero, validaciones, errores y bloqueo pendiente. Sin cambios de servicios o persistencia. Documentar comentarios en español. Revisión manual de borradores a 320/390 px y comprobación de Ingreso por componente compartido, sin guardar operaciones. Registrar límites; tipos y compilación cuando corresponda, git diff y git diff --check. No crear ni ejecutar tests, tags o push.
+
+## Git
+
+Rama task_26/088_refinar_nuevo_gasto. Commit style(gastos): refina formulario de nuevo gasto. Verificar e integrar la tarea previa antes de crear rama; detenerse tras el commit de esta tarea.

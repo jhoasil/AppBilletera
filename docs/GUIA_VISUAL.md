@@ -2847,3 +2847,7 @@ La referencia de Nuevo ingreso aportada el 03/10/2026 guía etiquetas exteriores
 Compactación posterior autorizada: Fecha y Descripción comparten fila desde 390 px, con columna de fecha de 160 px y descripción flexible; se apilan por debajo. La fecha usa solamente el calendario nativo. Ingreso reduce rellenos a 12 px, separación de campos a 12 px y filas de cobro a controles de 48 px con separación de 8 px. Billetera real permanece visible; la ayuda breve conserva formato decimal y vacío equivalente a cero. Gasto conserva su distribución anterior.
 
 La referencia final del 03/10/2026 sustituye las tarjetas separadas por una lista de cobros con divisores. La billetera real se muestra como selector de texto debajo del medio, con acceso visible a cambiarla, nunca como dato oculto. TOTAL INGRESO se integra en el bloque de cobros con cifra verde e icono de tendencia. Opciones de moneda y agregar/quitar medios siguen disponibles en un desplegable; los importes y los catálogos son reales, sin copiar cifras o logos de muestra.
+
+## Refinamiento de Nuevo gasto — TAREA 088
+
+La referencia del 03/10/2026 establece etiquetas exteriores, categoría y descripción obligatorias, actividad opcional y fecha/descripcion apiladas. Los pagos usan tarjetas con importe alineado y selector de billetera real en texto debajo, total rojo e icono de salida, guardado rojo. Más y Agregar otro medio de pago dan acceso a los medios reales disponibles; quitar medios y cambiar moneda permanecen disponibles. Ingreso conserva la composición aprobada en TAREA 87.

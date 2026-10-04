@@ -1,5 +1,17 @@
 # Revisión visual
 
+## Revisión de Nuevo gasto — TAREA 088
+
+03/10/2026. Se documentó el alcance antes de modificar código. Main ya incluía la TAREA 87: merge --ff-only confirmó que estaba actualizado. Trabajo en task_26/088_refinar_nuevo_gasto.
+
+Nuevo gasto incorpora etiquetas exteriores e iconos de descripción/observaciones, categoría obligatoria, actividad opcional, fecha y descripción apiladas. Las tarjetas de pago presentan icono configurado, importe y billetera real editable en texto debajo. TOTAL GASTO usa superficie roja, cifra exacta de 32 px e icono de salida; Guardar gasto conserva rojo y validaciones. Más y Agregar otro medio de pago abren las opciones reales; moneda y quitar/agregar distribuciones siguen disponibles. Si todos los medios activos están incluidos se informa sin inventar opciones. Ingreso conserva su variante de lista y total verde.
+
+Se observó Claro a 390 y 320 px CSS: categoría Combustible y actividad DiDi precargadas, campos disponibles, tres medios reales, billetera Efectivo y otros destinos pendientes de selección. Más abrió opciones con moneda, instrucciones y retirada de medios. En 320 px se observaron scroll, total cero y guardado deshabilitado; no hubo desbordamiento horizontal. Los importes se apilan bajo el nombre por debajo de 360 px. Se abrió Ingreso a 320 px y conservó su composición. No se escribieron ni guardaron operaciones financieras.
+
+[Captura local de Nuevo gasto](../tmp/tarea-088/nuevo-gasto.jpg), excluida de Git. Captura completa a 390 px: la navegación fija permanece en la posición del viewport, no implica que todo quepa en una pantalla. Se mantienen decimales, catálogos y destinos reales sin copiar cifras o logos de muestra. Oscuro/Sistema y otros anchos se revisaron conceptualmente con tokens; dispositivos físicos, lectores de pantalla, errores de persistencia y guardado efectivo no se observaron.
+
+Tipos y compilación correctos. Diff revisado y git diff --check sin errores. Commit indicado: style(gastos): refina formulario de nuevo gasto. Tests: no creados ni ejecutados. Sin push, tags ni merge de TAREA 88; se detiene al finalizar.
+
 ## Revisión de Nuevo ingreso — TAREA 087
 
 Fecha: 03/10/2026. Tarea definida en TAREAS_CODEX.md y documentación visual antes de modificar código; alcance exclusivo del formulario de ingreso y variantes optativas necesarias.
