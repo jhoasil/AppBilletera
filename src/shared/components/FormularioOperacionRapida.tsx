@@ -178,12 +178,12 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
       <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 1 }}><Typography variant="h6">{tipo === 'ingreso' ? 'Medios de cobro' : 'Medios de pago'} · {moneda}</Typography>{tipo === 'gasto' && <IconButton aria-label="Agregar medio de pago" color="error" onClick={abrirOpcionesMedios}><Add /></IconButton>}</Stack>
       {tipo === 'ingreso' ? <>
         <Typography variant="body2" color="text.secondary">Ingresá solamente los medios utilizados</Typography>
-        <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 3, overflow: 'hidden' }}>{lineas.map(mostrarLinea)}</Box>
+        <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: `${tokensVisuales.radioTarjeta}px`, overflow: 'hidden' }}>{lineas.map(mostrarLinea)}</Box>
         {mostrarTotalOperacion()}
         <details><summary>Opciones de medios y moneda</summary><Stack spacing={1} sx={{ pt: 1 }}><CampoTextoCatalogo etiqueta="Moneda" valor={moneda} alCambiar={establecerMoneda} obligatorio /><Typography variant="body2" color="text.secondary">Vacío = 0. Descripción opcional. Usá coma o punto decimal, sin separadores de miles.</Typography><Stack direction="row" sx={{ flexWrap: 'wrap' }}>{lineas.map(mostrarRetirada)}{datos.medios.map(mostrarMedio)}</Stack></Stack></details>
       </> : <>
         <Typography variant="body2" color="text.secondary">Ingresá solamente los medios utilizados</Typography>
-        <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 3, overflow: 'hidden' }}>{lineas.map(mostrarLinea)}</Box>
+        <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: `${tokensVisuales.radioTarjeta}px`, overflow: 'hidden' }}>{lineas.map(mostrarLinea)}</Box>
         <Button onClick={abrirOpcionesMedios} startIcon={<Add />} variant="outlined" sx={{ borderStyle: 'dashed', justifyContent: 'flex-start' }}>Agregar otro medio de pago</Button>
         {mostrarTotalOperacion()}
         {/* Ambos accesos abren opciones reales; si todos los medios están presentes no se inventan otros. */}
