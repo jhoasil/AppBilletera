@@ -2951,3 +2951,8 @@ Todos muestra Todos los períodos; Este mes y Mes anterior aplican fechas locale
 ## Reportes — actualización TAREA 90
 
 La composición de cinco pestañas sustituye el selector único de desglose, conservando todos los rangos y la rentabilidad. Comparar Mes con el mes calendario anterior y Año con el año calendario anterior; otros rangos con el rango inmediatamente anterior de igual duración. Sin porcentaje cuando la base es cero o negativa. Evolución de seis meses de calendario hasta el mes de fin, rotulada independientemente del período elegido. Separar monedas; patrimonio actual y movimientos internos son información independiente de ingresos/gastos/ganancia. Mostrar transferencias y ajustes positivos/negativos separados, sin total combinado. Movimientos recientes no se presentan como limitados al período. La selección de otro mes y las comparativas quedan autorizadas por esta referencia y prevalecen sobre su exclusión visual anterior.
+
+
+### Corrección visual de Reportes — 04/10/2026
+
+Continuación de TAREA 90 en su misma rama: acercar la composición a la referencia c880b95b. Cabecera móvil única con título y mes; tarjetas y accesos patrimoniales compactos; comparación con indicador semántico; eje monetario graduado; anillo y leyenda contiguos cuando el ancho lo permita. Mantener centavos, datos reales, fechas accesibles, alternativas textuales y separación de transferencias/ajustes. No crear opciones de gráfico ficticias. Validar visualmente y compilar, sin tests ni merge automático.

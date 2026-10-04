@@ -4436,3 +4436,8 @@ Transferencias y ajustes no se suman a resultado; el bloque interno muestra tran
 
 Revisión manual a 320/390 px y escritorio según disponibilidad, sin modificar datos; registrar diferencias y límites. Tipos, compilación, revisión de git diff y git diff --check. No crear ni ejecutar tests, push, tags o release.
 Rama task_26/090_refinar_reportes. Commit style(reportes): refina panel y desgloses financieros. Detenerse tras commit; sin merge automático de TAREA 90.
+
+
+### Corrección visual de Reportes — 04/10/2026
+
+Continuación de TAREA 90 en su misma rama: acercar la composición a la referencia c880b95b. Cabecera móvil única con título y mes; tarjetas y accesos patrimoniales compactos; comparación con indicador semántico; eje monetario graduado; anillo y leyenda contiguos cuando el ancho lo permita. Mantener centavos, datos reales, fechas accesibles, alternativas textuales y separación de transferencias/ajustes. No crear opciones de gráfico ficticias. Validar visualmente y compilar, sin tests ni merge automático.

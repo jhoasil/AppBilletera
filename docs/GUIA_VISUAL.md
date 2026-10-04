@@ -2863,3 +2863,8 @@ Referencia aprobada el 03/10/2026: cabecera horizontal con Agregar semántico, f
 ## Reportes — TAREA 90
 
 La referencia del 03/10/2026 autoriza cinco pestañas: Resumen, Ingresos, Gastos, Actividades y Billeteras; selector de mes en cabecera, manteniendo los rangos existentes. Resumen con tarjetas semánticas, patrimonio actual separado, transferencias y ajustes separados, gráfico mensual combinado y movimientos recientes. Ingresos/Gastos muestran desglose, evolución mensual y distribución por medio mediante anillo con leyenda exacta; Actividades conserva rentabilidad. Radios explícitos 16 px y colores normativos. Los gráficos tienen alternativa textual, moneda y denominador; no trasladar cifras ni porcentajes ficticios. Las comparativas autorizadas en esta tarea requieren consultar la base real.
+
+
+### Corrección visual de Reportes — 04/10/2026
+
+Continuación de TAREA 90 en su misma rama: acercar la composición a la referencia c880b95b. Cabecera móvil única con título y mes; tarjetas y accesos patrimoniales compactos; comparación con indicador semántico; eje monetario graduado; anillo y leyenda contiguos cuando el ancho lo permita. Mantener centavos, datos reales, fechas accesibles, alternativas textuales y separación de transferencias/ajustes. No crear opciones de gráfico ficticias. Validar visualmente y compilar, sin tests ni merge automático.
