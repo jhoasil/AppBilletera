@@ -1,3 +1,9 @@
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import Add from '@mui/icons-material/Add';
+import Check from '@mui/icons-material/Check';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { useEffect, useId, useState, type FormEvent, type ReactNode } from 'react';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -26,6 +32,8 @@ import { IconoCatalogo } from '../../../shared/components/IconoCatalogo';
 /** Contrato visual para reutilizar el listado y diálogo sin mezclar campos de entidades. */
 export interface PropiedadesEditorCatalogo<Entidad extends EntidadCatalogo> {
   singular: string;
+  alVolver?: () => void;
+  actividad?: boolean;
   servicio: ServicioCatalogo<Entidad>;
   crearNuevo: () => Entidad;
   campos: (entidad: Entidad, actualizar: (cambios: Partial<Entidad>) => void) => ReactNode;
@@ -40,7 +48,7 @@ export interface PropiedadesEditorCatalogo<Entidad extends EntidadCatalogo> {
 }
 
 /** Presenta un ABM paginado con errores visibles y controles deshabilitados durante escrituras. */
-export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, servicio, crearNuevo, campos, detalle, guardarPersonalizado, accionAdicional, etiquetaCrear, alturaTarjeta, tamanoIcono = 48, textoBusqueda }: PropiedadesEditorCatalogo<Entidad>) {
+export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, alVolver, actividad = false, servicio, crearNuevo, campos, detalle, guardarPersonalizado, accionAdicional, etiquetaCrear, alturaTarjeta, tamanoIcono = 48, textoBusqueda }: PropiedadesEditorCatalogo<Entidad>) {
   const [elementos, establecerElementos] = useState<readonly Entidad[]>([]);
   const [total, establecerTotal] = useState(0);
   const [pagina, establecerPagina] = useState(0);
@@ -52,10 +60,11 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
   const [borrador, establecerBorrador] = useState<Entidad | null>(null);
   const formularioId = useId();
   const [busqueda, establecerBusqueda] = useState('');
+  const [filtro, establecerFiltro] = useState('Todas');
   /** Busca solamente metadatos de catálogo y reinicia la página para no ocultar coincidencias. */
   function buscar(valor: string) { establecerBusqueda(valor); establecerPagina(0); }
   /** Compara nombre y los campos visibles sin distinguir mayúsculas. */
-  function coincide(entidad: Entidad) { return (textoBusqueda?.(entidad) ?? entidad.nombre).toLocaleLowerCase('es').includes(busqueda.trim().toLocaleLowerCase('es')); }
+  function coincide(entidad: Entidad) { return (!actividad || filtro === 'Todas' || (filtro === 'Archivadas' ? ('estado' in entidad && entidad.estado === 'archivado') : (!('estado' in entidad) || entidad.estado !== 'archivado') && entidad.activo === (filtro === 'Activas'))) && (textoBusqueda?.(entidad) ?? entidad.nombre).toLocaleLowerCase('es').includes(busqueda.trim().toLocaleLowerCase('es')); }
   const filtrados = textoBusqueda ? elementos.filter(coincide) : elementos;
   const visibles = textoBusqueda ? filtrados.slice(pagina * 20, (pagina + 1) * 20) : filtrados;
   const totalVisible = textoBusqueda ? filtrados.length : total;
@@ -117,29 +126,41 @@ export function EditorCatalogo<Entidad extends EntidadCatalogo>({ singular, serv
     }
     return <Card key={entidad.id} sx={{ p: 0 }}><CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 }, minHeight: alturaTarjeta ?? 88 }}>
       {/* En 320 px las acciones bajan de fila para conservar nombres y chips completos. */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: `${tamanoIcono}px minmax(0, 1fr) auto`, gap: 1.5, alignItems: 'center', '@media (max-width:359px)': { gridTemplateColumns: `${tamanoIcono}px minmax(0, 1fr)` } }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: `${tamanoIcono}px minmax(0, 1fr) auto`, gap: actividad ? 1 : 1.5, alignItems: 'center', '@media (max-width:359px)': { gridTemplateColumns: `${tamanoIcono}px minmax(0, 1fr)` } }}>
         <IconoCatalogo identificador={entidad.icono} color={entidad.color} contenedor tamano={tamanoIcono} />
-        <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}><Typography variant="subtitle1" sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}>{entidad.nombre}</Typography>
+        <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}><Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: actividad ? 14 : undefined, overflowWrap: 'anywhere' }}>{entidad.nombre}</Typography>
           {detalle && <Box sx={{ color: 'text.secondary', fontSize: 14 }}>{detalle(entidad)}</Box>}
-          <Chip size="small" sx={{ alignSelf: 'flex-start' }} label={entidad.activo ? 'Disponible' : 'No disponible'} color={entidad.activo ? 'success' : 'default'} variant="outlined" />
+          <Chip size="small" sx={{ display: actividad ? 'none' : undefined, alignSelf: 'flex-start' }} label={entidad.activo ? 'Disponible' : 'No disponible'} color={entidad.activo ? 'success' : 'default'} variant="outlined" />
         </Stack>
-        <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', '@media (max-width:359px)': { gridColumn: '2 / -1', justifyContent: 'space-between' } }}><Stack sx={{ alignItems: 'center', flexShrink: 0 }}><Typography variant="caption">Disponible</Typography><Switch checked={entidad.activo} onChange={cambiarActivo} disabled={pendiente} slotProps={{ input: { 'aria-label': `${entidad.activo ? 'Desactivar' : 'Activar'} ${entidad.nombre}` } }} /></Stack>
-        <IconButton onClick={editar} disabled={pendiente} aria-label={`Consultar o editar ${entidad.nombre}`}><ChevronRight /></IconButton></Stack>
+        <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', '@media (max-width:359px)': { gridColumn: '2 / -1', justifyContent: 'space-between' } }}><Stack sx={{ alignItems: 'center', flexShrink: 0 }}><Typography variant="caption" sx={{ display: actividad ? 'none' : undefined }}>Disponible</Typography><Switch size={actividad ? 'small' : 'medium'} color={actividad ? 'success' : 'primary'} checked={entidad.activo} onChange={cambiarActivo} disabled={pendiente} slotProps={{ input: { 'aria-label': `${entidad.activo ? 'Desactivar' : 'Activar'} ${entidad.nombre}` } }} /></Stack>
+        <IconButton size={actividad ? 'small' : 'medium'} onClick={editar} disabled={pendiente} aria-label={`Consultar o editar ${entidad.nombre}`}><ChevronRight /></IconButton></Stack>
       </Box>
       {accionAdicional && <Box sx={{ mt: 1 }}>{accionAdicional(entidad, pendiente)}</Box>}
     </CardContent></Card>;
   }
+  if (actividad && borrador) return <Stack spacing={2}>
+    <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}><IconButton onClick={cerrar} disabled={pendiente} aria-label="Volver a Actividades"><ArrowBack /></IconButton><Typography component="h1" variant="h2">{borrador.id ? 'Editar actividad' : 'Nueva actividad'}</Typography></Stack>
+    <Card component="form" id={formularioId} onSubmit={guardar} sx={{ p: 2 }}><Stack component="fieldset" disabled={pendiente} spacing={2} sx={{ border: 0, p: 0, m: 0, minWidth: 0 }}>
+      {errorFormulario && <Alert severity="error">{errorFormulario}</Alert>}
+      <CampoTextoCatalogo etiqueta="Nombre *" etiquetaExterior valor={borrador.nombre} alCambiar={cambiarNombre} obligatorio icono={<IconoCatalogo identificador={borrador.icono} />} />
+      {campos(borrador, actualizar)}
+      <FormControlLabel label="Disponible para nuevas operaciones" control={<Switch color="success" checked={borrador.activo} onChange={/** Cambia disponibilidad del borrador sin modificar historia. */ function disponibilidad(_evento, activo) { actualizar({ activo } as Partial<Entidad>); }} />} />
+    </Stack></Card>
+    <Button type="submit" form={formularioId} variant="contained" color="success" startIcon={<Check />} loading={pendiente}>Guardar cambios</Button><Button onClick={cerrar} disabled={pendiente} sx={{ bgcolor: 'action.hover' }}>Cancelar</Button>
+  </Stack>;
   return <Stack spacing={2}>
+    {actividad && <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}><IconButton onClick={alVolver} aria-label="Volver a Ajustes"><ArrowBack /></IconButton><Typography component="h1" variant="h2" sx={{ flex: 1 }}>Actividades</Typography><Button variant="contained" color="success" startIcon={<Add />} onClick={crear} sx={{ borderRadius: '24px', color: 'common.white' }}>Agregar</Button></Stack>}
     {textoBusqueda && <BuscadorCatalogo etiqueta={`Buscar ${singular}`} valor={busqueda} alCambiar={buscar} />}
+    {actividad && <ToggleButtonGroup exclusive value={filtro} onChange={/** Filtra antes de paginar y vuelve al principio del resultado. */ function filtrar(_evento, valor: string | null) { if (valor) { establecerFiltro(valor); establecerPagina(0); } }} sx={{ gap: 1, overflowX: 'auto', '& .MuiToggleButton-root': { border: 0, borderRadius: '24px !important', textTransform: 'none', px: 1, fontSize: 12, '&.Mui-selected': { color: 'success.main', bgcolor: 'action.selected' } } }}>{['Todas', 'Activas', 'Inactivas', 'Archivadas'].map(/** Ofrece estados de consulta con nombre explícito. */ function opcion(valor) { return <ToggleButton key={valor} value={valor}>{valor}</ToggleButton>; })}</ToggleButtonGroup>}
     {error && <Alert severity="error" action={<Button onClick={recargar}>Reintentar</Button>}>{error}</Alert>}
-    {cargando ? <CircularProgress aria-label="Cargando catálogo" /> : visibles.length ? visibles.map(mostrarEntidad) : !error && <EstadoVacio titulo={busqueda ? "Sin coincidencias" : "Sin registros"} descripcion={busqueda ? "Probá con otro nombre o tipo." : "Creá el primer registro de este catálogo."} />}
+    {cargando ? <CircularProgress aria-label="Cargando catálogo" /> : visibles.length ? visibles.map(mostrarEntidad) : !error && <EstadoVacio titulo={busqueda || (actividad && filtro !== 'Todas') ? "Sin coincidencias" : "Sin registros"} descripcion={busqueda || (actividad && filtro !== 'Todas') ? "Probá con otro nombre o filtro." : "Creá el primer registro de este catálogo."} />}
     <Stack direction="row" useFlexGap spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
       <Button onClick={anterior} disabled={pagina === 0 || cargando || pendiente}>Anterior</Button>
       <Typography variant="body2">Página {pagina + 1} · {totalVisible} registros</Typography>
       <Button onClick={siguiente} disabled={(pagina + 1) * 20 >= totalVisible || cargando || pendiente}>Siguiente</Button>
     </Stack>
     {/* La acción de alta queda dentro del flujo para no tapar la navegación ni el teclado. */}
-    <BotonAccion etiqueta={etiquetaCrear ?? `Crear ${singular}`} alPulsar={crear} deshabilitado={pendiente} />
+    {!actividad && <BotonAccion etiqueta={etiquetaCrear ?? `Crear ${singular}`} alPulsar={crear} deshabilitado={pendiente} />}
     <Dialog open={Boolean(borrador)} onClose={cerrar} fullWidth maxWidth="sm" aria-labelledby={`${formularioId}-titulo`}>
       <DialogTitle id={`${formularioId}-titulo`}>{borrador?.id ? 'Editar' : 'Crear'} {singular}</DialogTitle>
       <DialogContent><Stack component="form" id={formularioId} onSubmit={guardar} spacing={2} sx={{ pt: 1 }}>

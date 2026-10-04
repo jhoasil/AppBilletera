@@ -225,3 +225,8 @@ Comparación con c880b95b: eliminada la cabecera de marca duplicada solo en Repo
 Gráficos con retícula monetaria rotulada y valores exactos desplegables; etiqueta Mensual sin selector ficticio. Anillo y leyenda contiguos desde 360 px, apilados debajo; leyenda separa nombre/porcentaje de importe para conservar centavos. Cabecera mantiene fechas completas accesibles. Ver billeteras reemplaza el enlace ambiguo Ver todos.
 
 Revisión manual en Claro: Resumen en anchos solicitados 320/390 y escritorio 1024; Ingresos/Gastos en móvil. Compilación y tipos correctos. Sin escrituras de operaciones ni cambios de modelo. Captura tmp/tarea-090/resumen-corregido.png (ignorada por Git). No se verificaron visualmente variantes oscuras, múltiples monedas ni comparaciones con base positiva en esta corrección. Se conserva diferencia con la imagen por centavos, flechas semánticas vigentes y datos reales. Tests: no ejecutados.
+
+
+## TAREA 91 — Ajustes y Actividades, 04/10/2026
+
+Menú agrupado, iconos semánticos, indicador del tema, carga rápida enlazada al catálogo de medios y accesos a respaldo. Actividades agrega filtros antes de paginación, fechas/tipo, editor en página, selectores plegables y descripción multilínea. Validación manual en Claro móvil: abrir Actividades, consultar DiDi, cancelar sin escribir, filtrar Inactivas vacío, volver a Todas y Ajustes. Compilación y tipos correctos. No se probaron guardado, cambios de disponibilidad, importación/exportación, modo oscuro ni dispositivos nativos. No se implementan notificaciones, moneda global ni borrado físico. Datos preservados. Tests: no ejecutados.

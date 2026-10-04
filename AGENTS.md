@@ -3086,3 +3086,6 @@ docs/TAREAS_CODEX.md
 ```
 
 No asumir que una tarea futura está autorizada solamente porque la tarea anterior terminó.
+
+
+TAREA 91: refinamiento de Ajustes y Actividades completado el 04/10/2026. Alcance y validación en TAREAS_CODEX.md y REVISION_VISUAL.md.

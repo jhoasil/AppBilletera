@@ -82,7 +82,7 @@ export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstru
 
   return (
     <ContextoCabecera.Provider value={establecerCabecera}><Box sx={{ minHeight: '100dvh' }}>
-      <AppBar position="fixed" sx={{ display: paginaActual === 'reportes' ? { xs: 'none', md: 'flex' } : undefined, zIndex: tema.zIndex.drawer + 1, borderBottom: 1, borderColor: 'divider', bgcolor: 'background.paper', pt: 'env(safe-area-inset-top)', pl: 'env(safe-area-inset-left)', pr: 'env(safe-area-inset-right)' }}>
+      <AppBar position="fixed" sx={{ display: (paginaActual === 'reportes' || (paginaActual === 'ajustes' && !cabecera)) ? { xs: 'none', md: 'flex' } : undefined, zIndex: tema.zIndex.drawer + 1, borderBottom: 1, borderColor: 'divider', bgcolor: 'background.paper', pt: 'env(safe-area-inset-top)', pl: 'env(safe-area-inset-left)', pr: 'env(safe-area-inset-right)' }}>
         <Toolbar sx={{ gap: 1 }}>
           {/* En móvil el retorno contextual sustituye la marca, sin añadir otra barra fija. */}
           {cabecera && <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 1, minWidth: 0, flex: 1 }}>
@@ -127,7 +127,7 @@ export function EstructuraPrincipal({ paginaActual, children }: PropiedadesEstru
       </Drawer>
       <Box sx={{ ml: { md: `${anchoLateral}px` } }}>
         {/* Reportes tiene cabecera propia; en móvil evita duplicar marca y título. */}
-        <Toolbar sx={{ display: paginaActual === 'reportes' ? { xs: 'none', md: 'flex' } : undefined }} />
+        <Toolbar sx={{ display: (paginaActual === 'reportes' || (paginaActual === 'ajustes' && !cabecera)) ? { xs: 'none', md: 'flex' } : undefined }} />
         <Container
           component="main" id="contenido-principal" tabIndex={-1} maxWidth="lg"
           sx={{ minWidth: 0, pt: { xs: `calc(${paginaActual === 'inicio' ? 8 : 24}px + env(safe-area-inset-top))`, md: 'calc(32px + env(safe-area-inset-top))' }, pb: { xs: 'calc(96px + env(safe-area-inset-bottom))', md: 'max(32px, env(safe-area-inset-bottom))' }, pl: { xs: 'max(16px, env(safe-area-inset-left))', sm: 'max(24px, env(safe-area-inset-left))' }, pr: { xs: 'max(16px, env(safe-area-inset-right))', sm: 'max(24px, env(safe-area-inset-right))' } }}

@@ -2868,3 +2868,8 @@ La referencia del 03/10/2026 autoriza cinco pestañas: Resumen, Ingresos, Gastos
 ### Corrección visual de Reportes — 04/10/2026
 
 Continuación de TAREA 90 en su misma rama: acercar la composición a la referencia c880b95b. Cabecera móvil única con título y mes; tarjetas y accesos patrimoniales compactos; comparación con indicador semántico; eje monetario graduado; anillo y leyenda contiguos cuando el ancho lo permita. Mantener centavos, datos reales, fechas accesibles, alternativas textuales y separación de transferencias/ajustes. No crear opciones de gráfico ficticias. Validar visualmente y compilar, sin tests ni merge automático.
+
+
+## Ajustes y Actividades — TAREA 91
+
+Referencia 6ccf4b0b: menú agrupado con Catálogos, Preferencias y Respaldo y datos; actividades con filtros de disponibilidad/archivo, búsqueda y alta superior. Editor en página, controles exteriores, fechas en fila adaptable, selectores de icono/color plegables, acciones verdes. Conservar tipos libres, estado y activo independientes. Desactivar sustituye eliminar para preservar historia. Solo accesos a funciones implementadas.

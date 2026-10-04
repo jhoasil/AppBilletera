@@ -1,9 +1,9 @@
+import Box from '@mui/material/Box';
+import { IconoCatalogo } from '../../../shared/components/IconoCatalogo';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import type { Actividad } from '../../../core/entities/Actividad';
-import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
 import { servicioActividades } from '../../../app/data/serviciosCatalogos';
 import { SelectorCatalogo } from '../../../shared/components/SelectorCatalogo';
 import { SelectorIcono } from '../../../shared/components/SelectorIcono';
@@ -17,7 +17,7 @@ function crearActividad(): Actividad {
 }
 
 /** Resume el tipo y estado para consultar rápidamente la actividad. */
-function detalle(actividad: Actividad) { return <Stack spacing={0.5}><Typography variant="body2">{actividad.tipo === 'trabajo_temporal' ? 'Trabajo temporal' : actividad.tipo}</Typography><Chip size="small" sx={{ alignSelf: 'flex-start' }} label={actividad.estado === 'activo' ? 'Trabajo activo' : actividad.estado === 'finalizado' ? 'Finalizado' : 'Archivado'} color={actividad.estado === 'activo' ? 'success' : 'default'} variant="outlined" /></Stack>; }
+function detalle(actividad: Actividad) { return <Stack spacing={0.5}><Chip size="small" sx={{ alignSelf: 'flex-start', bgcolor: 'action.selected', color: 'primary.main' }} label={actividad.tipo.replaceAll('_', ' ')} /><Typography variant="caption" color="text.secondary">{actividad.fechaInicio ? new Date(`${actividad.fechaInicio}T12:00:00`).toLocaleDateString('es-AR') : 'Sin fecha inicial'} — {actividad.fechaFin ? new Date(`${actividad.fechaFin}T12:00:00`).toLocaleDateString('es-AR') : 'Actualidad'}{actividad.estado !== 'activo' ? ` · ${actividad.estado}` : ''}</Typography></Stack>; }
 
 /** Incluye nombre y tipo para buscar sin recorrer operaciones financieras. */
 function textoBusqueda(actividad: Actividad) { return `${actividad.nombre} ${actividad.tipo}`; }
@@ -26,8 +26,6 @@ function textoBusqueda(actividad: Actividad) { return `${actividad.nombre} ${act
 function campos(actividad: Actividad, actualizar: (cambios: Partial<Actividad>) => void) {
   /** Actualiza la clasificación libre de la actividad. */
   function tipo(valor: string) { actualizar({ tipo: valor }); }
-  /** Clasifica el registro como trabajo temporal conservando su identidad y relaciones. */
-  function temporal() { actualizar({ tipo: 'trabajo_temporal' }); }
   /** Actualiza la descripción opcional. */
   function descripcion(valor: string) { actualizar({ descripcion: valor || null }); }
   /** Actualiza el comienzo del período. */
@@ -40,17 +38,15 @@ function campos(actividad: Actividad, actualizar: (cambios: Partial<Actividad>) 
   function icono(valor: string) { actualizar({ icono: valor }); }
   /** Actualiza el color opcional sin modificar el tema global. */
   function color(valor: string) { actualizar({ color: valor || null }); }
-  return <><CampoTextoCatalogo etiqueta="Tipo" valor={actividad.tipo} alCambiar={tipo} obligatorio />
-    <Button onClick={temporal} aria-pressed={actividad.tipo === 'trabajo_temporal'}>Usar como trabajo temporal</Button>
-    {actividad.tipo === 'trabajo_temporal' && <Alert severity="info">Este trabajo conserva la misma actividad para asociar múltiples ingresos y gastos. Podés finalizarlo o archivarlo sin perder su historial.</Alert>}
-    <CampoTextoCatalogo etiqueta="Descripción (opcional)" valor={actividad.descripcion ?? ''} alCambiar={descripcion} />
-    <CampoTextoCatalogo etiqueta="Fecha de inicio (opcional)" valor={actividad.fechaInicio ?? ''} alCambiar={inicio} tipo="date" />
-    <CampoTextoCatalogo etiqueta="Fecha de fin (opcional)" valor={actividad.fechaFin ?? ''} alCambiar={fin} tipo="date" />
-    <SelectorCatalogo etiqueta="Estado" valor={actividad.estado} alCambiar={estado} obligatorio opciones={[{ id: 'activo', nombre: 'Activo' }, { id: 'finalizado', nombre: 'Finalizado' }, { id: 'archivado', nombre: 'Archivado' }]} />
-    <SelectorIcono valor={actividad.icono} alCambiar={icono} /><SelectorColor valor={actividad.color} alCambiar={color} /></>;
+  return <><SelectorCatalogo etiqueta="Tipo *" etiquetaExterior valor={actividad.tipo} alCambiar={tipo} obligatorio opciones={[...new Set(['trabajo', 'servicio', 'trabajo_temporal', 'comercio', actividad.tipo])].map(/** Conserva también tipos personalizados ya guardados. */ function opcion(valor) { return { id: valor, nombre: valor.replaceAll('_', ' ') }; })} />
+    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 2 }}><Box component="details"><Box component="summary" sx={{ cursor: 'pointer', p: 1.5, border: '1px solid', borderColor: 'divider', borderRadius: '12px' }}>Color <Box component="span" sx={{ display: 'inline-block', width: 20, height: 20, borderRadius: '50%', bgcolor: actividad.color ?? 'primary.main', verticalAlign: 'middle' }} /></Box><SelectorColor valor={actividad.color} alCambiar={color} /></Box><Box component="details"><Box component="summary" sx={{ cursor: 'pointer', p: 1.5, border: '1px solid', borderColor: 'divider', borderRadius: '12px' }}>Icono <IconoCatalogo identificador={actividad.icono} /></Box><SelectorIcono valor={actividad.icono} alCambiar={icono} /></Box></Box>
+    <CampoTextoCatalogo etiqueta="Descripción (opcional)" multilinea etiquetaExterior valor={actividad.descripcion ?? ''} alCambiar={descripcion} />
+    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 2, '@media (max-width:359px)': { gridTemplateColumns: '1fr' } }}><CampoTextoCatalogo etiqueta="Fecha inicio (opcional)" etiquetaExterior valor={actividad.fechaInicio ?? ''} alCambiar={inicio} tipo="date" /><CampoTextoCatalogo etiqueta="Fecha fin (opcional)" etiquetaExterior valor={actividad.fechaFin ?? ''} alCambiar={fin} tipo="date" /></Box>
+    <SelectorCatalogo etiqueta="Estado" etiquetaExterior valor={actividad.estado} alCambiar={estado} obligatorio opciones={[{ id: 'activo', nombre: 'Activo' }, { id: 'finalizado', nombre: 'Finalizado' }, { id: 'archivado', nombre: 'Archivado' }]} /></>;
+
 }
 
 /** Administra actividades reutilizando su identidad para ingresos, gastos y trabajos. */
-export function CatalogoActividades() {
-  return <EditorCatalogo singular="actividad" etiquetaCrear="Nueva actividad" alturaTarjeta={88} tamanoIcono={48} textoBusqueda={textoBusqueda} servicio={servicioActividades} crearNuevo={crearActividad} campos={campos} detalle={detalle} />;
+export function CatalogoActividades({ alVolver }: { alVolver?: () => void }) {
+  return <EditorCatalogo actividad {...(alVolver ? { alVolver } : {})} singular="actividad" etiquetaCrear="Nueva actividad" alturaTarjeta={88} tamanoIcono={40} textoBusqueda={textoBusqueda} servicio={servicioActividades} crearNuevo={crearActividad} campos={campos} detalle={detalle} />;
 }

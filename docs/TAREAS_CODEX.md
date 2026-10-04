@@ -4441,3 +4441,12 @@ Rama task_26/090_refinar_reportes. Commit style(reportes): refina panel y desglo
 ### Corrección visual de Reportes — 04/10/2026
 
 Continuación de TAREA 90 en su misma rama: acercar la composición a la referencia c880b95b. Cabecera móvil única con título y mes; tarjetas y accesos patrimoniales compactos; comparación con indicador semántico; eje monetario graduado; anillo y leyenda contiguos cuando el ancho lo permita. Mantener centavos, datos reales, fechas accesibles, alternativas textuales y separación de transferencias/ajustes. No crear opciones de gráfico ficticias. Validar visualmente y compilar, sin tests ni merge automático.
+
+
+# TAREA 91 — Refinar Ajustes y Actividades
+
+Estado: completada el 04/10/2026. Referencia 6ccf4b0b del usuario. Rama task_26/091_refinar_ajustes_actividades.
+
+Alcance: menú con Catálogos primero, Preferencias y Respaldo; iconos semánticos, descripciones y superficies agrupadas. Actividades con cabecera Agregar, búsqueda, filtros Todas/Activas/Inactivas/Archivadas aplicados antes de paginar, tarjetas compactas con tipo y fechas. Editor en página con campos exteriores, color/icono plegables en dos columnas, fechas en fila, estado y disponibilidad independientes, Guardar cambios verde y Cancelar. Mantener tipos personalizados existentes. Desactivar conserva historia: no inventar eliminación física. No agregar notificaciones o moneda configurable inexistentes ni controles decorativos sin acción. Exportar/importar permanecen en el flujo validado de respaldo. Comentarios en español.
+
+Validación: compilación, revisión manual sin escribir datos, git diff y git diff --check. Tests: no ejecutados. Commit style(ajustes): refina menú y edición de actividades. Sin push ni merge automático.
