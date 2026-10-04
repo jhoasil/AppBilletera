@@ -168,3 +168,11 @@ Tests: no creados ni ejecutados.
 ## Antecedente — TAREA 045
 
 La revisión histórica inspeccionó Inicio, carga de ingresos y Apariencia en 390, 768 y 1440 px, con modos claro y oscuro. Incorporó áreas seguras, ajuste de títulos y foco visible. La revisión vigente amplía ese alcance sin convertir el antecedente en una especificación normativa.
+
+## Referencia final de Nuevo ingreso — corrección de TAREA 087
+
+03/10/2026. Documentación actualizada antes de implementar la imagen final del usuario. Cobros agrupados en una sola lista con divisores; billetera real como selector de texto visible bajo el nombre del medio; importe a la derecha y total verde de 32 px con icono de tendencia dentro del bloque. La descripción permanece opcional, con etiqueta abreviada. Moneda, instrucciones decimales y agregar/quitar distribuciones se conservan en Opciones de medios y moneda. El formulario de gasto mantiene su variante previa.
+
+Se observó Claro en 390 y 320 px CSS, sin desbordamiento horizontal. En el ancho mínimo los importes pasan debajo del medio. El selector Billetera real Efectivo abrió el menú con Efectivo y Galicia; se cerró sin cambiar datos. Se abrió el desplegable de opciones y se observaron moneda, instrucciones y retirada de medios. No se guardaron operaciones. La falta de destino en otros medios se presenta como Seleccionar billetera, sin inventar asociaciones.
+
+[Captura completa local](../tmp/tarea-087/ingreso-referencia-final.jpg), excluida de Git. No se reproducen cifras, logos ni formatos sin decimales de la muestra. La navegación fija aparece en su posición del viewport en la captura completa; esta captura no implica que todo el formulario quepa en una pantalla. Oscuro/Sistema, dispositivos físicos y errores de persistencia no se observaron en esta corrección; se conservan tokens y contratos existentes. Tipos, compilación y git diff --check correctos. Tests: no creados ni ejecutados. Commit adicional en task_26/087_refinar_nuevo_ingreso; sin merge ni push.

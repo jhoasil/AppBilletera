@@ -4359,3 +4359,7 @@ Sin datos ficticios, logos comerciales, cambios de cálculos, preferencias, pers
 Rama: task_26/087_refinar_nuevo_ingreso.
 Commit: style(ingresos): refina formulario de nuevo ingreso.
 Sin push ni merge automático. Detenerse al finalizar.
+
+### Referencia final del usuario — 03/10/2026
+
+La nueva imagen codex-clipboard-1542c33c-2ae0-4297-87d5-2dabf41e7d6a.png sustituye la composición anterior del ingreso: lista única con separadores, icono/nombre y billetera real editable en texto debajo, importe a la derecha, subtítulo breve y bloque TOTAL INGRESO verde con icono de tendencia dentro de Medios de cobro. Fecha y Descripción siguen juntas cuando caben; Descripción sigue siendo opcional aunque su etiqueta se abrevie. Moneda, formato decimal y agregar/quitar medios quedan en opciones desplegables para despejar el formulario. No copiar importes, logos ni datos de la imagen; mantener selección de billetera accesible y errores. Implementar como corrección de la TAREA 87 en su rama existente, con commit adicional y sin tests, push ni merge.
