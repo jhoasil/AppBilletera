@@ -10,6 +10,10 @@ export interface ConsultaPaginada {
 export interface PaginaResultado<Entidad> {
   elementos: readonly Entidad[];
   total: number;
+  /** Totales completos por moneda calculados en la misma lectura que la página. */
+  totales?: readonly { moneda: string; importeCentavos: number }[];
+  /** Subtotales completos del filtro por mes y moneda, cuando se solicitan. */
+  resumen?: readonly { mes: string; moneda: string; importeCentavos: number }[];
 }
 
 /** Consulta de catálogo; omitir activo devuelve activos e inactivos, sin registros eliminados. */
@@ -20,6 +24,12 @@ export interface ConsultaCatalogo extends ConsultaPaginada {
 
 /** Filtros de ingresos y gastos, con fechas de calendario inclusivas. */
 export interface ConsultaOperaciones extends ConsultaPaginada {
+  /** Busca descripción o identidades de catálogos cuyos nombres coinciden. */
+  busqueda?: string;
+  actividadesCoincidentes?: readonly string[];
+  categoriasCoincidentes?: readonly string[];
+  /** Solicita acumulación exacta sin materializar la historia en memoria. */
+  resumir?: boolean;
   desde?: FechaCalendario;
   hasta?: FechaCalendario;
   actividadId?: Identificador;

@@ -192,3 +192,15 @@ Se observó Claro en 390 y 320 px CSS, sin desbordamiento horizontal. En el anch
 ### Corrección de TAREA 088 — lista compacta
 
 Fecha y Descripción ahora comparten fila desde 390 px. Los pagos reutilizan la fila de Ingreso dentro de una lista con separadores: icono, nombre, billetera real editable e importe. Se retiró la variante redundante de tarjetas; total rojo y opciones permanecen. Documentación actualizada antes del código. Observación manual en Claro a 390 px sin desbordamiento horizontal, sin guardar operaciones. [Captura local](../tmp/tarea-088/gasto-lista-compacta.jpg), excluida de Git. Adaptación menor de 390 px revisada mediante la distribución compartida ya observada anteriormente, no una nueva matriz de tamaños/temas. Tipos y git diff --check correctos. Tests: no creados ni ejecutados. Commit adicional en la rama de TAREA 88, sin merge ni push.
+
+## TAREA 89 — Listas de Ingresos y Gastos (03/10/2026)
+
+TAREA 88 integrada en main mediante fast-forward antes de crear task_26/089_refinar_listas_ingresos_gastos. Planificación y criterios registrados antes de modificar código.
+
+Revisión manual en navegador local, tema Claro: ambas listas con datos existentes a 390 y 320 px; Ingresos a 1024 px con navegación lateral. Cabecera horizontal, acciones semánticas, filtros rápidos, resumen por moneda, búsqueda, grupos mensuales y distribuciones históricas visibles. En 320 px los filtros pueden envolver y el importe pasa debajo del nombre; no se fuerza altura de pantalla. Capturas locales ignoradas en tmp/tarea-089/ingresos-390.jpg y gastos-390.jpg.
+
+Observado: búsqueda DiDi conserva dos ingresos y total $28.000,00; búsqueda sin coincidencias muestra vacío y cero; Mes anterior selecciona septiembre y vacío con los datos disponibles; Todos recupera octubre. En Gastos el filtro Combustible aplicado conserva el gasto existente y $20.000,00; controles de fechas, actividad y categoría accesibles. No se guardaron ni eliminaron operaciones.
+
+Comprobación estática: consultas filtran antes de contar/paginar; el recorrido mantiene una página y acumulados por mes/moneda. Totales exactos mediante sumarImportes, calculados en infraestructura y no en React. Distribuciones recuperadas solo para registros visibles; moneda de cabecera y billetera histórica, sin recurrir a la predeterminada. Tipos y compilación de producción correctos; git diff --check correcto. Tests: no creados ni ejecutados.
+
+Límites: no se observaron páginas posteriores (solo dos ingresos y un gasto disponibles), varias monedas, detalles legados ni fallos de almacenamiento. Tampoco se verificaron visualmente Oscuro/Sistema ni dispositivos nativos en esta revisión; se conservan paletas y adaptadores existentes. Diferencias deliberadas: centavos y catálogos reales, sin datos/logos inventados; Todos los períodos en vez del mes ambiguo de la muestra; menú de borrado confirmado conservado; contraste del botón de ingreso según la paleta normativa.

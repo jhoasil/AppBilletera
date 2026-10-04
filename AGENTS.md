@@ -3067,6 +3067,10 @@ TAREA 87
 TAREA 88
 → refinamiento visual de Nuevo gasto autorizado y completado el 03/10/2026
 → alcance y límites en docs/TAREAS_CODEX.md y docs/REVISION_VISUAL.md
+
+TAREA 89
+→ refinamiento de listas de Ingresos y Gastos completado el 03/10/2026
+→ alcance y límites en docs/TAREAS_CODEX.md y docs/REVISION_VISUAL.md
 ```
 
 La actualización del usuario del 03/10/2026 asigna la TAREA 86 al ajuste de Inicio y retira las tareas numeradas de tests y release del plan vigente. Su eventual incorporación requiere planificación y autorización específicas.

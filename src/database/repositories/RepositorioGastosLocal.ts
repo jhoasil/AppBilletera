@@ -1,3 +1,4 @@
+import { coincideBusqueda, acumularOperacion } from './resumirOperaciones';
 import { RangoConsulta } from '../contracts/RangoConsulta';
 import { validarPagina, rangoFechas, exigirCatalogoActivo } from './consultasDatos';
 import type { RepositorioGastos } from '../../core/repositories/RepositorioGastos';
@@ -29,14 +30,17 @@ export class RepositorioGastosLocal implements RepositorioGastos {
     /** Cuenta coincidencias y retiene únicamente las posiciones solicitadas. */
     async function leer(contexto: ContextoDatos) {
       const elementos: Gasto[] = []; let total = 0;
+      const resumen = new Map<string, { mes: string; moneda: string; importeCentavos: number }>();
       /** Filtra cada registro antes de contar su posición ordenada. */
       function seleccionar(registro: RegistroDatos) {
         if ((consulta.categoriaId && registro.categoria_id !== consulta.categoriaId) || (!consulta.incluirEliminados && registro.eliminado_en !== null) || (consulta.actividadId && registro.actividad_id !== consulta.actividadId)) return;
+        if (!coincideBusqueda(registro, consulta)) return;
+        if (consulta.resumir) acumularOperacion(resumen, registro);
         if (total >= consulta.desplazamiento && elementos.length < consulta.limite) elementos.push(convertirEntidad<Gasto>(registro));
         total++;
       }
       await contexto.recorrerPorFecha('gastos', 'por_fecha', rangoFechas(consulta.desde, consulta.hasta), seleccionar);
-      return { elementos, total };
+      return { elementos, total, ...(consulta.resumir ? { resumen: [...resumen.values()].filter(/** Retiene subtotales mensuales completos. */ function mensual(registro) { return registro.mes !== ''; }), totales: [...resumen.values()].filter(/** Separa acumulados generales por moneda. */ function general(registro) { return registro.mes === ''; }).map(/** Expone totales sin claves internas de acumulación. */ function importe(registro) { return { moneda: registro.moneda, importeCentavos: registro.importeCentavos }; }) } : {}) };
     }
     return baseLocal.ejecutarTransaccion({ recursos: ['gastos'], modo: 'lectura' }, leer);
   }

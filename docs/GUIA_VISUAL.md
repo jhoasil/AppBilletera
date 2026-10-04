@@ -2855,3 +2855,7 @@ La referencia del 03/10/2026 establece etiquetas exteriores, categoría y descri
 Corrección posterior de TAREA 88: Fecha y Descripción comparten fila desde 390 px (en anchos menores se apilan). Gasto reutiliza la lista unificada de Ingreso con separadores, billetera real editable junto al nombre y campo de importe a la derecha. Sustituye las tarjetas individuales; se mantienen total rojo, opciones y guardado.
 
 Corrección de bordes solicitada: las listas de medios de Ingreso y Gasto utilizan el token radioTarjeta (16 px explícitos), igual que el contenedor exterior. Sustituye borderRadius: 3, que Material UI multiplicaba por el radio base y producía esquinas excesivas. No cambia el resto de superficies ni los datos.
+
+## Listas de Ingresos y Gastos — TAREA 89
+
+Referencia aprobada el 03/10/2026: cabecera horizontal con Agregar semántico, filtros Todos/Este mes/Mes anterior/Personalizar, resumen por moneda, búsqueda y filtros de catálogo. Agrupar tarjetas por mes con subtotales completos del filtro, aunque la página contenga solo parte del mes. Tarjetas con icono configurado, nombre histórico, fecha, descripción y total a la derecha; debajo chips con medio, billetera realmente utilizada e importe exacto. Radios de tarjeta explícitos de 16 px. Mantener accesos al detalle y eliminación confirmada, temas y navegación.

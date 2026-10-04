@@ -4389,3 +4389,27 @@ Rama task_26/088_refinar_nuevo_gasto. Commit style(gastos): refina formulario de
 ### Corrección autorizada de TAREA 88
 
 Fecha y Descripción compartirán fila desde 390 px y se apilarán en anchos menores. Los medios de pago de Gasto usarán la misma lista unificada con separadores de Ingreso: icono, nombre y billetera real editable a la izquierda e importe a la derecha. Sustituye las tarjetas separadas y el apilado de campos de la referencia anterior. Conservar total rojo, botones, opciones y validaciones. Commit adicional en la rama de TAREA 88; sin tests ni push.
+
+---
+
+# TAREA 89 — Refinar listas de Ingresos y Gastos
+
+## Estado
+
+Completada el 03/10/2026. TAREA 88 integrada en main por fast-forward; planificación documentada antes del código. Tipos y compilación correctos. Revisión visual y límites en REVISION_VISUAL.md. Tests: no creados ni ejecutados.
+
+## Alcance y referencia
+
+Aplicar la referencia codex-clipboard-75969ae4-6f51-424a-84d5-ca27b12c4a92.png: título y Agregar en una fila, verde para Ingresos y rojo para Gastos; filtros Todos, Este mes, Mes anterior y Personalizar; resumen semántico del período; búsqueda y acceso a filtros; grupos mensuales con subtotal; tarjetas con icono del catálogo, nombre, fecha, descripción, importe a la derecha y distribuciones históricas por medio/billetera. Mantener acciones de edición y eliminación lógica confirmada.
+
+Los filtros y la búsqueda deben operar antes de paginar. Los totales mensuales y generales incluirán todas las coincidencias, separados por moneda, sin cargar la historia completa en memoria. Mostrar Todos los períodos cuando Todos esté activo: la imagen mezcla Todos con Octubre y no debe copiarse esa ambigüedad. Buscar descripción y nombres de actividad/categoría; filtros de actividad y categoría según operación. Detalles monetarios solo para la página visible, con billetera histórica y etiqueta de legado si falta. No inferir billeteras desde preferencias actuales.
+
+## Restricciones y validación
+
+Sin datos ficticios, migraciones, cambios de escrituras, formatos monetarios, formularios o navegación. Reutilizar tokens, radios explícitos de 16 px y componentes existentes; comentarios y JSDoc en español. Preservar carga, vacío, error y paginación. Revisar visualmente a 320/390 px y escritorio cuando sea posible, sin guardar operaciones; registrar límites. Comprobar tipos y compilación, revisar git diff y git diff --check. No crear ni ejecutar tests, push o tags.
+
+## Git
+
+Rama: task_26/089_refinar_listas_ingresos_gastos.
+Commit: style(operaciones): refina listas de ingresos y gastos.
+Detenerse tras el commit, sin merge automático de esta tarea.
