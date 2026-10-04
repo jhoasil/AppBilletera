@@ -2929,3 +2929,11 @@ Esta precisión conserva las acciones y reglas financieras anteriores; los tama�
 - Apariencia conserva una sola elección Sistema/Claro/Oscuro y presenta miniaturas demostrativas identificadas como ejemplo. No añadir switches contradictorios ni controles sin soporte.
 
 La TAREA 066 verificó la base existente con muestras manuales y revisión conceptual. Las TAREAS 067–085 refinan las diferencias de composición; no representan autorización de funcionalidades nuevas ni de tests.
+
+## Refinamiento visual de Nuevo ingreso — TAREA 087
+
+Mantener el orden Actividad, Fecha, Descripción opcional, Observaciones opcionales, Medios de cobro, Total y Guardar ingreso. Las etiquetas se muestran sobre los controles; cada medio incluye importe y billetera real visible y editable. La acción de guardar es azul y el total usa verde semántico. La referencia visual no modifica las validaciones ni la persistencia. Moneda y agregar/quitar medios siguen disponibles.
+
+Por instrucción posterior del usuario, Fecha y Descripción comparten fila desde 390 px y se apilan en el ancho mínimo. Se compactan rellenos y medios de cobro, manteniendo las billeteras reales visibles y controles de al menos 48 px.
+
+Referencia final de ingreso: medios agrupados en una sola lista con selector de billetera real en texto bajo cada nombre e importe a la derecha. TOTAL INGRESO se integra en el bloque de cobros. Moneda y agregar/quitar medios se conservan en Opciones de medios y moneda. Descripción sigue siendo opcional, aunque la etiqueta se abrevie.

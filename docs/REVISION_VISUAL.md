@@ -1,6 +1,20 @@
 # Revisión visual
 
-## Revisión vigente de Inicio — TAREA 086
+## Revisión de Nuevo ingreso — TAREA 087
+
+Fecha: 03/10/2026. Tarea definida en TAREAS_CODEX.md y documentación visual antes de modificar código; alcance exclusivo del formulario de ingreso y variantes optativas necesarias.
+
+Compactación posterior solicitada: Fecha y Descripción en una fila desde 390 px, icono nativo de calendario sin duplicación, menor relleno/separación y controles de cobro de 48 px. Ayuda breve sin perder formato decimal. Se observó en Claro a 390 y 320 px CSS, sin desbordamiento horizontal; a 320 px los campos se apilan. No se guardaron borradores. [Captura compacta actual](../tmp/tarea-087/ingreso-compacto-390.jpg), local y excluida de Git. Tipos correctos y git diff --check sin errores; no se repitió compilación para este ajuste de presentación. Las observaciones siguientes corresponden a la revisión anterior. Tests: no ejecutados.
+
+Se incorporaron etiquetas exteriores accesibles para actividad y campos de texto, iconos de fecha/descripción/observaciones y ejemplos opcionales. Los medios muestran icono configurado de 40 px e importe alineado a la derecha con cero orientativo y nombre accesible, sin repetir la etiqueta visual del importe. La billetera real sigue visible y editable, con quitar/agregar medios y moneda disponibles. La ayuda se sitúa después de las filas; total verde y guardado azul conservan las validaciones y el bloqueo existente.
+
+Observación manual en Claro a 390 y 320 px CSS: actividad DiDi precargada, fecha local, campos opcionales, tres medios disponibles, billetera real, total cero y guardado deshabilitado. Se escribió 1 únicamente en el borrador de Efectivo para observar total $1,00 y botón habilitado, sin guardar; el borrador se descartó. Se corrigió la división del nombre Transferencia en el ancho mínimo, colocando su importe debajo de la identidad del medio por debajo de 360 px. No se observó desbordamiento horizontal. Scroll permite llegar al total y a la acción. Nuevo gasto se observó en 320 px: conserva sus etiquetas interiores, campos y acción propia.
+
+Capturas locales excluidas de Git: [campos y medios](../tmp/tarea-087/ingreso-campos-390.jpg) y [total y guardado del borrador](../tmp/tarea-087/ingreso-total-390.jpg). La altura adicional respecto de la referencia se debe a las billeteras reales por distribución y a la moneda disponible, que no se ocultan para imitar el PNG. La captura del pie muestra la composición antes del último ajuste de iconos/etiquetas en medios; el total y el botón no cambiaron después.
+
+Tipos y compilación correctos; diff revisado y git diff --check sin errores. Oscuro/Sistema y otros tamaños se revisaron conceptualmente mediante los tokens, sin afirmar observación manual en esta tarea. No se simularon errores de persistencia ni se probaron dispositivos físicos o lectores de pantalla. Sin escrituras financieras ni cambios de cálculos. Tests: no creados ni ejecutados. Rama task_26/087_refinar_nuevo_ingreso; commit style(ingresos): refina formulario de nuevo ingreso. Sin push ni merge automático.
+
+## Revisión de Inicio — TAREA 086
 
 Fecha: 03/10/2026. Alcance: ajuste adicional de Inicio autorizado por el usuario, según GUIA_VISUAL.md y PANTALLAS.md. La planificación anterior de la TAREA 89 se renumera como 86; las tareas numeradas de tests y release fueron retiradas por el usuario.
 
@@ -154,3 +168,11 @@ Tests: no creados ni ejecutados.
 ## Antecedente — TAREA 045
 
 La revisión histórica inspeccionó Inicio, carga de ingresos y Apariencia en 390, 768 y 1440 px, con modos claro y oscuro. Incorporó áreas seguras, ajuste de títulos y foco visible. La revisión vigente amplía ese alcance sin convertir el antecedente en una especificación normativa.
+
+## Referencia final de Nuevo ingreso — corrección de TAREA 087
+
+03/10/2026. Documentación actualizada antes de implementar la imagen final del usuario. Cobros agrupados en una sola lista con divisores; billetera real como selector de texto visible bajo el nombre del medio; importe a la derecha y total verde de 32 px con icono de tendencia dentro del bloque. La descripción permanece opcional, con etiqueta abreviada. Moneda, instrucciones decimales y agregar/quitar distribuciones se conservan en Opciones de medios y moneda. El formulario de gasto mantiene su variante previa.
+
+Se observó Claro en 390 y 320 px CSS, sin desbordamiento horizontal. En el ancho mínimo los importes pasan debajo del medio. El selector Billetera real Efectivo abrió el menú con Efectivo y Galicia; se cerró sin cambiar datos. Se abrió el desplegable de opciones y se observaron moneda, instrucciones y retirada de medios. No se guardaron operaciones. La falta de destino en otros medios se presenta como Seleccionar billetera, sin inventar asociaciones.
+
+[Captura completa local](../tmp/tarea-087/ingreso-referencia-final.jpg), excluida de Git. No se reproducen cifras, logos ni formatos sin decimales de la muestra. La navegación fija aparece en su posición del viewport en la captura completa; esta captura no implica que todo el formulario quepa en una pantalla. Oscuro/Sistema, dispositivos físicos y errores de persistencia no se observaron en esta corrección; se conservan tokens y contratos existentes. Tipos, compilación y git diff --check correctos. Tests: no creados ni ejecutados. Commit adicional en task_26/087_refinar_nuevo_ingreso; sin merge ni push.

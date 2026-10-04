@@ -2839,3 +2839,11 @@ Inicio dispone de un resumen con icono a la derecha y dos columnas centradas de 
 Mi dinero adapta sus columnas a las billeteras realmente disponibles y ofrece Transferir/Ver todas en el pie. Los movimientos permiten bajar el importe completo a una segunda fila en anchos estrechos. El resumen principal conserva cifra de 34 px; los ingresos/gastos de su franja inferior, 20 px; los movimientos, 16 px. No se fuerzan alturas para hacer caber contenido debajo de la navegación fija.
 
 Las imágenes tienen diferencias entre sí. Se conservan paleta normativa, cuatro destinos inferiores, entrada positiva, salida negativa y ajuste violeta. No copiar logos comerciales ni cifras de muestra. Color de acento configurable, descripción de categorías, comparativas, cantidad de movimientos, arrastre y notificaciones quedan fuera hasta una tarea funcional autorizada.
+
+## Ajuste de Nuevo ingreso — TAREA 087
+
+La referencia de Nuevo ingreso aportada el 03/10/2026 guía etiquetas exteriores, iconos de apoyo, importes alineados a la derecha, ayuda inferior, total verde y guardado azul. La billetera real permanece visible y editable por distribución; no se copia su omisión en la imagen. Se preservan moneda, formato decimal exacto, actividad precargada y campos opcionales. Las propiedades visuales nuevas son optativas para conservar otros formularios.
+
+Compactación posterior autorizada: Fecha y Descripción comparten fila desde 390 px, con columna de fecha de 160 px y descripción flexible; se apilan por debajo. La fecha usa solamente el calendario nativo. Ingreso reduce rellenos a 12 px, separación de campos a 12 px y filas de cobro a controles de 48 px con separación de 8 px. Billetera real permanece visible; la ayuda breve conserva formato decimal y vacío equivalente a cero. Gasto conserva su distribución anterior.
+
+La referencia final del 03/10/2026 sustituye las tarjetas separadas por una lista de cobros con divisores. La billetera real se muestra como selector de texto debajo del medio, con acceso visible a cambiarla, nunca como dato oculto. TOTAL INGRESO se integra en el bloque de cobros con cifra verde e icono de tendencia. Opciones de moneda y agregar/quitar medios siguen disponibles en un desplegable; los importes y los catálogos son reales, sin copiar cifras o logos de muestra.
