@@ -7,13 +7,10 @@ import Save from '@mui/icons-material/Save';
 import TrendingUp from '@mui/icons-material/TrendingUp';
 import ArrowDownward from '@mui/icons-material/ArrowDownward';
 import Add from '@mui/icons-material/Add';
-import AccountBalanceWalletOutlined from '@mui/icons-material/AccountBalanceWalletOutlined';
 import DescriptionOutlined from '@mui/icons-material/DescriptionOutlined';
 import ChatBubbleOutlined from '@mui/icons-material/ChatBubbleOutlined';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -114,19 +111,11 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
     function cambiarBilletera(valor: string) { cambiar({ billeteraId: valor }); }
     /** Mantiene el destino histórico aunque esté inactivo. */
     function billeteraDisponible(registro: { activo: boolean; id: string; moneda: string }) { return (registro.activo && registro.moneda === moneda) || registro.id === linea.billeteraId; }
-    if (tipo === 'ingreso') return <Box key={`${linea.medioPagoId}-${indice}`} sx={{ display: 'grid', gridTemplateColumns: '40px minmax(0, 1fr) minmax(100px, 32%)', alignItems: 'center', gap: 1, p: 1, borderBottom: '1px solid', borderColor: 'divider', '&:last-child': { borderBottom: 0 }, '@media (max-width:359px)': { gridTemplateColumns: '40px minmax(0, 1fr)', '& > .importe-cobro': { gridColumn: '1 / -1' } } }}>
+    return <Box key={`${linea.medioPagoId}-${indice}`} sx={{ display: 'grid', gridTemplateColumns: '40px minmax(0, 1fr) minmax(100px, 32%)', alignItems: 'center', gap: 1, p: 1, borderBottom: '1px solid', borderColor: 'divider', '&:last-child': { borderBottom: 0 }, '@media (max-width:359px)': { gridTemplateColumns: '40px minmax(0, 1fr)', '& > .importe-cobro': { gridColumn: '1 / -1' } } }}>
       <IconoCatalogo identificador={medio?.icono ?? null} color={medio?.color ?? null} contenedor tamano={40} />
       <Box sx={{ minWidth: 0 }}><Typography sx={{ fontWeight: 700, overflowWrap: 'anywhere' }}>{medio?.nombre ?? 'Medio histórico'}</Typography><SelectorCatalogo etiqueta={`Billetera real ${medio?.nombre ?? ''}`} valor={linea.billeteraId} alCambiar={cambiarBilletera} opciones={datos?.billeteras.filter(billeteraDisponible) ?? []} obligatorio enLinea /></Box>
       <Box className="importe-cobro" sx={{ minWidth: 0 }}><CampoImporte etiqueta={`Importe ${medio?.nombre ?? ''}`} valor={linea.importe} alCambiar={cambiarImporte} compacto alineadoDerecha etiquetaOculta /></Box>
     </Box>;
-    // El importe comparte fila con el medio; la billetera sigue visible y editable debajo.
-    return <Card key={`${linea.medioPagoId}-${indice}`} variant="outlined"><CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 } }}><Stack spacing={1.5}>
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(110px, 42%)', gap: 1, alignItems: 'center', '@media (max-width:359px)': { gridTemplateColumns: 'minmax(0, 1fr)' } }}>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', minWidth: 0 }}><IconoCatalogo identificador={medio?.icono ?? null} color={medio?.color ?? null} contenedor tamano={40} /><Typography sx={{ fontWeight: 700, overflowWrap: 'anywhere', fontSize: 14 }}>{medio?.nombre ?? 'Medio histórico'}</Typography></Stack>
-        <CampoImporte etiqueta={`Importe ${medio?.nombre ?? ''}`} valor={linea.importe} alCambiar={cambiarImporte} compacto alineadoDerecha etiquetaOculta />
-      </Box>
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}><AccountBalanceWalletOutlined aria-hidden="true" fontSize="small" color="action" /><Box sx={{ flex: 1, minWidth: 0 }}><SelectorCatalogo etiqueta={`Billetera real ${medio?.nombre ?? ''}`} valor={linea.billeteraId} alCambiar={cambiarBilletera} opciones={datos?.billeteras.filter(billeteraDisponible) ?? []} obligatorio enLinea /></Box></Stack>
-    </Stack></CardContent></Card>;
   }
   /** Agrega un medio activo que no esté presente, sin editar su catálogo. */
   function mostrarMedio(medio: MedioPago) {
@@ -179,7 +168,7 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
       {/* Las etiquetas exteriores y los iconos son optativos para no rediseñar los otros formularios. */}
       <SelectorCatalogo etiqueta={tipo === 'ingreso' ? 'Actividad' : 'Actividad (opcional)'} valor={actividad} alCambiar={establecerActividad} opciones={datos.actividades.filter(actividadDisponible)} obligatorio={tipo === 'ingreso'} etiquetaExterior />
       {/* La fecha nativa ya incluye calendario; se evita duplicar iconos para compartir la fila en móvil. */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: tipo === 'ingreso' ? 1.5 : 2, ...(tipo === 'ingreso' && { '@media (min-width:390px)': { gridTemplateColumns: '160px minmax(0, 1fr)' } }) }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 1.5, '@media (min-width:390px)': { gridTemplateColumns: '160px minmax(0, 1fr)' } }}>
       <CampoTextoCatalogo etiqueta="Fecha" valor={fecha} alCambiar={establecerFecha} tipo="date" obligatorio etiquetaExterior />
       <CampoTextoCatalogo etiqueta="Descripción" valor={descripcion} alCambiar={establecerDescripcion} obligatorio={tipo === 'gasto'} etiquetaExterior icono={<DescriptionOutlined />} ejemplo={tipo === 'ingreso' ? 'Carrera matutina' : 'Carga de combustible'} />
       </Box>
@@ -194,7 +183,7 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
         <details><summary>Opciones de medios y moneda</summary><Stack spacing={1} sx={{ pt: 1 }}><CampoTextoCatalogo etiqueta="Moneda" valor={moneda} alCambiar={establecerMoneda} obligatorio /><Typography variant="body2" color="text.secondary">Vacío = 0. Descripción opcional. Usá coma o punto decimal, sin separadores de miles.</Typography><Stack direction="row" sx={{ flexWrap: 'wrap' }}>{lineas.map(mostrarRetirada)}{datos.medios.map(mostrarMedio)}</Stack></Stack></details>
       </> : <>
         <Typography variant="body2" color="text.secondary">Ingresá solamente los medios utilizados</Typography>
-        {lineas.map(mostrarLinea)}
+        <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 3, overflow: 'hidden' }}>{lineas.map(mostrarLinea)}</Box>
         <Button onClick={abrirOpcionesMedios} startIcon={<Add />} variant="outlined" sx={{ borderStyle: 'dashed', justifyContent: 'flex-start' }}>Agregar otro medio de pago</Button>
         {mostrarTotalOperacion()}
         {/* Ambos accesos abren opciones reales; si todos los medios están presentes no se inventan otros. */}

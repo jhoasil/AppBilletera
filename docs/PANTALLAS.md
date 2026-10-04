@@ -2941,3 +2941,5 @@ Referencia final de ingreso: medios agrupados en una sola lista con selector de 
 ## Refinamiento de Nuevo gasto — TAREA 088
 
 Categoría y descripción obligatorias, actividad y observaciones opcionales, fecha obligatoria. Etiquetas sobre los campos, con fecha y descripción apiladas. Cada tarjeta de medio de pago conserva importe exacto y billetera real editable en texto debajo. Más y Agregar otro medio de pago abren opciones de medios reales, moneda y retirada de distribuciones. TOTAL GASTO y Guardar gasto usan rojo semántico; no modificar cálculos, validaciones o persistencia para reproducir la referencia.
+
+Corrección de Gasto autorizada: Fecha y Descripción en una fila desde 390 px; medios de pago en lista única con divisores y selector de billetera real en texto bajo el nombre, como Ingreso. En anchos menores se conserva la alternativa apilada.

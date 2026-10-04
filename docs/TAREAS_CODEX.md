@@ -4385,3 +4385,7 @@ Conservar última categoría/actividad disponibles, distribución histórica, mo
 ## Git
 
 Rama task_26/088_refinar_nuevo_gasto. Commit style(gastos): refina formulario de nuevo gasto. Verificar e integrar la tarea previa antes de crear rama; detenerse tras el commit de esta tarea.
+
+### Corrección autorizada de TAREA 88
+
+Fecha y Descripción compartirán fila desde 390 px y se apilarán en anchos menores. Los medios de pago de Gasto usarán la misma lista unificada con separadores de Ingreso: icono, nombre y billetera real editable a la izquierda e importe a la derecha. Sustituye las tarjetas separadas y el apilado de campos de la referencia anterior. Conservar total rojo, botones, opciones y validaciones. Commit adicional en la rama de TAREA 88; sin tests ni push.

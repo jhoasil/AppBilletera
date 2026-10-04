@@ -2851,3 +2851,5 @@ La referencia final del 03/10/2026 sustituye las tarjetas separadas por una list
 ## Refinamiento de Nuevo gasto — TAREA 088
 
 La referencia del 03/10/2026 establece etiquetas exteriores, categoría y descripción obligatorias, actividad opcional y fecha/descripcion apiladas. Los pagos usan tarjetas con importe alineado y selector de billetera real en texto debajo, total rojo e icono de salida, guardado rojo. Más y Agregar otro medio de pago dan acceso a los medios reales disponibles; quitar medios y cambiar moneda permanecen disponibles. Ingreso conserva la composición aprobada en TAREA 87.
+
+Corrección posterior de TAREA 88: Fecha y Descripción comparten fila desde 390 px (en anchos menores se apilan). Gasto reutiliza la lista unificada de Ingreso con separadores, billetera real editable junto al nombre y campo de importe a la derecha. Sustituye las tarjetas individuales; se mantienen total rojo, opciones y guardado.
