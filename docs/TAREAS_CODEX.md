@@ -4516,3 +4516,9 @@ Estado: completada el 05/10/2026. Autorizada el 05/10/2026. Rama task_26/099_uni
 Sustituir inputs nativos date/month por un componente compartido Material UI: campo con formato español e icono de calendario, diálogo temático de selección de día o mes, navegación mensual, año editable y acciones Hoy/Este mes, Borrar opcional y Cancelar. Integración en CampoTextoCatalogo cubre Reportes, Ingresos/Gastos, filtros, transferencias, actividades y saldo inicial. Conservar contratos ISO YYYY-MM-DD y YYYY-MM, fechas sin conversión de zona horaria, campos opcionales y obligatorios, estado disabled y etiquetas exteriores. Sin cambios de persistencia ni dependencias nuevas; selección confirmada al elegir día/mes, cancelar no altera el valor.
 
 Validación: compilación/tipos, revisión manual de mes en Reportes y día en operación con cancelación/selección, revisión estrecha, diff y diff --check. Sin tests. Commit independiente y merge a main; sin push.
+
+# TAREA 100 — Corregir apertura de SQLite nativo
+
+Estado: completada el 05/10/2026. Autorizada el 05/10/2026 por el reporte de tabla _metadatos inexistente. Rama task_26/100_corregir_apertura_sqlite.
+
+Ejecutar PRAGMA foreign_keys y CREATE TABLE IF NOT EXISTS _metadatos en llamadas independientes antes de publicar la conexión. El plugin Android divide lotes por punto y coma seguido de salto de línea: el lote anterior en una línea no garantizaba ejecutar CREATE. Preservar tabla, versión y registros existentes; mantener migraciones y cierre ante errores. No borrar la base ni reinterpretar su versión. Validar compilación/tipos y revisar implementación del plugin y diff; sin crear ni ejecutar tests. Verificación en dispositivo pendiente, sin generar release ni instalar APK. Commit independiente y merge a main; sin push.

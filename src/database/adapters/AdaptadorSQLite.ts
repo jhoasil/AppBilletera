@@ -13,7 +13,14 @@ export class AdaptadorSQLite implements AdaptadorBaseLocal<ContextoDatos, Contex
   /** Abre la base privada de la aplicación, sin cifrado ni dependencias del adaptador Web. */
   async abrir() {
     const conexion = await this.gestor.createConnection('app_billetera', false, 'no-encryption', 1, false);
-    try { await conexion.open(); await conexion.execute('PRAGMA foreign_keys = ON; CREATE TABLE IF NOT EXISTS _metadatos (id TEXT PRIMARY KEY, valor INTEGER);', false); this.conexion = conexion; }
+    try {
+      await conexion.open();
+      // Android separa los lotes por ; y salto de línea. Cada llamada contiene una
+      // sentencia para garantizar que CREATE se ejecute antes de leer la versión.
+      await conexion.execute('PRAGMA foreign_keys = ON;', false);
+      await conexion.execute('CREATE TABLE IF NOT EXISTS _metadatos (id TEXT PRIMARY KEY, valor INTEGER);', false);
+      this.conexion = conexion;
+    }
     catch (error) { await this.gestor.closeConnection('app_billetera', false); throw error; }
   }
   /** Rechaza operaciones antes de abrir o después de cerrar. */
