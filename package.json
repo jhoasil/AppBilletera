@@ -12,7 +12,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
     "build": "pnpm typecheck && vite build",
     "preview": "vite preview",
-    "build:native": "pnpm typecheck && vite build --mode nativo",
+    "build:native": "pnpm typecheck && vite build --mode native",
     "android:sync": "pnpm run build:native && pnpm capacitor sync android",
     "capacitor": "node node_modules/@capacitor/cli/bin/capacitor"
   },

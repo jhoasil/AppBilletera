@@ -13,7 +13,7 @@ pnpm capacitor open android
 
 En Android Studio, instalar el SDK solicitado y usar Build → Build APK(s). Por terminal, desde `android`, `./gradlew.bat assembleDebug` genera el APK en `app/build/outputs/apk/debug/`. Las compilaciones no se commitean. El APK de depuración usa la firma local de desarrollo; publicar requiere un proceso de versión separado.
 
-`android:sync` ejecuta primero `build:native` y luego `capacitor sync android`. Debe realizarse antes de cada APK cuando cambie React: Gradle por sí solo empaqueta los assets copiados anteriormente. El modo Vite es `nativo`, que desactiva el registro PWA. La configuración actual nombra el APK con versión y fecha de compilación dentro de `android/app/build/outputs/apk/debug/`; elegir el archivo recién generado y no el antiguo `app-debug.apk`.
+`android:sync` ejecuta primero `build:native` y luego `capacitor sync android`. Debe realizarse antes de cada APK cuando cambie React: Gradle por sí solo empaqueta los assets copiados anteriormente. El modo Vite es `native`, que desactiva el registro PWA. La configuración actual nombra el APK con versión y fecha de compilación dentro de `android/app/build/outputs/apk/debug/`; elegir el archivo recién generado y no el antiguo `app-debug.apk`.
 
 No se ejecutan tests. La compilación Web y la sincronización no verifican por sí mismas el funcionamiento en un dispositivo. La compilación del APK requiere SDK/JDK disponibles.
 

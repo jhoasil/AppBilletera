@@ -4534,3 +4534,11 @@ Calendario compartido con cabecera y fecha larga, cierre, mes/año en fila, nave
 Estado: completada el 05/10/2026. Autorizada el 05/10/2026 por persistencia del error de metadatos en teléfono. Rama task_26/102_actualizar_compilacion_android.
 
 Los assets copiados a Android contienen la apertura SQL anterior y el APK local es del 02/10/2026. Alinear build:native con el modo nativo de Vite, agregar android:sync que reconstruya antes de copiar, actualizar documentación y generar APK debug actual. Verificar dentro del APK la corrección SQL y ausencia de registro PWA; no cambiar datos, migraciones, firma ni versión. Validar tipos/build/sync/assembleDebug sin tests; no instalar en teléfono ni publicar. Commit independiente y merge a main.
+
+# TAREA 103 — Modo de compilación native
+
+Estado: completada el 05/10/2026. Autorizada el 05/10/2026. Rama task_26/103_modo_compilacion_native.
+
+Cambiar build:native a --mode native y la condición de VitePWA a native por instrucción del usuario. Actualizar documentación vigente, conservando la nota histórica de TAREA 102. Validar build:native con tipos y ausencia de registro/service worker en dist; sin tests, APK ni cambios financieros. Commit propio y merge a main.
+
+Validación: pnpm run build:native correcto, incluidos tipos. dist sin sw.js ni registro registerSW en index.html. Diff y diff --check revisados. Tests: no creados ni ejecutados.
