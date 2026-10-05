@@ -242,3 +242,9 @@ Comprobaciones: pnpm compilar (incluye tipos) correcto; revisión manual de nave
 Completada. Efectivo y Dinero digital son las únicas opciones de alta/edición; clasificación compartida en catálogo, lista patrimonial y detalle. Filtros antes de paginar y sumar en el repositorio común a ambos motores. Los tipos antiguos conocidos se resuelven sin escrituras; al guardar se normalizan. Tipos ambiguos requieren selección explícita.
 
 Validación: pnpm compilar correcto (incluye TypeScript). Revisión manual: Todas mostró 5 billeteras y $6.363.031,25; Efectivo, 2 y $1.881.229,25; Dinero digital, 3 y $4.481.802,00, todos ARS. Catálogo Digital mostró las mismas tres identidades. Selector ofreció Efectivo/Dinero digital y la vista previa respondió a la selección; se canceló sin guardar. No se modificaron registros ni se ejecutaron tests. Escrituras y motores nativos no verificados por UI. Evidencia local ignorada en tmp/tarea-093/digital.png.
+
+## TAREA 94 — Moneda bloqueada al editar (05/10/2026)
+
+Completada. Selector deshabilitado desde la apertura de cualquier billetera existente, con explicación; Otra moneda disponible solo en el alta. El repositorio rechaza cambiar la moneda de una identidad existente dentro de la transacción, también sin movimientos.
+
+Validación: pnpm compilar correcto (incluye tipos). Revisión manual de Efectivo: Moneda deshabilitada, ARS visible y sin Otra moneda; Nueva billetera conserva selector habilitado y opción alternativa. No se guardaron datos. Diff y diff --check revisados. Tests: no creados ni ejecutados. Motores nativos y escrituras no comprobados por UI. Captura local en tmp/tarea-094/moneda-bloqueada.png.

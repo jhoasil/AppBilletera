@@ -3093,3 +3093,5 @@ TAREA 91: refinamiento de Ajustes y Actividades completado el 04/10/2026. Alcanc
 TAREA 92: catálogos de medios/billeteras y nueva distribución de Gasto completados el 04/10/2026. Alcance y comprobaciones en TAREAS_CODEX.md y REVISION_VISUAL.md.
 
 TAREA 93: clasificación de billeteras en efectivo/digital completada el 04/10/2026. Tipos antiguos conocidos compatibles; historial financiero preservado. Por instrucción del usuario, tareas independientes con rama/commit y merge a main antes de continuar.
+
+TAREA 94: moneda fija desde el alta de billetera y bloqueada al abrir su edición, completada el 05/10/2026. Validación en REVISION_VISUAL.md.

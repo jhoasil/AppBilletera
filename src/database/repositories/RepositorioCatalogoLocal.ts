@@ -1,4 +1,3 @@
-import { RangoConsulta } from '../contracts/RangoConsulta';
 import type { EntidadAuditada } from '../../core/entities/EntidadAuditada';
 import type { ConsultaCatalogo, PaginaResultado } from '../../core/repositories/ConsultasRepositorio';
 import type { NombreTabla } from '../migrations/EsquemaBaseDatos';
@@ -56,13 +55,9 @@ export class RepositorioCatalogoLocal<Entidad extends EntidadAuditada & { nombre
       const registro = convertirRegistro(entidad);
       if (this.tabla === 'billeteras') {
         const anterior = await contexto.obtener('billeteras', entidad.id);
-        if (anterior && anterior.moneda !== registro.moneda) {
-          let tieneHistorial = false;
-          /** Conserva la unidad monetaria de cualquier historial, incluido el borrado lógico. */
-          function comprobar(_movimiento: RegistroDatos) { tieneHistorial = true; }
-          await contexto.recorrer('movimientos_billetera', comprobar, 'por_billetera_fecha', RangoConsulta.acotar([entidad.id, ''], [entidad.id, '\uffff']));
-          if (tieneHistorial) throw new Error('No se puede cambiar la moneda de una billetera con movimientos registrados.');
-        }
+        // La moneda pertenece a la identidad de la billetera desde el alta, aun sin movimientos.
+        // Comparar dentro de la escritura protege también frente a borradores de otras pestañas.
+        if (anterior && anterior.moneda !== registro.moneda) throw new Error('La moneda de una billetera creada no se puede cambiar. Creá otra billetera para usar una moneda diferente.');
       }
       await contexto.guardar(this.tabla, registro);
     };

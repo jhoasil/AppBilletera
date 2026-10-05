@@ -4468,3 +4468,11 @@ Dos tipos para altas y edición: efectivo (dinero físico) y digital (bancos, bi
 Compatibilidad: resolver tipos antiguos conocidos (caja/efectivo → efectivo; banco/app/transferencia/virtual/digital → digital) mediante una regla común, sin reescribir historia al abrir la app. Al guardar, persistir el tipo canónico. Un tipo libre desconocido se muestra como pendiente de clasificación y requiere elegir uno de los dos tipos al editar; no inferirlo del nombre, icono o saldo. Respaldos anteriores permanecen legibles; no modificar migraciones distribuidas.
 
 Validación: tipos y compilación, revisión manual de filtros y selector sin guardar datos, diff y diff --check. Tests no autorizados. Commit independiente y merge a main al finalizar por instrucción del usuario; sin push.
+
+# TAREA 94 — Bloquear moneda al editar billeteras
+
+Estado: completada el 05/10/2026. Autorizada el 05/10/2026. Rama task_26/094_bloquear_moneda_edicion_billetera.
+
+La moneda se define al crear la billetera y queda fija desde su primer guardado, aunque aún no tenga movimientos. Al abrir la edición, el selector debe estar deshabilitado y explicar la regla; el campo alternativo de código monetario solo aparece al crear. La persistencia rechaza cambios de moneda de una identidad existente en su misma transacción, sin recorrer historial. Conservar nombre, tipo, disponibilidad, icono, color y todas las referencias históricas.
+
+Validación: compilación con tipos, revisión manual de creación y edición sin guardar datos, diff y diff --check. No crear ni ejecutar tests. Commit propio y merge a main conforme a la instrucción vigente del usuario; sin push.

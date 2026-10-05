@@ -2969,3 +2969,7 @@ Las referencias del 04/10/2026 sustituyen la composición anterior de estos cat�
 ## Billeteras: efectivo y digital — TAREA 93
 
 El selector de tipo ofrece únicamente Efectivo y Dinero digital. Digital incluye bancos, billeteras virtuales y cuentas de cobro. Ambas listas (Ajustes y saldos) permiten filtrar por estos grupos; el listado patrimonial muestra el total del grupo seleccionado, por moneda, incluyendo activos e inactivos. Los tipos antiguos conocidos se presentan con sus etiquetas vigentes. Los desconocidos muestran Clasificar billetera y permanecen en Todas hasta su revisión. Esta decisión sustituye los tipos libres de TAREA 92.
+
+## Edición de moneda de billetera — TAREA 94
+
+En Nueva billetera, Moneda y Otra moneda están disponibles. En Editar billetera, Moneda aparece deshabilitada desde la apertura y explica que queda fija al crear; no se ofrece el campo alternativo de código. Los restantes atributos editables permanecen disponibles.

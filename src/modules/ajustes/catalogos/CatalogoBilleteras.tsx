@@ -40,17 +40,17 @@ function textoBusqueda(billetera: Billetera) { return `${billetera.nombre} ${nom
 function campos(billetera: Billetera, actualizar: (cambios: Partial<Billetera>) => void) {
   /** Actualiza la clasificación libre de la billetera. */
   function tipo(valor: string) { actualizar({ tipo: valor }); }
-  /** Normaliza el código de moneda antes de validarlo. */
-  function moneda(valor: string) { actualizar({ moneda: valor.trim().toUpperCase() }); }
+  /** Define la moneda solo durante el alta; una billetera persistida conserva su unidad monetaria. */
+  function moneda(valor: string) { if (!billetera.id) actualizar({ moneda: valor.trim().toUpperCase() }); }
   /** Conserva solamente el identificador del icono. */
   function icono(valor: string) { actualizar({ icono: valor }); }
   /** Cambia el metadato de color opcional. */
   function color(valor: string) { actualizar({ color: valor || null }); }
   return <><Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 2 }}><SelectorCatalogo etiqueta="Tipo" etiquetaExterior valor={clasificarTipoBilletera(billetera.tipo) ?? ''} alCambiar={tipo} opciones={tiposBilletera} obligatorio />
-    <SelectorCatalogo etiqueta="Moneda" etiquetaExterior valor={billetera.moneda} alCambiar={moneda} obligatorio opciones={[...new Set(['ARS', 'USD', billetera.moneda])].map(/** Conserva códigos existentes junto a las monedas habituales. */ function opcion(id) { return { id, nombre: id }; })} /></Box>
+    <SelectorCatalogo etiqueta="Moneda" etiquetaExterior valor={billetera.moneda} alCambiar={moneda} obligatorio deshabilitado={Boolean(billetera.id)} {...(billetera.id ? { ayuda: 'La moneda queda fija al crear la billetera.' } : {})} opciones={[...new Set(['ARS', 'USD', billetera.moneda])].map(/** Conserva códigos existentes junto a las monedas habituales. */ function opcion(id) { return { id, nombre: id }; })} /></Box>
     <Typography variant="body2" color="text.secondary">Efectivo: billetes y monedas. Dinero digital: bancos, billeteras virtuales y cuentas digitales de cobro.</Typography>
     {!clasificarTipoBilletera(billetera.tipo) && <Alert severity="warning">El tipo anterior «{billetera.tipo || 'sin tipo'}» requiere clasificación. Elegí uno de los dos tipos antes de guardar.</Alert>}
-    <details><summary>Otra moneda</summary><Stack spacing={1} sx={{ pt: 1 }}><CampoTextoCatalogo etiqueta="Código de moneda" valor={billetera.moneda} alCambiar={moneda} obligatorio /></Stack></details>
+    {!billetera.id && <details><summary>Otra moneda</summary><Stack spacing={1} sx={{ pt: 1 }}><CampoTextoCatalogo etiqueta="Código de moneda" valor={billetera.moneda} alCambiar={moneda} obligatorio /></Stack></details>}
     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 2 }}><Box component="details" sx={{ minWidth: 0 }}><summary><IconoCatalogo identificador={billetera.icono} color={billetera.color} contenedor /> Icono</summary><SelectorIcono compacto valor={billetera.icono} alCambiar={icono} /></Box><Box component="details" sx={{ minWidth: 0 }}><summary><Box component="span" sx={{ display: 'inline-block', verticalAlign: 'middle', width: 32, height: 32, bgcolor: billetera.color ?? 'primary.main', borderRadius: '50%' }} /> Color</summary><SelectorColor compacto valor={billetera.color} alCambiar={color} /></Box></Box>
     {billetera.id && <Alert severity="info">El saldo proviene de movimientos. Para corregirlo usá Conciliar desde el detalle de la billetera.</Alert>}</>;
 

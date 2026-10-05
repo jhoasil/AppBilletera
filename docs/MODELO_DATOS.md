@@ -2224,3 +2224,7 @@ La trazabilidad y la integridad financiera tienen prioridad sobre simplificacion
 Los tipos vigentes son `efectivo` (billetes y monedas físicos) y `digital` (bancos, billeteras virtuales y cuentas digitales de cobro). Son metadatos de la ubicación del dinero, independientes del medio de pago y de su moneda. Nuevas escrituras de catálogo usan solo estos valores.
 
 Por compatibilidad el campo sigue siendo texto: los tipos antiguos reconocibles se interpretan con una función común y se normalizan cuando se guarda la billetera. Los tipos libres desconocidos se conservan y requieren clasificación explícita; no se adivinan por el nombre. La lectura no modifica datos ni auditoría y los respaldos históricos siguen siendo válidos. Reclasificar no genera movimientos, conversiones o variaciones de saldo.
+
+## Moneda fija de billetera — TAREA 94 (05/10/2026)
+
+La moneda queda fijada al crear una billetera, incluso si aún no tiene movimientos. Al editar se conserva sin posibilidad de cambio; para otra moneda se crea otra identidad. El repositorio valida esta regla dentro de la transacción de escritura. Esta regla sustituye el bloqueo condicionado a la existencia de movimientos. No modifica saldos ni historia existentes.
