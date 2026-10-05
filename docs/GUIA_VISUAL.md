@@ -2877,3 +2877,7 @@ Referencia 6ccf4b0b: menú agrupado con Catálogos, Preferencias y Respaldo y da
 ## Nuevo ingreso — TAREA 96 (05/10/2026)
 
 Referencia 7eccca2a: actividad destacada con icono configurado, fecha/descripcion en fila adaptable y observaciones de ancho completo. Lista unificada de cobros con iconos circulares y destinos reales; aviso breve de ceros. Total verde separado, Guardar y Opciones avanzadas plegables, en ese orden. Mantener radios explícitos de 16 px y navegación común. No copiar iconos de navegación que cambien el significado de las secciones; no cambiar datos ni moneda automática.
+
+## Campos de fecha y mes — TAREA 99
+
+Componente compartido Material UI con icono de calendario, borde, tipografía y foco del theme. Selector en diálogo adaptable con superficies claro/oscuro del tema, día/mes seleccionado con primary, fecha actual indicada por borde y acciones accesibles. No utilizar el popup nativo de date/month ni colores fijos. Formato español y etiquetas asociadas, sin imitar la barra del sistema.

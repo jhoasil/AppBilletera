@@ -2989,3 +2989,7 @@ La referencia 9917740d del 05/10/2026 sustituye los botones de medios sueltos po
 ## Nuevo gasto alineado con Ingreso — TAREA 98
 
 La instrucción del 05/10/2026 aplica la composición de TAREAS 95–97 a Nuevo gasto. Categoría y Actividad opcional preceden a Fecha/Descripción en una fila desde 390 px, Observaciones ocupa el ancho completo. Moneda automática de las billeteras reales sustituye el selector manual. Los pagos positivos deben compartir moneda y tener billetera; edición conserva moneda histórica. Total rojo fuera de la tarjeta, Guardar azul y Opciones avanzadas con etiquetas de pago. Las acciones gestionan únicamente filas del borrador y conservan las restantes. Esta regla sustituye las excepciones de Gasto de las tareas anteriores.
+
+## Selectores compartidos de fecha y mes — TAREA 99
+
+Todos los campos de fecha y mes abren un diálogo Material UI coherente con el tema de la app, en lugar del calendario nativo del navegador. Campo de día muestra dd/mm/aaaa; mes muestra nombre español y año. Calendario con lunes como inicio, navegación, mes y año; selección de mes en cuadrícula. Hoy/Este mes confirma el período actual; Cancelar preserva valor; Borrar solo en campos opcionales. Se conservan valores ISO y las reglas de cada pantalla, sin modificar zona horaria ni datos históricos.

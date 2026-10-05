@@ -4508,3 +4508,11 @@ Estado: completada el 05/10/2026. Autorizada el 05/10/2026. Rama task_26/098_igu
 Trasladar TAREAS 95–97 a Gasto: moneda automática desde billeteras reales, filas compactas con iconos circulares, aviso breve de ceros, total separado rojo, Guardar azul con icono y Opciones avanzadas debajo. Categoría obligatoria y Actividad opcional a todo el ancho, Fecha/Descripción en la misma fila adaptable y Observaciones a todo el ancho. Descripción de Gasto sigue obligatoria. Panel compartido con etiquetas de pago/cobro, selector de adicionales, lista manual con Quitar y Todos los medios activos. Reutilizar cálculo exacto y compatibilidad de monedas en ambos tipos; editar conserva moneda histórica. Sin conversiones ni borrado automático de importes, sin cambios de base de datos ni datos ficticios.
 
 Validación prevista: tipos y compilación, revisión manual de Gasto e Ingreso sin guardar operaciones, panel desplegado, total/moneda y móvil estrecho, diff y diff --check. No crear ni ejecutar tests. Commit independiente y merge a main; sin push.
+
+# TAREA 99 — Selectores de fecha coherentes con la aplicación
+
+Estado: completada el 05/10/2026. Autorizada el 05/10/2026. Rama task_26/099_unificar_selectores_fecha. Referencia 76ca9837 del usuario.
+
+Sustituir inputs nativos date/month por un componente compartido Material UI: campo con formato español e icono de calendario, diálogo temático de selección de día o mes, navegación mensual, año editable y acciones Hoy/Este mes, Borrar opcional y Cancelar. Integración en CampoTextoCatalogo cubre Reportes, Ingresos/Gastos, filtros, transferencias, actividades y saldo inicial. Conservar contratos ISO YYYY-MM-DD y YYYY-MM, fechas sin conversión de zona horaria, campos opcionales y obligatorios, estado disabled y etiquetas exteriores. Sin cambios de persistencia ni dependencias nuevas; selección confirmada al elegir día/mes, cancelar no altera el valor.
+
+Validación: compilación/tipos, revisión manual de mes en Reportes y día en operación con cancelación/selección, revisión estrecha, diff y diff --check. Sin tests. Commit independiente y merge a main; sin push.
