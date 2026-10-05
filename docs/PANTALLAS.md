@@ -2981,3 +2981,7 @@ Nuevo ingreso toma su moneda de la billetera real elegida. Los cobros positivos 
 ## Composición de Nuevo ingreso — TAREA 96
 
 La referencia 7eccca2a del 05/10/2026 separa el total verde de la tarjeta de medios. Esta tarjeta termina con «Los campos vacíos cuentan como 0». Guardar precede a Opciones avanzadas, plegadas inicialmente, con agregar/quitar medios e instrucciones completas. Fecha/Descripción comparten fila desde 390 px; Actividad destaca su icono configurado. Los medios usan iconos circulares y conservan billetera/moneda en el selector. La moneda sigue siendo automática; la explicación detallada se traslada a Opciones avanzadas. Se mantiene la navegación común de la app y no se copia la barra de estado del dispositivo.
+
+## Opciones avanzadas desplegadas — TAREA 97
+
+La referencia 9917740d del 05/10/2026 sustituye los botones de medios sueltos por Agregar medio, lista de medios agregados manualmente con Quitar y Mostrar todos los medios activos. Agregar medio ofrece activos fuera de carga rápida y aún no presentes; Mostrar todos permite gestionar todos los activos, incluidos los rápidos retirados. Cada selección agrega una fila al bloque principal sin duplicados. Retirar una fila preserva las demás. Medios históricos fuera de carga rápida continúan visibles aunque estén inactivos, pero no se ofrecen para altas. Moneda automática e importes permanecen en los controles principales.

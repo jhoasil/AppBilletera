@@ -4492,3 +4492,11 @@ Estado: completada el 05/10/2026. Autorizada el 05/10/2026. Rama task_26/096_aju
 Actividad con icono destacado y etiqueta exterior; Fecha/Descripción en la misma fila desde 390 px, Observaciones a todo el ancho. Medios agrupados con iconos circulares, billetera y moneda visibles, importe alineado a la derecha y aviso breve de campos vacíos. Total verde separado del bloque de cobros; Guardar seguido de Opciones avanzadas plegables con las acciones existentes de agregar/quitar medios y explicación de moneda automática. Conservar navegación semántica común, iconos configurados, moneda automática de TAREA 95, centavos y validaciones; sin datos ficticios ni cambios de Gasto o persistencia.
 
 Validación: tipos y compilación, revisión manual móvil y opciones avanzadas sin guardar datos, diff y diff --check. Sin tests. Commit independiente y merge a main; sin push.
+
+# TAREA 97 — Opciones avanzadas de ingreso desplegadas
+
+Estado: completada el 05/10/2026. Autorizada el 05/10/2026. Rama task_26/097_opciones_avanzadas_ingreso. Referencia 9917740d del usuario.
+
+Panel con cabecera, separadores, Agregar otro medio de cobro y botón Agregar medio. Este botón abre los medios activos no incluidos ni configurados para carga rápida. Lista de medios agregados manualmente con icono y Quitar; los medios históricos fuera de carga rápida también permanecen visibles. Mostrar todos los medios activos abre un selector completo para agregar/restaurar o quitar medios del borrador. Sin duplicados ni cambios de catálogo, sin borrar importes de otras filas. Las filas agregadas aparecen en el bloque de cobros para elegir billetera e importe. Conservar moneda automática, centavos y guardado. No copiar nombres/logos ficticios ni cambiar Gasto.
+
+Validar compilación/tipos, panel y acciones manualmente sin guardar operaciones, adaptación móvil, diff y diff --check. Sin tests. Commit propio y merge a main; sin push.

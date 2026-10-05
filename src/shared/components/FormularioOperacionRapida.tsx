@@ -23,6 +23,7 @@ import { CampoTextoCatalogo } from './CampoTextoCatalogo';
 import { CampoImporte } from './CampoImporte';
 import { SelectorCatalogo } from './SelectorCatalogo';
 import { IconoCatalogo } from './IconoCatalogo';
+import { OpcionesMediosIngreso } from './OpcionesMediosIngreso';
 import { fechaActual } from '../dates/fechaActual';
 import { formatearImporte } from '../money/formatearImporte';
 import { crearImporte } from '../../core/money/Importe';
@@ -31,7 +32,7 @@ import type { CargaIngreso, LineaCobro } from '../../core/services/CargaIngreso'
 import type { MedioPago } from '../../core/entities/MedioPago';
 
 /** Edición textual de una distribución; su dinero se convierte únicamente mediante dominio. */
-interface LineaFormulario { medioPagoId: string; billeteraId: string; importe: string }
+interface LineaFormulario { medioPagoId: string; billeteraId: string; importe: string; agregadaManualmente?: boolean }
 /** Formulario conectado mediante una acción de aplicación, sin acceso a IndexedDB. */
 export interface PropiedadesFormularioOperacion { tipo: 'ingreso' | 'gasto'; alGuardar?: (carga: CargaOperacion) => Promise<void>; inicial?: CargaIngreso & { categoriaId?: string }; alCompletar?: () => void; etiquetaGuardar?: string; resumenImpacto?: (moneda: string, lineas: readonly LineaCobro[]) => ReactNode }
 /** Datos comunes de pantalla; la actividad vacía se convierte en null para un gasto. */
@@ -133,6 +134,16 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
     function agregar() { establecerLineas([...lineas, { medioPagoId: medio.id, billeteraId: medio.billeteraPredeterminadaId ?? '', importe: '' }]); }
     return <Button key={medio.id} onClick={agregar}>Agregar {medio.nombre}</Button>;
   }
+  /** Añade un medio activo elegido en opciones avanzadas sin duplicar ni modificar otras filas. */
+  function agregarMedioIngreso(id: string) {
+    const medio = datos?.medios.find(/** Resuelve una opción activa del catálogo real. */ function identificar(medio) { return medio.id === id && medio.activo; });
+    if (pendiente || !medio || lineas.some(/** Impide repetir un medio ya presente. */ function incluida(linea) { return linea.medioPagoId === id; })) return;
+    establecerLineas([...lineas, { medioPagoId: id, billeteraId: medio.billeteraPredeterminadaId ?? '', importe: '', agregadaManualmente: true }]);
+  }
+  /** Retira una distribución del borrador, conservando importes y destinos de las restantes. */
+  function quitarMedioIngreso(id: string) {
+    if (!pendiente) establecerLineas(lineas.filter(/** Conserva las filas de otros medios. */ function conservar(linea) { return linea.medioPagoId !== id; }));
+  }
   /** Conserva la retirada de medios dentro de las opciones, sin ocupar las filas de carga. */
   function mostrarRetirada(linea: LineaFormulario, indice: number) {
     const medio = datos?.medios.find(/** Localiza la etiqueta de la distribución. */ function identificar(medio) { return medio.id === linea.medioPagoId; });
@@ -211,11 +222,7 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
     <Button startIcon={tipo === 'ingreso' ? <Save /> : undefined} fullWidth type="submit" variant="contained" color="primary" loading={pendiente} disabled={!alGuardar || Boolean(errorImportes) || total === 0}>{etiquetaGuardar ?? `Guardar ${tipo}`}</Button>
     {tipo === 'ingreso' && <Paper component="details" variant="outlined" sx={{ p: 1.5, '& > summary': { display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', listStyle: 'none', '&::-webkit-details-marker': { display: 'none' } }, '&[open] .flecha-opciones': { transform: 'rotate(180deg)' } }}>
       <Box component="summary"><Settings aria-hidden="true" sx={{ color: 'text.secondary' }} /><Typography>Opciones avanzadas</Typography><ExpandMore className="flecha-opciones" aria-hidden="true" sx={{ ml: 'auto', color: 'text.secondary' }} /></Box>
-      <Stack component="fieldset" disabled={pendiente} spacing={1} sx={{ border: 0, p: 0, m: 0, pt: 1.5, minWidth: 0 }}>
-        <Typography variant="body2" color="text.secondary">{moneda ? `Moneda automática: ${moneda}. Todos los cobros deben usar la misma moneda.` : 'La moneda se determina al seleccionar una billetera.'}</Typography>
-        <Typography variant="body2" color="text.secondary">Usá coma o punto decimal, sin separadores de miles. La descripción es opcional.</Typography>
-        <Stack direction="row" sx={{ flexWrap: 'wrap' }}>{lineas.map(mostrarRetirada)}{datos.medios.map(mostrarMedio)}</Stack>
-      </Stack>
+      <Box sx={{ mt: 1.5, pt: 1.5, borderTop: '1px solid', borderColor: 'divider' }}><OpcionesMediosIngreso medios={datos.medios} incluidos={lineas.map(/** Identifica los medios presentes sin transportar importes al panel. */ function identidad(linea) { return linea.medioPagoId; })} manuales={lineas.filter(/** Distingue adiciones explícitas de sugerencias de carga rápida. */ function manual(linea) { return linea.agregadaManualmente; }).map(/** Entrega las identidades añadidas al panel. */ function identidad(linea) { return linea.medioPagoId; })} pendiente={pendiente} alAgregar={agregarMedioIngreso} alQuitar={quitarMedioIngreso} /></Box>
     </Paper>}
   </Stack>;
 }
