@@ -2881,3 +2881,5 @@ Referencia 7eccca2a: actividad destacada con icono configurado, fecha/descripcio
 ## Campos de fecha y mes — TAREA 99
 
 Componente compartido Material UI con icono de calendario, borde, tipografía y foco del theme. Selector en diálogo adaptable con superficies claro/oscuro del tema, día/mes seleccionado con primary, fecha actual indicada por borde y acciones accesibles. No utilizar el popup nativo de date/month ni colores fijos. Formato español y etiquetas asociadas, sin imitar la barra del sistema.
+
+TAREA 101, referencia 45da2389: cabecera con fecha larga y cierre circular; controles de mes y año alineados entre flechas circulares, semana desde lunes, días con selección circular azul y texto semántico del theme. Pie separado con Hoy, Cancelar y Aceptar destacado. En móvil estrecho se reduce la decoración de los selectores para mantener ambos controles visibles. Selección pendiente de Aceptar, también para meses y borrado opcional.

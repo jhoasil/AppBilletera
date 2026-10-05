@@ -4522,3 +4522,9 @@ Validación: compilación/tipos, revisión manual de mes en Reportes y día en o
 Estado: completada el 05/10/2026. Autorizada el 05/10/2026 por el reporte de tabla _metadatos inexistente. Rama task_26/100_corregir_apertura_sqlite.
 
 Ejecutar PRAGMA foreign_keys y CREATE TABLE IF NOT EXISTS _metadatos en llamadas independientes antes de publicar la conexión. El plugin Android divide lotes por punto y coma seguido de salto de línea: el lote anterior en una línea no garantizaba ejecutar CREATE. Preservar tabla, versión y registros existentes; mantener migraciones y cierre ante errores. No borrar la base ni reinterpretar su versión. Validar compilación/tipos y revisar implementación del plugin y diff; sin crear ni ejecutar tests. Verificación en dispositivo pendiente, sin generar release ni instalar APK. Commit independiente y merge a main; sin push.
+
+# TAREA 101 — Calendario con confirmación según referencia
+
+Estado: completada el 05/10/2026. Referencia 45da2389 del 05/10/2026. Rama task_26/101_calendario_confirmacion_fecha.
+
+Calendario compartido con cabecera y fecha larga, cierre, mes/año en fila, navegación circular y selección azul circular. Elegir día/mes y Hoy/Este mes modifican un borrador; Aceptar confirma y Cancelar/cierre descartan. Borrar opcional prepara un valor vacío pendiente de Aceptar. Año desplegable con ventana móvil de cien años anteriores y posteriores, limitada a 1–9999; navegación conserva acceso al rango ISO. Mantener ISO, etiquetas, claro/oscuro y cobertura global. Sustituye la confirmación inmediata de TAREA 99. Compilación y revisión manual móvil sin guardar operaciones; sin tests. Commit y merge a main, sin push.

@@ -2993,3 +2993,5 @@ La instrucción del 05/10/2026 aplica la composición de TAREAS 95–97 a Nuevo 
 ## Selectores compartidos de fecha y mes — TAREA 99
 
 Todos los campos de fecha y mes abren un diálogo Material UI coherente con el tema de la app, en lugar del calendario nativo del navegador. Campo de día muestra dd/mm/aaaa; mes muestra nombre español y año. Calendario con lunes como inicio, navegación, mes y año; selección de mes en cuadrícula. Hoy/Este mes confirma el período actual; Cancelar preserva valor; Borrar solo en campos opcionales. Se conservan valores ISO y las reglas de cada pantalla, sin modificar zona horaria ni datos históricos.
+
+TAREA 101 sustituye la confirmación inmediata: seleccionar día/mes, Hoy/Este mes y Borrar opcional actualizan solo el borrador del diálogo. Aceptar aplica el valor; Cancelar, Escape, fondo y cierre lo descartan. Cabecera con fecha larga seleccionada y controles desplegables de mes/año en una fila adaptable.

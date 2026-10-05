@@ -3102,3 +3102,4 @@ TAREA 97: opciones avanzadas de ingreso según referencia 9917740d completadas e
 TAREA 98: Nuevo gasto adopta composición, moneda automática y opciones avanzadas de Ingreso, completada el 05/10/2026. Componentes compartidos de operación con etiquetas específicas y total rojo. Validación en REVISION_VISUAL.md.
 TAREA 99: campos de fecha y mes con calendario compartido Material UI, completada el 05/10/2026. Formato español, contratos ISO y cancelación preservados. Validación y límites en REVISION_VISUAL.md.
 TAREA 100: apertura SQLite corregida con PRAGMA y creación de metadatos en llamadas separadas, completada el 05/10/2026. Compilación correcta; verificación en dispositivo pendiente. Detalle en ANDROID.md.
+TAREA 101: calendario con fecha larga, mes/año alineados y confirmación Aceptar, completada el 05/10/2026. Cancelar descarta selección y borrado pendientes. Validación en REVISION_VISUAL.md.
