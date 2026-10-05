@@ -2985,3 +2985,7 @@ La referencia 7eccca2a del 05/10/2026 separa el total verde de la tarjeta de med
 ## Opciones avanzadas desplegadas — TAREA 97
 
 La referencia 9917740d del 05/10/2026 sustituye los botones de medios sueltos por Agregar medio, lista de medios agregados manualmente con Quitar y Mostrar todos los medios activos. Agregar medio ofrece activos fuera de carga rápida y aún no presentes; Mostrar todos permite gestionar todos los activos, incluidos los rápidos retirados. Cada selección agrega una fila al bloque principal sin duplicados. Retirar una fila preserva las demás. Medios históricos fuera de carga rápida continúan visibles aunque estén inactivos, pero no se ofrecen para altas. Moneda automática e importes permanecen en los controles principales.
+
+## Nuevo gasto alineado con Ingreso — TAREA 98
+
+La instrucción del 05/10/2026 aplica la composición de TAREAS 95–97 a Nuevo gasto. Categoría y Actividad opcional preceden a Fecha/Descripción en una fila desde 390 px, Observaciones ocupa el ancho completo. Moneda automática de las billeteras reales sustituye el selector manual. Los pagos positivos deben compartir moneda y tener billetera; edición conserva moneda histórica. Total rojo fuera de la tarjeta, Guardar azul y Opciones avanzadas con etiquetas de pago. Las acciones gestionan únicamente filas del borrador y conservan las restantes. Esta regla sustituye las excepciones de Gasto de las tareas anteriores.

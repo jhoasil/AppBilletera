@@ -2,22 +2,22 @@ import type { Billetera } from '../entities/Billetera';
 import { calcularCargaRapida, interpretarCampoRapido } from './calcularCargaRapida';
 
 /** Borrador textual de cobro; la billetera real determina su unidad monetaria. */
-export interface CobroConBilletera { billeteraId: string; importe: string }
+export interface LineaConBilletera { billeteraId: string; importe: string }
 /** Vista previa exacta; una moneda pendiente nunca se sustituye por una divisa inventada. */
-export interface ResumenMonedaIngreso { moneda: string | null; totalCentavos: number; error: string }
+export interface ResumenMonedaOperacion { moneda: string | null; totalCentavos: number; error: string }
 
 /**
  * Resuelve la moneda y el total de cobros sin sumar unidades incompatibles.
  * Las sugerencias vacías no condicionan cobros positivos; una edición conserva su moneda histórica.
  */
-export function resolverMonedaIngreso(lineas: readonly CobroConBilletera[], billeteras: readonly Billetera[], monedaHistorica?: string, billeteraSeleccionada?: string): ResumenMonedaIngreso {
+export function resolverMonedaOperacion(lineas: readonly LineaConBilletera[], billeteras: readonly Billetera[], monedaHistorica?: string, billeteraSeleccionada?: string, tipo: 'ingreso' | 'gasto' = 'ingreso'): ResumenMonedaOperacion {
   let moneda = monedaHistorica || null;
   try {
     const positivas = lineas.filter(/** Excluye filas vacías y valida textos sin redondearlos. */ function positiva(linea) { return interpretarCampoRapido(linea.importe) > 0; });
     for (const linea of positivas) {
       const billetera = billeteras.find(/** Resuelve el destino real por identidad. */ function coincide(registro) { return registro.id === linea.billeteraId; });
-      if (!billetera) return { moneda, totalCentavos: 0, error: 'Seleccioná una billetera para cada cobro con importe.' };
-      if (moneda && billetera.moneda !== moneda) return { moneda, totalCentavos: 0, error: 'Todos los cobros del ingreso deben usar billeteras de la misma moneda.' };
+      if (!billetera) return { moneda, totalCentavos: 0, error: `Seleccioná una billetera para cada ${tipo === 'ingreso' ? 'cobro' : 'pago'} con importe.` };
+      if (moneda && billetera.moneda !== moneda) return { moneda, totalCentavos: 0, error: `Todos los ${tipo === 'ingreso' ? 'cobros del ingreso' : 'pagos del gasto'} deben usar billeteras de la misma moneda.` };
       moneda = billetera.moneda;
     }
     if (!moneda && billeteraSeleccionada && lineas.some(/** Evita usar una selección de una fila ya retirada. */ function seleccionada(linea) { return linea.billeteraId === billeteraSeleccionada; })) {
@@ -31,12 +31,12 @@ export function resolverMonedaIngreso(lineas: readonly CobroConBilletera[], bill
     }
     return { moneda, totalCentavos: moneda ? calcularCargaRapida(lineas.map(/** Entrega textos al cálculo exacto compartido. */ function importe(linea) { return linea.importe; }), moneda) : 0, error: '' };
   } catch (causa) {
-    return { moneda, totalCentavos: 0, error: causa instanceof Error ? causa.message : 'Revisá los importes del ingreso.' };
+    return { moneda, totalCentavos: 0, error: causa instanceof Error ? causa.message : `Revisá los importes del ${tipo}.` };
   }
 }
 
 /** Determina las monedas permitidas al editar una fila sin condicionar por sugerencias vacías. */
-export function monedaOtrosCobros(lineas: readonly CobroConBilletera[], indice: number, billeteras: readonly Billetera[], monedaHistorica?: string): string | null {
+export function monedaOtrasLineas(lineas: readonly LineaConBilletera[], indice: number, billeteras: readonly Billetera[], monedaHistorica?: string): string | null {
   if (monedaHistorica) return monedaHistorica;
   for (let posicion = 0; posicion < lineas.length; posicion++) {
     if (posicion === indice) continue;

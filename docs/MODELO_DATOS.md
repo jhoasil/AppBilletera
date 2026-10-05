@@ -2232,3 +2232,7 @@ La moneda queda fijada al crear una billetera, incluso si aún no tiene movimien
 ## Moneda de Nuevo ingreso — TAREA 95 (05/10/2026)
 
 La moneda del ingreso se deriva de las billeteras reales de sus distribuciones positivas. El formulario no permite escribir un código monetario. Cada cobro positivo debe tener billetera y todas deben compartir moneda. No se realizan conversiones ni sumas entre monedas; una incompatibilidad impide el guardado. La elección de billetera sugerida solo anticipa la moneda cuando no hay importes, y no reinterpreta operaciones históricas.
+
+## Moneda automática de Gasto — TAREA 98
+
+Gasto adopta la misma resolución de moneda que Ingreso: billeteras reales de distribuciones positivas, unidad única por operación, sin entrada manual de código ni conversión. Sugerencias vacías no imponen moneda a líneas positivas; edición mantiene la moneda histórica. Cambios de presentación sin migraciones ni alteración del historial.

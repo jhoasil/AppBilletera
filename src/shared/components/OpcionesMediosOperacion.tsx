@@ -17,6 +17,7 @@ import type { MedioPago } from '../../core/entities/MedioPago';
 
 /** Gestiona medios del borrador sin modificar el catálogo ni los datos persistidos. */
 interface PropiedadesOpcionesMedios {
+  tipo: 'ingreso' | 'gasto';
   medios: readonly MedioPago[];
   incluidos: readonly string[];
   manuales: readonly string[];
@@ -26,7 +27,7 @@ interface PropiedadesOpcionesMedios {
 }
 
 /** Presenta las acciones avanzadas y un selector de medios reales sin duplicar distribuciones. */
-export function OpcionesMediosIngreso({ medios, incluidos, manuales, pendiente, alAgregar, alQuitar }: PropiedadesOpcionesMedios) {
+export function OpcionesMediosOperacion({ tipo, medios, incluidos, manuales, pendiente, alAgregar, alQuitar }: PropiedadesOpcionesMedios) {
   const [selector, establecerSelector] = useState<'adicionales' | 'todos' | null>(null);
   /** Ofrece solamente activos fuera de la carga rápida que aún no están en el borrador. */
   function adicional(medio: MedioPago) { return medio.activo && !medio.mostrarEnCargaRapida && !incluidos.includes(medio.id); }
@@ -62,14 +63,14 @@ export function OpcionesMediosIngreso({ medios, incluidos, manuales, pendiente, 
   return <>
     <Stack spacing={1.5} divider={<Divider />}>
       <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: 1, alignItems: 'center', '@media (max-width:399px)': { gridTemplateColumns: 'minmax(0, 1fr)' } }}>
-        <Box><Typography sx={{ fontWeight: 600 }}>Agregar otro medio de cobro</Typography><Typography variant="body2" color="text.secondary">Usá un medio activo que no esté en la carga rápida.</Typography></Box>
+        <Box><Typography sx={{ fontWeight: 600 }}>Agregar otro medio de {tipo === 'ingreso' ? 'cobro' : 'pago'}</Typography><Typography variant="body2" color="text.secondary">Usá un medio activo que no esté en la carga rápida.</Typography></Box>
         <Button variant="outlined" startIcon={<Add />} onClick={abrirAdicionales} disabled={pendiente || !medios.some(adicional)} sx={{ flexShrink: 0 }}>Agregar medio</Button>
       </Box>
       <Stack spacing={0.75}><Typography sx={{ fontWeight: 600 }}>Medios agregados manualmente</Typography>{agregados.length ? agregados.map(mostrarManual) : <Typography variant="body2" color="text.secondary">Todavía no agregaste otros medios.</Typography>}</Stack>
       <Button fullWidth variant="outlined" startIcon={<List />} endIcon={<ChevronRight sx={{ ml: 'auto' }} />} onClick={abrirTodos} disabled={pendiente}>Mostrar todos los medios activos</Button>
     </Stack>
     <Dialog open={selector !== null} onClose={cerrar} fullWidth maxWidth="sm">
-      <DialogTitle>{selector === 'todos' ? 'Todos los medios activos' : 'Agregar medio de cobro'}</DialogTitle>
+      <DialogTitle>{selector === 'todos' ? 'Todos los medios activos' : `Agregar medio de ${tipo === 'ingreso' ? 'cobro' : 'pago'}`}</DialogTitle>
       <DialogContent><Stack spacing={1}>{opciones.length ? opciones.map(mostrarOpcion) : <Typography>No hay otros medios activos disponibles.</Typography>}</Stack></DialogContent>
       <DialogActions><Button onClick={cerrar}>Cerrar</Button></DialogActions>
     </Dialog>

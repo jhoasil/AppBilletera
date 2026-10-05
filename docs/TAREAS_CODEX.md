@@ -4500,3 +4500,11 @@ Estado: completada el 05/10/2026. Autorizada el 05/10/2026. Rama task_26/097_opc
 Panel con cabecera, separadores, Agregar otro medio de cobro y botón Agregar medio. Este botón abre los medios activos no incluidos ni configurados para carga rápida. Lista de medios agregados manualmente con icono y Quitar; los medios históricos fuera de carga rápida también permanecen visibles. Mostrar todos los medios activos abre un selector completo para agregar/restaurar o quitar medios del borrador. Sin duplicados ni cambios de catálogo, sin borrar importes de otras filas. Las filas agregadas aparecen en el bloque de cobros para elegir billetera e importe. Conservar moneda automática, centavos y guardado. No copiar nombres/logos ficticios ni cambiar Gasto.
 
 Validar compilación/tipos, panel y acciones manualmente sin guardar operaciones, adaptación móvil, diff y diff --check. Sin tests. Commit propio y merge a main; sin push.
+
+# TAREA 98 — Aplicar composición y opciones de Ingreso a Nuevo gasto
+
+Estado: completada el 05/10/2026. Autorizada el 05/10/2026. Rama task_26/098_igualar_nuevo_gasto.
+
+Trasladar TAREAS 95–97 a Gasto: moneda automática desde billeteras reales, filas compactas con iconos circulares, aviso breve de ceros, total separado rojo, Guardar azul con icono y Opciones avanzadas debajo. Categoría obligatoria y Actividad opcional a todo el ancho, Fecha/Descripción en la misma fila adaptable y Observaciones a todo el ancho. Descripción de Gasto sigue obligatoria. Panel compartido con etiquetas de pago/cobro, selector de adicionales, lista manual con Quitar y Todos los medios activos. Reutilizar cálculo exacto y compatibilidad de monedas en ambos tipos; editar conserva moneda histórica. Sin conversiones ni borrado automático de importes, sin cambios de base de datos ni datos ficticios.
+
+Validación prevista: tipos y compilación, revisión manual de Gasto e Ingreso sin guardar operaciones, panel desplegado, total/moneda y móvil estrecho, diff y diff --check. No crear ni ejecutar tests. Commit independiente y merge a main; sin push.

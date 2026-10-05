@@ -3099,3 +3099,4 @@ TAREA 94: moneda fija desde el alta de billetera y bloqueada al abrir su edició
 TAREA 95: moneda automática de ingreso desde las billeteras reales, completada el 05/10/2026. Campo manual retirado, cobros positivos de una misma moneda y edición histórica preservada. Validación y límites en REVISION_VISUAL.md.
 TAREA 96: composición de Nuevo ingreso según referencia 7eccca2a, completada el 05/10/2026. Total separado, opciones avanzadas después de Guardar y medios compactos. Validación en REVISION_VISUAL.md.
 TAREA 97: opciones avanzadas de ingreso según referencia 9917740d completadas el 05/10/2026. Selector de adicionales, lista manual con retirada y acceso a todos los medios activos. Validación en REVISION_VISUAL.md.
+TAREA 98: Nuevo gasto adopta composición, moneda automática y opciones avanzadas de Ingreso, completada el 05/10/2026. Componentes compartidos de operación con etiquetas específicas y total rojo. Validación en REVISION_VISUAL.md.
