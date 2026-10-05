@@ -8,11 +8,11 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "desarrollo": "vite",
-    "verificar-tipos": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
-    "compilar": "pnpm verificar-tipos && vite build",
-    "previsualizar": "vite preview",
-    "compilar:nativo": "pnpm verificar-tipos && vite build --mode nativo",
+    "dev": "vite",
+    "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
+    "build": "pnpm typecheck && vite build",
+    "preview": "vite preview",
+    "build:native": "pnpm typecheck && vite build --mode native",
     "capacitor": "node node_modules/@capacitor/cli/bin/capacitor"
   },
   "dependencies": {
