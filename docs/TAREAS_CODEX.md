@@ -4476,3 +4476,11 @@ Estado: completada el 05/10/2026. Autorizada el 05/10/2026. Rama task_26/094_blo
 La moneda se define al crear la billetera y queda fija desde su primer guardado, aunque aún no tenga movimientos. Al abrir la edición, el selector debe estar deshabilitado y explicar la regla; el campo alternativo de código monetario solo aparece al crear. La persistencia rechaza cambios de moneda de una identidad existente en su misma transacción, sin recorrer historial. Conservar nombre, tipo, disponibilidad, icono, color y todas las referencias históricas.
 
 Validación: compilación con tipos, revisión manual de creación y edición sin guardar datos, diff y diff --check. No crear ni ejecutar tests. Commit propio y merge a main conforme a la instrucción vigente del usuario; sin push.
+
+# TAREA 95 — Moneda de ingreso automática desde la billetera
+
+Estado: completada el 05/10/2026. Autorizada el 05/10/2026. Rama task_26/095_moneda_ingreso_desde_billetera.
+
+Nuevo ingreso obtiene la moneda de las billeteras reales elegidas, sin campo manual. Las líneas positivas definen la moneda; las sugerencias vacías de otros medios no la imponen. Antes de ingresar importes, priorizar la última billetera activa elegida explícitamente o, en su ausencia, la primera sugerida como vista previa; sin billetera mostrar una indicación de selección. Todos los cobros positivos deben usar la misma moneda y tener billetera. La selección permite cambiar de moneda si no hay otros cobros positivos, y deshabilita destinos incompatibles si los hay. No convertir ni borrar importes automáticamente. El total y sus errores se resuelven en dominio. La edición conserva la moneda histórica del ingreso. Mantener Gasto fuera de este cambio.
+
+Validación: tipos/compilación, revisión manual sin guardar operaciones, diff y diff --check. Sin tests. Commit propio y merge a main según instrucción vigente; sin push.

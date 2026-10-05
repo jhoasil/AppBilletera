@@ -248,3 +248,9 @@ Validación: pnpm compilar correcto (incluye TypeScript). Revisión manual: Toda
 Completada. Selector deshabilitado desde la apertura de cualquier billetera existente, con explicación; Otra moneda disponible solo en el alta. El repositorio rechaza cambiar la moneda de una identidad existente dentro de la transacción, también sin movimientos.
 
 Validación: pnpm compilar correcto (incluye tipos). Revisión manual de Efectivo: Moneda deshabilitada, ARS visible y sin Otra moneda; Nueva billetera conserva selector habilitado y opción alternativa. No se guardaron datos. Diff y diff --check revisados. Tests: no creados ni ejecutados. Motores nativos y escrituras no comprobados por UI. Captura local en tmp/tarea-094/moneda-bloqueada.png.
+
+## TAREA 95 — Moneda automática de ingreso (05/10/2026)
+
+Completada. Campo manual retirado; moneda y total derivados de las billeteras reales. Selección etiquetada con moneda y destinos incompatibles deshabilitados cuando otro cobro positivo fija la unidad. Las filas vacías no condicionan la moneda de un cobro positivo. Edición conserva la moneda histórica.
+
+Validación: pnpm compilar correcto, incluidos tipos. Revisión manual del borrador en móvil: Efectivo ARS con 1000,25 muestra $1.000,25 y habilita Guardar; quitar la billetera conserva el texto, muestra la indicación de destino obligatorio y deshabilita Guardar; volver a seleccionarla recupera el total. No existe textbox Moneda. Sin guardar operaciones ni modificar datos. No se verificó manualmente combinación ARS/USD porque las billeteras disponibles son ARS; regla revisada en código. Diff y diff --check revisados. Tests: no creados ni ejecutados. Captura local ignorada en tmp/tarea-095/ingreso-moneda-automatica.png.

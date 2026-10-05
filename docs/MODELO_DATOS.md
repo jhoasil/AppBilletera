@@ -2228,3 +2228,7 @@ Por compatibilidad el campo sigue siendo texto: los tipos antiguos reconocibles 
 ## Moneda fija de billetera — TAREA 94 (05/10/2026)
 
 La moneda queda fijada al crear una billetera, incluso si aún no tiene movimientos. Al editar se conserva sin posibilidad de cambio; para otra moneda se crea otra identidad. El repositorio valida esta regla dentro de la transacción de escritura. Esta regla sustituye el bloqueo condicionado a la existencia de movimientos. No modifica saldos ni historia existentes.
+
+## Moneda de Nuevo ingreso — TAREA 95 (05/10/2026)
+
+La moneda del ingreso se deriva de las billeteras reales de sus distribuciones positivas. El formulario no permite escribir un código monetario. Cada cobro positivo debe tener billetera y todas deben compartir moneda. No se realizan conversiones ni sumas entre monedas; una incompatibilidad impide el guardado. La elección de billetera sugerida solo anticipa la moneda cuando no hay importes, y no reinterpreta operaciones históricas.

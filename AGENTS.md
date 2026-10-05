@@ -3095,3 +3095,5 @@ TAREA 92: catálogos de medios/billeteras y nueva distribución de Gasto complet
 TAREA 93: clasificación de billeteras en efectivo/digital completada el 04/10/2026. Tipos antiguos conocidos compatibles; historial financiero preservado. Por instrucción del usuario, tareas independientes con rama/commit y merge a main antes de continuar.
 
 TAREA 94: moneda fija desde el alta de billetera y bloqueada al abrir su edición, completada el 05/10/2026. Validación en REVISION_VISUAL.md.
+
+TAREA 95: moneda automática de ingreso desde las billeteras reales, completada el 05/10/2026. Campo manual retirado, cobros positivos de una misma moneda y edición histórica preservada. Validación y límites en REVISION_VISUAL.md.

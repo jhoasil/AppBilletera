@@ -1,3 +1,4 @@
+import { resolverMonedaIngreso, monedaOtrosCobros } from '../../core/money/resolverMonedaIngreso';
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import Box from '@mui/material/Box';
 import Close from '@mui/icons-material/Close';
@@ -41,8 +42,9 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
   const [fecha, establecerFecha] = useState(inicial?.fecha ?? fechaActual());
   const [descripcion, establecerDescripcion] = useState(inicial?.descripcion ?? '');
   const [observaciones, establecerObservaciones] = useState(inicial?.observaciones ?? '');
-  const [moneda, establecerMoneda] = useState(inicial?.moneda ?? 'ARS');
+  const [monedaGasto, establecerMoneda] = useState(inicial?.moneda ?? 'ARS');
   const [lineas, establecerLineas] = useState<readonly LineaFormulario[]>([]);
+  const [billeteraReferencia, establecerBilleteraReferencia] = useState('');
   const [error, establecerError] = useState('');
   const [errorCarga, establecerErrorCarga] = useState('');
   const [revision, establecerRevision] = useState(0);
@@ -81,9 +83,14 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
   function reintentar() { establecerRevision(revision + 1); }
   /** Obtiene el texto de cada importe para calcular el total en dominio. */
   function texto(linea: LineaFormulario) { return linea.importe; }
-  let total = 0; let errorImportes = '';
-  try { total = calcularCargaRapida(lineas.map(texto), moneda); }
-  catch (causa) { errorImportes = causa instanceof Error ? causa.message : 'El importe no es válido.'; }
+  const resumenIngreso = resolverMonedaIngreso(lineas, datos?.billeteras ?? [], inicial?.moneda, billeteraReferencia);
+  const moneda = tipo === 'ingreso' ? resumenIngreso.moneda ?? '' : monedaGasto;
+  let total = tipo === 'ingreso' ? resumenIngreso.totalCentavos : 0;
+  let errorImportes = tipo === 'ingreso' ? resumenIngreso.error : '';
+  if (tipo === 'gasto') {
+    try { total = calcularCargaRapida(lineas.map(texto), moneda); }
+    catch (causa) { errorImportes = causa instanceof Error ? causa.message : 'El importe no es válido.'; }
+  }
   /** Ofrece catálogos activos sin ocultar una identidad usada en la operación editada. */
   function actividadDisponible(registro: { activo: boolean; id: string }) { return registro.activo || registro.id === inicial?.actividadId; }
   /** Conserva la categoría histórica únicamente para la operación que la utilizó. */
@@ -102,12 +109,15 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
     /** Conserva el importe escrito para validarlo y sumar sin redondeo. */
     function cambiarImporte(valor: string) { cambiar({ importe: valor }); }
     /** Actualiza la billetera real, independiente del medio de cobro. */
-    function cambiarBilletera(valor: string) { cambiar({ billeteraId: valor }); }
+    function cambiarBilletera(valor: string) { cambiar({ billeteraId: valor }); if (tipo === 'ingreso') establecerBilleteraReferencia(valor); }
     /** Mantiene el destino histórico aunque esté inactivo. */
-    function billeteraDisponible(registro: { activo: boolean; id: string; moneda: string }) { return (registro.activo && registro.moneda === moneda) || registro.id === linea.billeteraId; }
+    function billeteraDisponible(registro: { activo: boolean; id: string; moneda: string }) { return (registro.activo && (tipo === 'ingreso' || registro.moneda === moneda)) || registro.id === linea.billeteraId; }
+    const monedaRequerida = tipo === 'ingreso' ? monedaOtrosCobros(lineas, indice, datos?.billeteras ?? [], inicial?.moneda) : moneda;
+    /** Etiqueta la moneda de cada destino y bloquea combinaciones incompatibles con otros cobros. */
+    function opcionBilletera(registro: { id: string; nombre: string; moneda: string }) { return { ...registro, nombre: tipo === 'ingreso' ? `${registro.nombre} · ${registro.moneda}` : registro.nombre, deshabilitada: Boolean(tipo === 'ingreso' && monedaRequerida && registro.moneda !== monedaRequerida) }; }
     return <Box key={`${linea.medioPagoId}-${indice}`} sx={{ display: 'grid', gridTemplateColumns: '40px minmax(0, 1fr) minmax(100px, 32%)', alignItems: 'center', gap: 1, p: 1, borderBottom: '1px solid', borderColor: 'divider', '&:last-child': { borderBottom: 0 }, '@media (max-width:359px)': { gridTemplateColumns: '40px minmax(0, 1fr)', '& > .importe-cobro': { gridColumn: '1 / -1' } } }}>
       <IconoCatalogo identificador={medio?.icono ?? null} color={medio?.color ?? null} contenedor tamano={40} />
-      <Box sx={{ minWidth: 0 }}><Typography sx={{ fontWeight: 700, overflowWrap: 'anywhere' }}>{medio?.nombre ?? 'Medio histórico'}</Typography><SelectorCatalogo etiqueta={`Billetera real ${medio?.nombre ?? ''}`} valor={linea.billeteraId} alCambiar={cambiarBilletera} opciones={datos?.billeteras.filter(billeteraDisponible) ?? []} obligatorio enLinea /></Box>
+      <Box sx={{ minWidth: 0 }}><Typography sx={{ fontWeight: 700, overflowWrap: 'anywhere' }}>{medio?.nombre ?? 'Medio histórico'}</Typography><SelectorCatalogo etiqueta={`Billetera real ${medio?.nombre ?? ''}`} valor={linea.billeteraId} alCambiar={cambiarBilletera} opciones={datos?.billeteras.filter(billeteraDisponible).map(opcionBilletera) ?? []} obligatorio enLinea /></Box>
       <Box className="importe-cobro" sx={{ minWidth: 0 }}><CampoImporte etiqueta={`Importe ${medio?.nombre ?? ''}`} valor={linea.importe} alCambiar={cambiarImporte} compacto alineadoDerecha etiquetaOculta /></Box>
     </Box>;
   }
@@ -129,7 +139,7 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
   }
   /** Presenta el total exacto calculado por dominio dentro del bloque de cobros. */
   function mostrarTotalOperacion() {
-    return errorImportes ? <Alert severity="error">{errorImportes}</Alert> : <Box aria-live="polite" sx={/** Adapta el resumen semántico a ambas paletas sin alterar el importe. */ function apariencia(tema) { const estado = estadosFinancieros[tema.palette.mode === 'dark' ? 'oscuro' : 'claro'][tipo]; return { p: 2, borderRadius: '16px', display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: estado.fondo, color: estado.texto }; }}>
+    return errorImportes ? <Alert severity="error">{errorImportes}</Alert> : !moneda ? <Alert severity="info">Seleccioná una billetera para determinar la moneda del ingreso.</Alert> : <Box aria-live="polite" sx={/** Adapta el resumen semántico a ambas paletas sin alterar el importe. */ function apariencia(tema) { const estado = estadosFinancieros[tema.palette.mode === 'dark' ? 'oscuro' : 'claro'][tipo]; return { p: 2, borderRadius: '16px', display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: estado.fondo, color: estado.texto }; }}>
       <Box aria-hidden="true" sx={{ display: 'grid', placeItems: 'center', width: 48, height: 48, flexShrink: 0, borderRadius: '50%', bgcolor: tipo === 'ingreso' ? 'success.main' : 'error.main', color: tipo === 'ingreso' ? 'success.contrastText' : 'error.contrastText' }}>{tipo === 'ingreso' ? <TrendingUp sx={{ fontSize: 32 }} /> : <ArrowDownward sx={{ fontSize: 32 }} />}</Box>
       <Box sx={{ minWidth: 0 }}><Typography sx={{ fontWeight: 700, fontSize: 13, letterSpacing: 0.5 }}>{tipo === 'ingreso' ? 'TOTAL INGRESO' : 'TOTAL GASTO'}</Typography><Typography sx={{ fontSize: 32, fontWeight: 700, overflowWrap: 'anywhere', fontVariantNumeric: 'tabular-nums' }}>{formatearImporte(crearImporte(total, moneda))}</Typography></Box>
     </Box>;
@@ -138,7 +148,7 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
   async function guardar(evento: FormEvent) {
     evento.preventDefault(); if (pendiente || !alGuardar) return;
     establecerError(''); establecerConfirmacion('');
-    if (errorImportes || total === 0 || (tipo === 'ingreso' && !actividad) || (tipo === 'gasto' && (!categoria || !descripcion.trim()))) { establecerError(errorImportes || 'Completá los campos obligatorios e indicá un total mayor a cero.'); return; }
+    if (errorImportes || !moneda || total === 0 || (tipo === 'ingreso' && !actividad) || (tipo === 'gasto' && (!categoria || !descripcion.trim()))) { establecerError(errorImportes || 'Completá los campos obligatorios e indicá un total mayor a cero.'); return; }
     /** Convierte las filas al contrato del servicio. */
     function convertir(linea: LineaFormulario): LineaCobro { return { medioPagoId: linea.medioPagoId, billeteraId: linea.billeteraId || null, importeCentavos: interpretarCampoRapido(linea.importe) }; }
     /** Excluye ceros de la persistencia. */
@@ -178,12 +188,13 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
       </>}
       </Stack></Paper>
       <Paper variant="outlined" sx={{ p: tipo === 'ingreso' ? 1.5 : 2 }}><Stack spacing={tipo === 'ingreso' ? 1 : 1.5}>
-      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 1 }}><Typography variant="h6">{tipo === 'ingreso' ? 'Medios de cobro' : 'Medios de pago'} · {moneda}</Typography></Stack>
+      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 1 }}><Typography variant="h6">{tipo === 'ingreso' ? 'Medios de cobro' : 'Medios de pago'}{moneda ? ` · ${moneda}` : ''}</Typography></Stack>
       {tipo === 'ingreso' ? <>
         <Typography variant="body2" color="text.secondary">Ingresá solamente los medios utilizados</Typography>
         <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: `${tokensVisuales.radioTarjeta}px`, overflow: 'hidden' }}>{lineas.map(mostrarLinea)}</Box>
+        <Typography variant="body2" color="text.secondary" aria-live="polite">{moneda ? `Moneda automática: ${moneda}. Todos los cobros deben usar la misma moneda.` : 'La moneda se determina al seleccionar una billetera.'}</Typography>
         {mostrarTotalOperacion()}
-        <details><summary>Opciones de medios y moneda</summary><Stack spacing={1} sx={{ pt: 1 }}><CampoTextoCatalogo etiqueta="Moneda" valor={moneda} alCambiar={establecerMoneda} obligatorio /><Typography variant="body2" color="text.secondary">Vacío = 0. Descripción opcional. Usá coma o punto decimal, sin separadores de miles.</Typography><Stack direction="row" sx={{ flexWrap: 'wrap' }}>{lineas.map(mostrarRetirada)}{datos.medios.map(mostrarMedio)}</Stack></Stack></details>
+        <details><summary>Opciones de medios</summary><Stack spacing={1} sx={{ pt: 1 }}><Typography variant="body2" color="text.secondary">Vacío = 0. Descripción opcional. Usá coma o punto decimal, sin separadores de miles.</Typography><Stack direction="row" sx={{ flexWrap: 'wrap' }}>{lineas.map(mostrarRetirada)}{datos.medios.map(mostrarMedio)}</Stack></Stack></details>
       </> : <>
         <Typography variant="body2" color="text.secondary">Ingresá solamente los medios utilizados</Typography>
         <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: `${tokensVisuales.radioTarjeta}px`, overflow: 'hidden' }}>{lineas.map(mostrarLinea)}</Box>
@@ -194,7 +205,7 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
       </Stack></Paper>
     </Stack>
     {tipo === 'gasto' && mostrarTotalOperacion()}
-    {resumenImpacto && !errorImportes && resumenImpacto(moneda, lineas.map(/** Prepara distribuciones positivas para la vista previa delegada al dominio. */ function convertir(linea) { return { medioPagoId: linea.medioPagoId, billeteraId: linea.billeteraId || null, importeCentavos: interpretarCampoRapido(linea.importe) }; }).filter(/** Excluye líneas vacías de la vista previa, igual que en el guardado. */ function positiva(linea) { return linea.importeCentavos > 0; }))}
+    {resumenImpacto && moneda && !errorImportes && resumenImpacto(moneda, lineas.map(/** Prepara distribuciones positivas para la vista previa delegada al dominio. */ function convertir(linea) { return { medioPagoId: linea.medioPagoId, billeteraId: linea.billeteraId || null, importeCentavos: interpretarCampoRapido(linea.importe) }; }).filter(/** Excluye líneas vacías de la vista previa, igual que en el guardado. */ function positiva(linea) { return linea.importeCentavos > 0; }))}
     {!alGuardar && <Alert severity="info">La persistencia se conectará en la siguiente tarea.</Alert>}
     <Button startIcon={tipo === 'ingreso' ? <Save /> : undefined} fullWidth type="submit" variant="contained" color="primary" loading={pendiente} disabled={!alGuardar || Boolean(errorImportes) || total === 0}>{etiquetaGuardar ?? `Guardar ${tipo}`}</Button>
   </Stack>;

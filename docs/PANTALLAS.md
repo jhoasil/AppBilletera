@@ -2973,3 +2973,7 @@ El selector de tipo ofrece únicamente Efectivo y Dinero digital. Digital incluy
 ## Edición de moneda de billetera — TAREA 94
 
 En Nueva billetera, Moneda y Otra moneda están disponibles. En Editar billetera, Moneda aparece deshabilitada desde la apertura y explica que queda fija al crear; no se ofrece el campo alternativo de código. Los restantes atributos editables permanecen disponibles.
+
+## Moneda automática del ingreso — TAREA 95
+
+Nuevo ingreso toma su moneda de la billetera real elegida. Los cobros positivos deben compartir moneda; no existe entrada manual de código. Antes de cargar importes, se muestra la moneda de la última billetera seleccionada, o de una sugerencia vigente si aún no hubo elección explícita. Sin billetera se solicita seleccionarla. Filas vacías no participan en el total ni imponen moneda. Las opciones muestran la moneda del destino y deshabilitan las incompatibles con otros cobros positivos. La edición conserva la moneda histórica. Esta regla sustituye el campo manual de TAREA 87; Gasto conserva su flujo actual.
