@@ -3,6 +3,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
+import { CampoFechaCalendario } from './CampoFechaCalendario';
 
 /** Campo controlado para propiedades textuales de los formularios de catálogo. */
 interface PropiedadesCampoTexto {
@@ -22,6 +23,7 @@ export function CampoTextoCatalogo({ etiqueta, valor, alCambiar, tipo = 'text', 
   const identificador = useId();
   /** Entrega la edición sin persistir ni transformar el texto. */
   function cambiar(evento: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) { alCambiar(evento.target.value); }
+  if (tipo === 'date' || tipo === 'month') return <CampoFechaCalendario etiqueta={etiqueta} valor={valor} alCambiar={alCambiar} tipo={tipo} obligatorio={obligatorio} etiquetaExterior={etiquetaExterior} />;
   return <Box sx={{ minWidth: 0 }}>
     {etiquetaExterior && <Typography component="label" htmlFor={identificador} sx={{ display: 'block', mb: 1 }}>{etiqueta}</Typography>}
     <TextField multiline={multilinea} minRows={multilinea ? 3 : undefined} fullWidth id={identificador} label={etiquetaExterior ? undefined : etiqueta} value={valor} type={tipo} onChange={cambiar} required={obligatorio} placeholder={ejemplo}
