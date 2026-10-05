@@ -4528,3 +4528,9 @@ Ejecutar PRAGMA foreign_keys y CREATE TABLE IF NOT EXISTS _metadatos en llamadas
 Estado: completada el 05/10/2026. Referencia 45da2389 del 05/10/2026. Rama task_26/101_calendario_confirmacion_fecha.
 
 Calendario compartido con cabecera y fecha larga, cierre, mes/año en fila, navegación circular y selección azul circular. Elegir día/mes y Hoy/Este mes modifican un borrador; Aceptar confirma y Cancelar/cierre descartan. Borrar opcional prepara un valor vacío pendiente de Aceptar. Año desplegable con ventana móvil de cien años anteriores y posteriores, limitada a 1–9999; navegación conserva acceso al rango ISO. Mantener ISO, etiquetas, claro/oscuro y cobertura global. Sustituye la confirmación inmediata de TAREA 99. Compilación y revisión manual móvil sin guardar operaciones; sin tests. Commit y merge a main, sin push.
+
+# TAREA 102 — Actualizar empaquetado Android de primera instalación
+
+Estado: completada el 05/10/2026. Autorizada el 05/10/2026 por persistencia del error de metadatos en teléfono. Rama task_26/102_actualizar_compilacion_android.
+
+Los assets copiados a Android contienen la apertura SQL anterior y el APK local es del 02/10/2026. Alinear build:native con el modo nativo de Vite, agregar android:sync que reconstruya antes de copiar, actualizar documentación y generar APK debug actual. Verificar dentro del APK la corrección SQL y ausencia de registro PWA; no cambiar datos, migraciones, firma ni versión. Validar tipos/build/sync/assembleDebug sin tests; no instalar en teléfono ni publicar. Commit independiente y merge a main.
