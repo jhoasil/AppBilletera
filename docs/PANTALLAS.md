@@ -2977,3 +2977,7 @@ En Nueva billetera, Moneda y Otra moneda están disponibles. En Editar billetera
 ## Moneda automática del ingreso — TAREA 95
 
 Nuevo ingreso toma su moneda de la billetera real elegida. Los cobros positivos deben compartir moneda; no existe entrada manual de código. Antes de cargar importes, se muestra la moneda de la última billetera seleccionada, o de una sugerencia vigente si aún no hubo elección explícita. Sin billetera se solicita seleccionarla. Filas vacías no participan en el total ni imponen moneda. Las opciones muestran la moneda del destino y deshabilitan las incompatibles con otros cobros positivos. La edición conserva la moneda histórica. Esta regla sustituye el campo manual de TAREA 87; Gasto conserva su flujo actual.
+
+## Composición de Nuevo ingreso — TAREA 96
+
+La referencia 7eccca2a del 05/10/2026 separa el total verde de la tarjeta de medios. Esta tarjeta termina con «Los campos vacíos cuentan como 0». Guardar precede a Opciones avanzadas, plegadas inicialmente, con agregar/quitar medios e instrucciones completas. Fecha/Descripción comparten fila desde 390 px; Actividad destaca su icono configurado. Los medios usan iconos circulares y conservan billetera/moneda en el selector. La moneda sigue siendo automática; la explicación detallada se traslada a Opciones avanzadas. Se mantiene la navegación común de la app y no se copia la barra de estado del dispositivo.

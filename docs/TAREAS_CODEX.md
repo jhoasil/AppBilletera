@@ -4484,3 +4484,11 @@ Estado: completada el 05/10/2026. Autorizada el 05/10/2026. Rama task_26/095_mon
 Nuevo ingreso obtiene la moneda de las billeteras reales elegidas, sin campo manual. Las líneas positivas definen la moneda; las sugerencias vacías de otros medios no la imponen. Antes de ingresar importes, priorizar la última billetera activa elegida explícitamente o, en su ausencia, la primera sugerida como vista previa; sin billetera mostrar una indicación de selección. Todos los cobros positivos deben usar la misma moneda y tener billetera. La selección permite cambiar de moneda si no hay otros cobros positivos, y deshabilita destinos incompatibles si los hay. No convertir ni borrar importes automáticamente. El total y sus errores se resuelven en dominio. La edición conserva la moneda histórica del ingreso. Mantener Gasto fuera de este cambio.
 
 Validación: tipos/compilación, revisión manual sin guardar operaciones, diff y diff --check. Sin tests. Commit propio y merge a main según instrucción vigente; sin push.
+
+# TAREA 96 — Composición de Nuevo ingreso según referencia
+
+Estado: completada el 05/10/2026. Autorizada el 05/10/2026. Rama task_26/096_ajustar_ingreso_referencia. Referencia: imagen 7eccca2a del usuario.
+
+Actividad con icono destacado y etiqueta exterior; Fecha/Descripción en la misma fila desde 390 px, Observaciones a todo el ancho. Medios agrupados con iconos circulares, billetera y moneda visibles, importe alineado a la derecha y aviso breve de campos vacíos. Total verde separado del bloque de cobros; Guardar seguido de Opciones avanzadas plegables con las acciones existentes de agregar/quitar medios y explicación de moneda automática. Conservar navegación semántica común, iconos configurados, moneda automática de TAREA 95, centavos y validaciones; sin datos ficticios ni cambios de Gasto o persistencia.
+
+Validación: tipos y compilación, revisión manual móvil y opciones avanzadas sin guardar datos, diff y diff --check. Sin tests. Commit independiente y merge a main; sin push.

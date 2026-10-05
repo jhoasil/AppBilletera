@@ -2872,4 +2872,8 @@ Continuación de TAREA 90 en su misma rama: acercar la composición a la referen
 
 ## Ajustes y Actividades — TAREA 91
 
+
 Referencia 6ccf4b0b: menú agrupado con Catálogos, Preferencias y Respaldo y datos; actividades con filtros de disponibilidad/archivo, búsqueda y alta superior. Editor en página, controles exteriores, fechas en fila adaptable, selectores de icono/color plegables, acciones verdes. Conservar tipos libres, estado y activo independientes. Desactivar sustituye eliminar para preservar historia. Solo accesos a funciones implementadas.
+## Nuevo ingreso — TAREA 96 (05/10/2026)
+
+Referencia 7eccca2a: actividad destacada con icono configurado, fecha/descripcion en fila adaptable y observaciones de ancho completo. Lista unificada de cobros con iconos circulares y destinos reales; aviso breve de ceros. Total verde separado, Guardar y Opciones avanzadas plegables, en ese orden. Mantener radios explícitos de 16 px y navegación común. No copiar iconos de navegación que cambien el significado de las secciones; no cambiar datos ni moneda automática.

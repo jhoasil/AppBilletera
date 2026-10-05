@@ -28,12 +28,13 @@ interface PropiedadesSelectorCatalogo {
   etiquetaExterior?: boolean;
   compacto?: boolean;
   enLinea?: boolean;
+  destacado?: boolean;
 }
 
 /** Muestra un catálogo recibido por propiedades sin cargar datos ni permitir editarlo. */
 export function SelectorCatalogo({
   etiqueta, valor, opciones, alCambiar, ayuda, error,
-  obligatorio = false, deshabilitado = false, etiquetaExterior = false, compacto = false, enLinea = false,
+  obligatorio = false, deshabilitado = false, etiquetaExterior = false, compacto = false, enLinea = false, destacado = false,
 }: PropiedadesSelectorCatalogo) {
   const identificador = useId();
 
@@ -53,12 +54,18 @@ export function SelectorCatalogo({
     return opcion ? `Billetera: ${opcion.nombre}` : 'Seleccionar billetera';
   }
 
+  /** Destaca el icono configurado de la actividad sin cambiar su identidad ni sus opciones. */
+  function mostrarDestacada(id: unknown) {
+    const opcion = opciones.find(/** Resuelve los metadatos del catálogo seleccionado. */ function identificar(opcion) { return opcion.id === id; });
+    return opcion ? <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: 1.5, fontWeight: 700 }}>{opcion.icono && <IconoCatalogo identificador={opcion.icono} color={opcion.color ?? null} contenedor tamano={36} />}{opcion.nombre}</Box> : 'Sin seleccionar';
+  }
+
   return (
     <Box sx={{ minWidth: 0 }}>
     {etiquetaExterior && <Typography id={`${identificador}-etiqueta`} sx={{ mb: 1 }}>{etiqueta}</Typography>}
     <TextField fullWidth select id={identificador} variant={enLinea ? 'standard' : 'outlined'} label={etiquetaExterior || enLinea ? undefined : etiqueta} value={valor}
-      sx={enLinea ? { '& .MuiInput-root': { minHeight: 44, fontSize: 13, color: 'text.secondary' }, '& .MuiSelect-select': { whiteSpace: 'normal', py: 1, pr: 3 } } : compacto ? { '& .MuiOutlinedInput-root': { minHeight: 48 }, '& .MuiSelect-select': { py: 1.5 } } : undefined}
-      slotProps={{ input: { ...(enLinea && { disableUnderline: true }) }, select: { ...(etiquetaExterior && { labelId: `${identificador}-etiqueta` }), ...(enLinea && { displayEmpty: true, renderValue: mostrarSeleccion, IconComponent: ChevronRight, SelectDisplayProps: { 'aria-label': etiqueta } }) } }}
+      sx={enLinea ? { '& .MuiInput-root': { minHeight: 44, fontSize: 13, color: 'text.secondary' }, '& .MuiSelect-select': { whiteSpace: 'normal', py: 1, pr: 3 } } : destacado ? { '& .MuiSelect-select': { py: 1 }, '& .MuiOutlinedInput-root': { minHeight: 52 } } : compacto ? { '& .MuiOutlinedInput-root': { minHeight: 48 }, '& .MuiSelect-select': { py: 1.5 } } : undefined}
+      slotProps={{ input: { ...(enLinea && { disableUnderline: true }) }, select: { ...(etiquetaExterior && { labelId: `${identificador}-etiqueta` }), ...(destacado && { renderValue: mostrarDestacada }), ...(enLinea && { displayEmpty: true, renderValue: mostrarSeleccion, IconComponent: ChevronRight, SelectDisplayProps: { 'aria-label': etiqueta } }) } }}
       onChange={cambiarSeleccion} required={obligatorio}
       disabled={deshabilitado || opciones.length === 0} error={Boolean(error)}
       helperText={error || ayuda || (opciones.length === 0 ? 'No hay opciones disponibles.' : undefined)}>
