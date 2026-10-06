@@ -2999,3 +2999,7 @@ TAREA 101 sustituye la confirmación inmediata: seleccionar día/mes, Hoy/Este m
 ## Filas sin importe — TAREA 104
 
 En Ingreso y Gasto, una fila vacía o con importe cero no exige billetera ni se envía al servicio. El selector pasa a obligatorio al interpretar un importe positivo en centavos. Los importes inválidos conservan su error y bloquean Guardar; las filas positivas conservan la validación de billetera y moneda. No se permite guardar un total cero.
+
+## Última billetera por medio — TAREA 105
+
+Al elegir una billetera en una nueva operación se recuerda localmente su identidad por medio, incluso con importe cero. Nuevos ingresos y gastos precargan esa última billetera activa antes que la predeterminada del medio. Si el recuerdo no está disponible, se utiliza la predeterminada activa o se deja vacío. Sin seleccionar limpia el recuerdo. Medios rápidos y adicionales comparten esta preferencia; editar una operación conserva los destinos históricos y no modifica el recuerdo. La preferencia no cambia el catálogo ni registra dinero y no forma parte del respaldo financiero.

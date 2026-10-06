@@ -66,7 +66,7 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
         establecerCategoria(preferenciasUI.obtenerDisponible('ultima_categoria_gasto', resultado.categorias.filter(disponible)));
       }
       /** Crea una fila vacía por cada medio rápido, o recupera las distribuciones históricas. */
-      function preparar(medio: MedioPago): LineaFormulario { return { medioPagoId: medio.id, billeteraId: medio.billeteraPredeterminadaId ?? '', importe: '' }; }
+      function preparar(medio: MedioPago): LineaFormulario { return { medioPagoId: medio.id, billeteraId: preferenciasUI.obtenerBilleteraMedio(medio.id, medio.billeteraPredeterminadaId, resultado.billeteras), importe: '' }; }
       /** Incluye solamente medios activos configurados para carga rápida. */
       function rapido(medio: MedioPago) { return medio.activo && medio.mostrarEnCargaRapida; }
       /** Convierte centavos históricos a texto decimal exacto sin formateo con miles. */
@@ -109,8 +109,11 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
     }
     /** Conserva el importe escrito para validarlo y sumar sin redondeo. */
     function cambiarImporte(valor: string) { cambiar({ importe: valor }); }
-    /** Actualiza la billetera real, independiente del medio de cobro. */
-    function cambiarBilletera(valor: string) { cambiar({ billeteraId: valor }); establecerBilleteraReferencia(valor); }
+    /** Actualiza el destino y recuerda la elección para nuevas operaciones, sin reinterpretar ediciones. */
+    function cambiarBilletera(valor: string) {
+      cambiar({ billeteraId: valor }); establecerBilleteraReferencia(valor);
+      if (!inicial) preferenciasUI.recordarBilleteraMedio(linea.medioPagoId, valor || null);
+    }
     /** Mantiene el destino histórico aunque esté inactivo. */
     function billeteraDisponible(registro: { activo: boolean; id: string; moneda: string }) { return registro.activo || registro.id === linea.billeteraId; }
     const monedaRequerida = monedaOtrasLineas(lineas, indice, datos?.billeteras ?? [], inicial?.moneda);
@@ -126,7 +129,7 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
   function agregarMedioOperacion(id: string) {
     const medio = datos?.medios.find(/** Resuelve una opción activa del catálogo real. */ function identificar(medio) { return medio.id === id && medio.activo; });
     if (pendiente || !medio || lineas.some(/** Impide repetir un medio ya presente. */ function incluida(linea) { return linea.medioPagoId === id; })) return;
-    establecerLineas([...lineas, { medioPagoId: id, billeteraId: medio.billeteraPredeterminadaId ?? '', importe: '', agregadaManualmente: true }]);
+    establecerLineas([...lineas, { medioPagoId: id, billeteraId: preferenciasUI.obtenerBilleteraMedio(medio.id, medio.billeteraPredeterminadaId, datos?.billeteras ?? []), importe: '', agregadaManualmente: true }]);
   }
   /** Retira una distribución del borrador, conservando importes y destinos de las restantes. */
   function quitarMedioOperacion(id: string) {

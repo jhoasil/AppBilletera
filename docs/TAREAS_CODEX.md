@@ -4552,3 +4552,13 @@ En el formulario compartido de Ingreso/Gasto, exigir billetera únicamente cuand
 Validar tipos/build, revisión de controles y filtrado, diff y diff --check. Sin crear ni ejecutar tests. Commit independiente y merge a main, sin push.
 
 Validación realizada: pnpm run build correcto, incluidos tipos. En navegador, Ingreso y Gasto con Efectivo 500 y otros medios vacíos/cero: billeteras sin required y sin error de destino. Al cargar un importe positivo sin billetera, aparece el error y Guardar se deshabilita. Revisión del filtro positivo previo a alGuardar confirma exclusión de ceros. No se guardaron operaciones durante la comprobación. Tests: no ejecutados.
+
+# TAREA 105 — Recordar la última billetera por medio
+
+Estado: completada el 06/10/2026. Autorizada el 06/10/2026. Rama task_26/105_recordar_billetera_por_medio.
+
+Recordar al seleccionar la billetera de cada medio en nuevas operaciones, incluso si el importe es cero. Preferencia local por UUID de medio, compartida entre Ingreso/Gasto y aplicable a medios rápidos y adicionales. Precargar la última billetera si sigue activa; si no está disponible, usar la predeterminada activa del medio o dejar vacío. Elegir Sin seleccionar limpia el recuerdo. Editar operaciones conserva sus detalles históricos y no cambia esta preferencia. Guardar únicamente identidades de catálogos en localStorage; sin modificar medios, datos financieros, respaldos ni esquema.
+
+Validar tipos/build, revisión manual de selección y reapertura sin guardar operaciones, filtros de disponibilidad, diff y diff --check. Sin tests. Commit propio y merge a main, sin push.
+
+Validación realizada: pnpm run build correcto, incluidos tipos. En navegador, seleccionar BRUBANK para Transferencia con importe vacío y recargar Nuevo ingreso conserva la selección; abrir Nuevo gasto precarga la misma billetera y no cambia Efectivo/Tarjeta. No se guardaron operaciones. Disponibilidad, alternativa predeterminada y conservación de edición revisadas en código. Tests no ejecutados.

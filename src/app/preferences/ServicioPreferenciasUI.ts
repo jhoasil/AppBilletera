@@ -1,5 +1,5 @@
 /** Preferencias de selección: contienen únicamente UUID de catálogos, nunca importes ni operaciones. */
-export type ClavePreferencia = 'ultima_actividad_ingreso' | 'ultima_actividad_gasto' | 'ultima_categoria_gasto';
+export type ClavePreferencia = 'ultima_actividad_ingreso' | 'ultima_actividad_gasto' | 'ultima_categoria_gasto' | `ultima_billetera_medio_${string}`;
 
 /** Recuerda selecciones de interfaz sin convertir localStorage en almacenamiento financiero. */
 export class ServicioPreferenciasUI {
@@ -25,6 +25,18 @@ export class ServicioPreferenciasUI {
     /** Compara identidad sin guardar información adicional del catálogo. */
     function coincide(opcion: { id: string }) { return opcion.id === id; }
     return opciones.some(coincide) ? id! : '';
+  }
+
+  /** Precarga el último destino activo del medio, o su sugerencia vigente, para nuevas operaciones. */
+  obtenerBilleteraMedio(medioPagoId: string, predeterminadaId: string | null, billeteras: readonly { id: string; activo: boolean }[]): string {
+    const activas = billeteras.filter(/** Excluye destinos desactivados de las nuevas sugerencias. */ function activa(billetera) { return billetera.activo; });
+    const recordada = this.obtenerDisponible(`ultima_billetera_medio_${medioPagoId}`, activas);
+    return recordada || (activas.some(/** Comprueba la disponibilidad de la sugerencia del catálogo. */ function predeterminada(billetera) { return billetera.id === predeterminadaId; }) ? predeterminadaId! : '');
+  }
+
+  /** Recuerda la selección explícita por medio sin almacenar importes ni alterar su catálogo. */
+  recordarBilleteraMedio(medioPagoId: string, billeteraId: string | null): void {
+    this.recordar(`ultima_billetera_medio_${medioPagoId}`, billeteraId);
   }
 }
 
