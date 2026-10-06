@@ -96,6 +96,11 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
     /** Encuentra la etiqueta e icono del medio. */
     function coincide(medio: MedioPago) { return medio.id === linea.medioPagoId; }
     const medio = datos?.medios.find(coincide);
+    /** Exige destino solo para dinero positivo; los textos inválidos se informan en el resumen. */
+    function requiereBilletera(): boolean {
+      try { return interpretarCampoRapido(linea.importe) > 0; }
+      catch { return false; }
+    }
     /** Cambia una fila sin perder las demás distribuciones. */
     function cambiar(cambios: Partial<LineaFormulario>) {
       /** Mezcla únicamente la posición editada. */
@@ -113,7 +118,7 @@ export function FormularioOperacionRapida({ tipo, alGuardar, inicial, alCompleta
     function opcionBilletera(registro: { id: string; nombre: string; moneda: string }) { return { ...registro, nombre: `${registro.nombre} · ${registro.moneda}`, deshabilitada: Boolean(monedaRequerida && registro.moneda !== monedaRequerida) }; }
     return <Box key={`${linea.medioPagoId}-${indice}`} sx={{ display: 'grid', gridTemplateColumns: '44px minmax(0, 1fr) minmax(100px, 30%)', alignItems: 'center', gap: 1, p: 1, borderBottom: '1px solid', borderColor: 'divider', '&:last-child': { borderBottom: 0 }, '@media (max-width:359px)': { gridTemplateColumns: '40px minmax(0, 1fr)', '& > .importe-cobro': { gridColumn: '1 / -1' } } }}>
       <Box sx={{ display: 'flex', borderRadius: '50%', overflow: 'hidden', width: 44, height: 44 }}><IconoCatalogo identificador={medio?.icono ?? null} color={medio?.color ?? null} contenedor tamano={44} /></Box>
-      <Box sx={{ minWidth: 0, '& .MuiInput-root': { minHeight: 28 }, '& .MuiSelect-select': { py: 0.5 } }}><Typography sx={{ fontWeight: 700, overflowWrap: 'anywhere' }}>{medio?.nombre ?? 'Medio histórico'}</Typography><SelectorCatalogo etiqueta={`Billetera real ${medio?.nombre ?? ''}`} valor={linea.billeteraId} alCambiar={cambiarBilletera} opciones={datos?.billeteras.filter(billeteraDisponible).map(opcionBilletera) ?? []} obligatorio enLinea /></Box>
+      <Box sx={{ minWidth: 0, '& .MuiInput-root': { minHeight: 28 }, '& .MuiSelect-select': { py: 0.5 } }}><Typography sx={{ fontWeight: 700, overflowWrap: 'anywhere' }}>{medio?.nombre ?? 'Medio histórico'}</Typography><SelectorCatalogo etiqueta={`Billetera real ${medio?.nombre ?? ''}`} valor={linea.billeteraId} alCambiar={cambiarBilletera} opciones={datos?.billeteras.filter(billeteraDisponible).map(opcionBilletera) ?? []} obligatorio={requiereBilletera()} enLinea /></Box>
       <Box className="importe-cobro" sx={{ minWidth: 0 }}><CampoImporte etiqueta={`Importe ${medio?.nombre ?? ''}`} valor={linea.importe} alCambiar={cambiarImporte} compacto alineadoDerecha etiquetaOculta /></Box>
     </Box>;
   }

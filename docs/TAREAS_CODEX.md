@@ -4542,3 +4542,13 @@ Estado: completada el 05/10/2026. Autorizada el 05/10/2026. Rama task_26/103_mod
 Cambiar build:native a --mode native y la condición de VitePWA a native por instrucción del usuario. Actualizar documentación vigente, conservando la nota histórica de TAREA 102. Validar build:native con tipos y ausencia de registro/service worker en dist; sin tests, APK ni cambios financieros. Commit propio y merge a main.
 
 Validación: pnpm run build:native correcto, incluidos tipos. dist sin sw.js ni registro registerSW en index.html. Diff y diff --check revisados. Tests: no creados ni ejecutados.
+
+# TAREA 104 — Ignorar billeteras en filas sin importe
+
+Estado: completada el 06/10/2026. Autorizada el 06/10/2026. Rama task_26/104_ignorar_billeteras_importe_cero.
+
+En el formulario compartido de Ingreso/Gasto, exigir billetera únicamente cuando el importe interpretado en centavos sea positivo. Las filas vacías o cero no bloquean el envío por validación nativa y se excluyen del contrato enviado al servicio. Mantener errores de importes inválidos, billetera/moneda de filas positivas y total mayor a cero. Conservar el filtrado existente y las validaciones del dominio; sin migraciones ni cambios de datos.
+
+Validar tipos/build, revisión de controles y filtrado, diff y diff --check. Sin crear ni ejecutar tests. Commit independiente y merge a main, sin push.
+
+Validación realizada: pnpm run build correcto, incluidos tipos. En navegador, Ingreso y Gasto con Efectivo 500 y otros medios vacíos/cero: billeteras sin required y sin error de destino. Al cargar un importe positivo sin billetera, aparece el error y Guardar se deshabilita. Revisión del filtro positivo previo a alGuardar confirma exclusión de ceros. No se guardaron operaciones durante la comprobación. Tests: no ejecutados.

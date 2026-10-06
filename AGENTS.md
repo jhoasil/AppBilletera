@@ -3105,3 +3105,5 @@ TAREA 100: apertura SQLite corregida con PRAGMA y creación de metadatos en llam
 TAREA 101: calendario con fecha larga, mes/año alineados y confirmación Aceptar, completada el 05/10/2026. Cancelar descarta selección y borrado pendientes. Validación en REVISION_VISUAL.md.
 TAREA 102: flujo Android reconstruye y sincroniza el frontend nativo; APK debug actualizado y verificado por contenido el 05/10/2026. Arranque en teléfono pendiente. Detalle en ANDROID.md.
 TAREA 103: modo de compilación cambiado a native en package.json y Vite por pedido del usuario el 05/10/2026. Build nativo correcto, sin service worker.
+
+TAREA 104: billetera obligatoria solamente para filas positivas de Ingreso/Gasto, completada el 06/10/2026. Ceros/vacíos excluidos del guardado; compilación y revisión manual sin persistir operaciones correctas. Tests no ejecutados.
